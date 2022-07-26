@@ -22,8 +22,7 @@ class AccountTable {
             const client = new Client();
             try {
                 yield client.connect();
-                console.log('conectado ao banco novamente');
-                console.log(account.id, account.ownerCpf, account.password, account.agency, account.agencyDigit, account.account, account.accountDigit, account.balance);
+                console.log('conectado ao banco, pagina account');
                 const insertAccountQuery = `
             INSERT INTO public.accounts
                 (id, owners_cpf, password, agency, agency_digit, account, account_digit, balance) 
@@ -40,7 +39,7 @@ class AccountTable {
                     account.accountDigit,
                     account.balance
                 ]);
-                console.log('foi');
+                console.log('operação executada');
                 yield client.end();
                 if (result.rows.length !== 0) {
                     return true;

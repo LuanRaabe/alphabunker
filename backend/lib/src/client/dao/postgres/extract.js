@@ -12,18 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CheckBalance = void 0;
+exports.CheckExtract = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { Client } = require('pg');
 const bcrypt_1 = __importDefault(require("bcrypt"));
-function CheckBalance(cpf, password, agency, agency_digit, account, account_digit) {
+function CheckExtract(cpf, password, agency, agency_digit, account, account_digit) {
     return __awaiter(this, void 0, void 0, function* () {
         const clientSelect = new Client();
         try {
-            console.log('search');
+            console.log('searching');
             yield clientSelect.connect();
-            console.log('conectado ao banco');
+            console.log('conectado ao banco, pagina de extrato');
             const selectBalanceQuery = `
         SELECT * FROM public.accounts
         WHERE
@@ -34,21 +34,31 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
             account_digit=$5
         `;
             const check = yield clientSelect.query(selectBalanceQuery, [cpf, agency, agency_digit, account, account_digit]);
-            const balance = check.rows[0];
-            const compare = bcrypt_1.default.compareSync(password, balance.password);
-            yield clientSelect.end();
+            console.log(check.rows[0]);
+            const compare = bcrypt_1.default.compareSync(password, check.rows[0].password);
             console.log(compare);
-            if (compare) {
-                const data = {
-                    id: balance.id,
-                    owners_cpf: balance.owners_cpf,
-                    agency: balance.agency,
-                    agency_digit: balance.agency_digit,
-                    account: balance.account,
-                    account_digit: balance.account_digit,
-                    balance: balance.balance
-                };
-                return data;
+            if (!compare) {
+                return false;
+            }
+            const id = check.rows[0].id;
+            const selectExtractQuery = `
+        SELECT * FROM public.extracts
+        WHERE
+            account_id=$1
+            ORDER BY created_at DESC
+        `;
+            const check2 = yield clientSelect.query(selectExtractQuery, [id]);
+            const extract = check2.rows;
+            const accountInfo = {
+                cpf: cpf,
+                account: account,
+                account_digit: account_digit,
+                agency: agency,
+                agency_digit: agency_digit
+            };
+            yield clientSelect.end();
+            if (check.rows.length !== 0) {
+                return { account: accountInfo, extract: extract };
             }
             return false;
         }
@@ -58,4 +68,4 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
         }
     });
 }
-exports.CheckBalance = CheckBalance;
+exports.CheckExtract = CheckExtract;

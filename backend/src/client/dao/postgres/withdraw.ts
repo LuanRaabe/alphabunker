@@ -87,23 +87,22 @@ class WithdrawTable extends PostgresDB{
                 UPDATE public.accounts SET balance = balance - $1
                 WHERE
                     owners_cpf=$2 and 
-                    password=$3 and 
-                    agency=$4 and 
-                    agency_digit=$5 and
-                    account=$6 and
-                    account_digit=$7
+                    agency=$3 and 
+                    agency_digit=$4 and
+                    account=$5 and
+                    account_digit=$6
                     RETURNING balance
                 `;
                 
                 const final = await client.query(alterBalance, [
                     newFee,
-                    withdraw.id,
                     withdraw.ownerCpf,
                     withdraw.agency,
                     withdraw.agencyDigit,
                     withdraw.account,
                     withdraw.accountDigit
                 ]);
+                console.log('withdraw completo')
 
                 const data = {
                     withdraw: {

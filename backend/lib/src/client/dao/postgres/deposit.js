@@ -12,20 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.WithdrawTable = void 0;
-const _1 = require(".");
+exports.DepositTable = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { Client } = require('pg');
 const uuid_1 = require("uuid");
-const bcrypt_1 = __importDefault(require("bcrypt"));
-class WithdrawTable extends _1.PostgresDB {
-    insert(withdraw) {
+class DepositTable {
+    insert(deposit) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = new Client();
             try {
                 yield client.connect();
-                console.log('conectado ao banco');
+                console.log('conectado ao banco, pagina do deposito');
                 const selectBalanceQuery = `
             SELECT * FROM public.accounts
             WHERE
@@ -36,35 +34,30 @@ class WithdrawTable extends _1.PostgresDB {
                 account_digit=$5
 
             `;
-                const check = yield client.query(selectBalanceQuery, [withdraw.ownerCpf, withdraw.agency, withdraw.agencyDigit, withdraw.account, withdraw.accountDigit]);
-                const compare = bcrypt_1.default.compareSync(withdraw.password, check.rows[0].password);
-                if (!compare) {
-                    return false;
-                }
+                const check = yield client.query(selectBalanceQuery, [deposit.ownerCpf, deposit.agency, deposit.agencyDigit, deposit.account, deposit.accountDigit]);
                 const balance = check.rows[0];
                 const id = balance.id;
                 const atualBalance = parseFloat(balance.balance);
-                const withdrawValue = parseFloat(withdraw.value);
-                const fee = 4;
-                const newFee = withdrawValue + fee;
-                const newValue = atualBalance - newFee;
+                const depositValue = parseFloat(deposit.value);
+                const fee = (depositValue * 0.01);
+                const newFee = depositValue - fee;
+                const newValue = atualBalance + newFee;
                 if (newValue >= 0) {
-                    console.log('entrou');
-                    const insertWithdrawQuery = `
+                    const insertDepositQuery = `
                 INSERT INTO public.extracts
                     (id, account_id, operation_name, value, created_at) 
                 VALUES 
                     ( $1, $2, $3, $4, NOW() ) RETURNING id
                 `;
-                    const result = yield client.query(insertWithdrawQuery, [
-                        withdraw.id,
+                    const result = yield client.query(insertDepositQuery, [
+                        deposit.id,
                         id,
-                        'saque',
-                        withdraw.value
+                        'deposito',
+                        deposit.value
                     ]);
                     console.log(result.rows);
                     if (result.rows.length !== 0) {
-                        console.log("primeiro ok");
+                        console.log("primeira inserção");
                     }
                     const insertFeeQuery = `
                 INSERT INTO public.extracts
@@ -80,39 +73,36 @@ class WithdrawTable extends _1.PostgresDB {
                         'taxa',
                         passFee
                     ]);
-                    console.log(feeResult.rows);
                     if (feeResult.rows.length !== 0) {
-                        console.log("segundo ok");
+                        console.log("segunda inserção");
                     }
                     const alterBalance = `
-                UPDATE public.accounts SET balance = balance - $1
+                UPDATE public.accounts SET balance = balance + $1
                 WHERE
                     owners_cpf=$2 and 
-                    password=$3 and 
-                    agency=$4 and 
-                    agency_digit=$5 and
-                    account=$6 and
-                    account_digit=$7
+                    agency=$3 and 
+                    agency_digit=$4 and
+                    account=$5 and
+                    account_digit=$6
                     RETURNING balance
                 `;
                     const final = yield client.query(alterBalance, [
                         newFee,
-                        withdraw.id,
-                        withdraw.ownerCpf,
-                        withdraw.agency,
-                        withdraw.agencyDigit,
-                        withdraw.account,
-                        withdraw.accountDigit
+                        deposit.ownerCpf,
+                        deposit.agency,
+                        deposit.agencyDigit,
+                        deposit.account,
+                        deposit.accountDigit
                     ]);
                     const data = {
-                        withdraw: {
-                            id: withdraw.id,
-                            value: withdraw.value,
-                            cpf: withdraw.ownerCpf,
-                            agency: withdraw.agency,
-                            agencyDigit: withdraw.agencyDigit,
-                            account: withdraw.account,
-                            accountDigit: withdraw.accountDigit
+                        deposit: {
+                            id: deposit.id,
+                            value: deposit.value,
+                            cpf: deposit.ownerCpf,
+                            agency: deposit.agency,
+                            agencyDigit: deposit.agencyDigit,
+                            account: deposit.account,
+                            accountDigit: deposit.accountDigit
                         },
                         fee: {
                             id: feeId,
@@ -131,4 +121,4 @@ class WithdrawTable extends _1.PostgresDB {
         });
     }
 }
-exports.WithdrawTable = WithdrawTable;
+exports.DepositTable = DepositTable;

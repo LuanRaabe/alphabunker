@@ -12,13 +12,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DepositTable = void 0;
+exports.WithdrawTable = void 0;
+const _1 = require(".");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { Client } = require('pg');
 const uuid_1 = require("uuid");
-class DepositTable {
-    insert(deposit) {
+const bcrypt_1 = __importDefault(require("bcrypt"));
+class WithdrawTable extends _1.PostgresDB {
+    insert(withdraw) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = new Client();
             try {
@@ -34,27 +36,31 @@ class DepositTable {
                 account_digit=$5
 
             `;
-                const check = yield client.query(selectBalanceQuery, [deposit.ownerCpf, deposit.agency, deposit.agencyDigit, deposit.account, deposit.accountDigit]);
+                const check = yield client.query(selectBalanceQuery, [withdraw.ownerCpf, withdraw.agency, withdraw.agencyDigit, withdraw.account, withdraw.accountDigit]);
+                const compare = bcrypt_1.default.compareSync(withdraw.password, check.rows[0].password);
+                if (!compare) {
+                    return false;
+                }
                 const balance = check.rows[0];
                 const id = balance.id;
                 const atualBalance = parseFloat(balance.balance);
-                const depositValue = parseFloat(deposit.value);
-                const fee = (depositValue * 0.01);
-                const newFee = depositValue - fee;
-                const newValue = atualBalance + newFee;
+                const withdrawValue = parseFloat(withdraw.value);
+                const fee = 4;
+                const newFee = withdrawValue + fee;
+                const newValue = atualBalance - newFee;
                 if (newValue >= 0) {
                     console.log('entrou');
-                    const insertDepositQuery = `
+                    const insertWithdrawQuery = `
                 INSERT INTO public.extracts
                     (id, account_id, operation_name, value, created_at) 
                 VALUES 
                     ( $1, $2, $3, $4, NOW() ) RETURNING id
                 `;
-                    const result = yield client.query(insertDepositQuery, [
-                        deposit.id,
+                    const result = yield client.query(insertWithdrawQuery, [
+                        withdraw.id,
                         id,
-                        'deposito',
-                        deposit.value
+                        'saque',
+                        withdraw.value
                     ]);
                     console.log(result.rows);
                     if (result.rows.length !== 0) {
@@ -74,11 +80,12 @@ class DepositTable {
                         'taxa',
                         passFee
                     ]);
+                    console.log(feeResult.rows);
                     if (feeResult.rows.length !== 0) {
                         console.log("segundo ok");
                     }
                     const alterBalance = `
-                UPDATE public.accounts SET balance = balance + $1
+                UPDATE public.accounts SET balance = balance - $1
                 WHERE
                     owners_cpf=$2 and 
                     agency=$3 and 
@@ -89,21 +96,22 @@ class DepositTable {
                 `;
                     const final = yield client.query(alterBalance, [
                         newFee,
-                        deposit.ownerCpf,
-                        deposit.agency,
-                        deposit.agencyDigit,
-                        deposit.account,
-                        deposit.accountDigit
+                        withdraw.ownerCpf,
+                        withdraw.agency,
+                        withdraw.agencyDigit,
+                        withdraw.account,
+                        withdraw.accountDigit
                     ]);
+                    console.log('withdraw completo');
                     const data = {
-                        deposit: {
-                            id: deposit.id,
-                            value: deposit.value,
-                            cpf: deposit.ownerCpf,
-                            agency: deposit.agency,
-                            agencyDigit: deposit.agencyDigit,
-                            account: deposit.account,
-                            accountDigit: deposit.accountDigit
+                        withdraw: {
+                            id: withdraw.id,
+                            value: withdraw.value,
+                            cpf: withdraw.ownerCpf,
+                            agency: withdraw.agency,
+                            agencyDigit: withdraw.agencyDigit,
+                            account: withdraw.account,
+                            accountDigit: withdraw.accountDigit
                         },
                         fee: {
                             id: feeId,
@@ -122,4 +130,4 @@ class DepositTable {
         });
     }
 }
-exports.DepositTable = DepositTable;
+exports.WithdrawTable = WithdrawTable;
