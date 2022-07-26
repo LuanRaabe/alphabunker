@@ -8,7 +8,7 @@ import {
   UserCircle,
 } from 'phosphor-react';
 import { SectionButton } from './SectionButton';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface MenuProps {
   username: string;
@@ -29,26 +29,30 @@ interface MenuProps {
  */
 
 export function Menu(props: MenuProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col">
       <div className="flex flex-row">
-        <span>Bem vindo, {props.username}!</span>
+        <span onClick={() => navigate('/profile')}>
+          Bem vindo, {props.username}!
+        </span>
         <UserCircle weight="bold" className="w-6 h-6 text-icon-dark-200" />
       </div>
       <div className="flex flex-row">
-        <SectionButton title="Extrato" onclick={}>
+        <SectionButton title="Extrato" onClick={() => navigate('/extract')}>
           <Bank weight="bold" className="w-6 h-6 text-icon-dark-200" />
         </SectionButton>
-        <SectionButton title="Transferir" onclick={}>
+        <SectionButton title="Transferir" onClick={() => navigate('/transfer')}>
           <ArrowsLeftRight
             weight="bold"
             className="w-6 h-6 text-icon-dark-200"
           />
         </SectionButton>
-        <SectionButton title="Depósito" onclick={}>
+        <SectionButton title="Depósito" onClick={() => navigate('/deposit')}>
           <UploadSimple weight="bold" className="w-6 h-6 text-icon-dark-200" />
         </SectionButton>
-        <SectionButton title="Sacar" onclick={}>
+        <SectionButton title="Sacar" onClick={() => navigate('/withdraw')}>
           <DownloadSimple
             weight="bold"
             className="w-6 h-6 text-icon-dark-200"

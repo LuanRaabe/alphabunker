@@ -27,9 +27,9 @@ const Private = ({ children }: ChildrenTypes) => {
 const Public = ({ children }: ChildrenTypes) => {
   const { user } = useUser();
 
-  if (user) {
+  /* if (user) {
     return <Navigate to="/deposit" />;
-  }
+  } */
 
   return children;
 };
@@ -62,7 +62,7 @@ export const Router = () => (
       }
     />
     <Route
-      path="/Transfer"
+      path="/transfer"
       element={
         <Private>
           <Transfer />
