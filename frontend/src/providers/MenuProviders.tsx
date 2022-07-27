@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useState, useContext } from 'react';
-import { Menu } from '../components/Menu';
+import { Menu } from '../components/Menu/Menu';
 
 export const MenuContext = createContext({
   showMenu: false,

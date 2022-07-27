@@ -44,7 +44,7 @@ select {
 }
 
 .icon-light {
-  @apply bg-brand-hover;
+  @apply bg-btn-session;
 }
 
 .text-gold {

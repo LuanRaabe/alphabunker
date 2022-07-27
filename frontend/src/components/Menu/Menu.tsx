@@ -33,7 +33,7 @@ export function Menu(props: MenuProps) {
 
   return (
     <div
-      className="relative flex flex-col items-center
+      className="fixed top-0 flex flex-col items-center
       w-full h-52
       bg-header-menu rounded-b-3xl
       text-white"
