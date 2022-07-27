@@ -19,15 +19,15 @@ interface SectionButtonProps {
 
 export function SectionButton(props: SectionButtonProps) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mx-1">
       <button
-        className={`h-10 px-3 text-btn-text rounded ${props.className}`}
+        className={`flex items-center justify-center h-10 w-14 text-btn-text rounded icon-light ${props.className}`}
         type="button"
         onClick={props.onClick}
       >
         {props.children}
       </button>
-      {props.title}
+      <span className="text-xs">{props.title}</span>
     </div>
   );
 }

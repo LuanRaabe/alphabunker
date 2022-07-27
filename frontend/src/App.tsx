@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import { MenuProvider } from './providers/MenuProviders';
 
 import { UserProvider } from './providers/UserProvider';
 import { Router } from './routes/routes';
@@ -19,7 +20,9 @@ export const App = () => {
   return (
     <UserProvider>
       <BrowserRouter>
-        <Router />
+        <MenuProvider>
+          <Router />
+        </MenuProvider>
       </BrowserRouter>
     </UserProvider>
   );

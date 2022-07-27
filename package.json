@@ -6,6 +6,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev:web": "cd ./web && yarn dev"
+    "dev:front": "cd ./frontend && yarn dev",
+    "dev:back": "cd ./backend && yarn dev"
   }
 }

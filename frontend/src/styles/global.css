@@ -38,3 +38,15 @@ select {
 .btn-cancel {
   @apply bg-btn-cancel-base hover:bg-btn-cancel-hover;
 }
+
+.bg-header-menu {
+  @apply bg-brand-base;
+}
+
+.icon-light {
+  @apply bg-brand-hover;
+}
+
+.text-gold {
+  @apply text-header-gold;
+}
