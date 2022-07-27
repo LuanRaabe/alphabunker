@@ -37,6 +37,7 @@ module.exports = {
             loading: '#E24B2DE6',
             disabled: '#E24B2D80',
           },
+          session: '#75ACB1',
           text: '#F7F7F7',
           inactive: '#F7F7F780',
         },
