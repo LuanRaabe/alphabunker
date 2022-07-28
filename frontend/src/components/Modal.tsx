@@ -1,6 +1,6 @@
 import { X } from 'phosphor-react';
 import { MouseEvent, useEffect, useRef } from 'react';
-import { Button } from './Button';
+import { Button } from './Form/Button';
 
 interface PropTypes {
   title: string;

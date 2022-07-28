@@ -30,9 +30,9 @@ const Private = ({ children, callback }: ChildrenTypes) => {
 const Public = ({ children, callback }: ChildrenTypes) => {
   const { user } = useUser();
 
-  /* if (user) {
+  if (user) {
     return <Navigate to="/deposit" />;
-  } */
+  }
 
   callback();
   return children;

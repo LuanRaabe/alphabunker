@@ -28,15 +28,15 @@ select {
 }
 
 .btn-primary {
-  @apply bg-btn-primary-base hover:bg-btn-primary-hover;
+  @apply bg-btn-primary-base hover:bg-btn-primary-hover disabled:bg-btn-primary-disabled;
 }
 
 .btn-secondary {
-  @apply bg-btn-secondary-base hover:bg-btn-secondary-hover;
+  @apply bg-btn-secondary-base hover:bg-btn-secondary-hover disabled:bg-btn-secondary-disabled;
 }
 
 .btn-cancel {
-  @apply bg-btn-cancel-base hover:bg-btn-cancel-hover;
+  @apply bg-btn-cancel-base hover:bg-btn-cancel-hover disabled:bg-btn-cancel-disabled;
 }
 
 .bg-header-menu {
@@ -49,4 +49,8 @@ select {
 
 .text-gold {
   @apply text-header-gold;
+}
+
+.bg-input {
+  @apply bg-input-base;
 }

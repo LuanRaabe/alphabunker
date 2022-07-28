@@ -19,13 +19,8 @@ interface UserProviderTypes {
 }
 
 export const UserProvider = ({ children }: UserProviderTypes) => {
-  const [user, setUser] = useState<UserTypes>({
-    name: 'string',
-    email: 'string',
-    cpf: 'string',
-    birthDate: 'string',
-  });
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<UserTypes | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
 
   return (
     <UserContext.Provider
