@@ -26,7 +26,7 @@ export const Button = ({
   category,
 }: PropTypes) => (
   <button
-    className={`h-10 px-3 text-btn-text rounded btn-${category} ${
+    className={`w-64 h-8 flex items-center justify-center text-white rounded-md btn-${category} ${
       className ?? ''
     }`}
     type={type}
