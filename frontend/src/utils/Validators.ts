@@ -47,3 +47,15 @@ export function validateConfirmPassword(
 ): boolean {
   return password === confirmPassword;
 }
+
+export function validateDate(inputDate: string): boolean {
+  const date = new Date(inputDate);
+  if (isNaN(date.getTime())) return false;
+  if (date.getTime() >= new Date().getTime()) return false;
+  return true;
+}
+
+export function validateUsername(username: string): boolean {
+  const usernameFormatted = username.replace(/\s/g, '');
+  return usernameFormatted.length >= 1;
+}

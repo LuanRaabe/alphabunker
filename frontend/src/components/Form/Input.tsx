@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface ValiadatorsType {
+interface ValidatorsType {
   validate: (value: string) => boolean;
-  message: string;
+  errorMessage: string;
 }
 
 interface InputProps {
@@ -12,12 +12,32 @@ interface InputProps {
   value: string;
   onChange: (event: any) => void;
   mask?: (value: string) => string;
+  onFocus?: () => void;
   onBlur?: () => void;
-  validators?: ValiadatorsType[];
+  validators?: ValidatorsType[];
+  callback?: (value: boolean) => void;
 }
 
 export function Input(props: InputProps) {
   const [error, setError] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    setError(undefined);
+  }, [props.value]);
+
+  function runInputValidators() {
+    props.validators?.forEach(({ validate, errorMessage }) => {
+      if (!validate(props.value)) {
+        setError(errorMessage);
+        props.callback?.(true);
+      } else setError(undefined);
+    });
+  }
+
+  function resetError() {
+    props.callback?.(false);
+    setError(undefined);
+  }
 
   return (
     <div className="relative flex flex-col">
@@ -28,17 +48,15 @@ export function Input(props: InputProps) {
         required={!!props.required}
         value={props.value}
         onChange={(e) =>
-          props.onChange(
-            props.mask ? props.mask(e.target.value) : e.target.value,
-          )
+          props.onChange(props.mask?.(e.target.value) || e.target.value)
         }
         onBlur={() => {
           props.onBlur;
-          props.validators &&
-            props.validators.forEach(({ validate, message }) => {
-              if (!validate(props.value)) setError(message);
-              else setError(undefined);
-            });
+          runInputValidators();
+        }}
+        onFocus={() => {
+          props.onFocus;
+          resetError();
         }}
       />
       {error && (

@@ -1,10 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../components/Button';
-import { Input } from '../../components/Input';
+import { Button } from '../../components/Form/Button';
+import { FormSubmit } from '../../components/Form/FormSubmit';
+import { Input } from '../../components/Form/Input';
 import { useUser } from '../../providers/UserProvider';
 import { maskCpf, maskEmail } from '../../utils/Masks';
-import { validateCpf } from '../../utils/Validators';
+import {
+  validateConfirmPassword,
+  validateCpf,
+  validateDate,
+  validateEmail,
+  validatePassword,
+  validateUsername,
+} from '../../utils/Validators';
 /**
  * Archive: src/pages/Home.tsx
  *
@@ -27,8 +35,14 @@ export const Home = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
+  const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const isLoginScreen = loginOrRegister === 'login';
+
+  function handleSubmit() {
+    if (isLoginScreen) navigate('/deposit');
+    else navigate('/deposit');
+  }
 
   function changeScreen() {
     setUsername('');
@@ -37,17 +51,8 @@ export const Home = () => {
     setEmail('');
     setPassword('');
     setConfirmPassword('');
+    setDisableSubmit(false);
     setLoginOrRegister(isLoginScreen ? 'register' : 'login');
-  }
-
-  function handleLogin() {
-    console.log('login');
-    navigate('/profile');
-  }
-
-  function handleRegister() {
-    console.log('register');
-    navigate('/profile');
   }
 
   function renderLoading() {
@@ -83,12 +88,13 @@ export const Home = () => {
       <>
         <Button
           category="primary"
+          type="submit"
           label={isLoginScreen ? 'Entrar' : 'Cadastrar'}
-          onClick={isLoginScreen ? () => handleLogin() : () => handleRegister()}
           className="mb-2"
+          isDisabled={disableSubmit}
         />
         <span
-          className="text-sm text-paragraph-dark"
+          className="text-sm text-paragraph-dark cursor-pointer"
           onClick={() => changeScreen()}
         >
           {isLoginScreen ? 'Crie sua conta' : 'Entrar'}
@@ -107,13 +113,23 @@ export const Home = () => {
           value={cpf}
           onChange={setCpf}
           mask={maskCpf}
-          validators={[{ validate: validateCpf, message: 'CPF inválido' }]}
+          validators={[
+            {
+              validate: validateCpf,
+              errorMessage: 'CPF inválido',
+            },
+          ]}
+          callback={setDisableSubmit}
         />
         <Input
           type="password"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
+          validators={[
+            { validate: validatePassword, errorMessage: 'Senha inválida' },
+          ]}
+          callback={setDisableSubmit}
         />
         {renderBottomButtons()}
       </>
@@ -129,12 +145,26 @@ export const Home = () => {
           placeholder="Digite seu nome"
           value={username}
           onChange={setUsername}
+          validators={[
+            {
+              validate: validateUsername,
+              errorMessage: 'Nome inválido',
+            },
+          ]}
+          callback={setDisableSubmit}
         />
         <Input
           type="date"
           placeholder="Digite sua data de nascimento"
           value={birthday}
           onChange={setBirthday}
+          validators={[
+            {
+              validate: validateDate,
+              errorMessage: 'Data inválida',
+            },
+          ]}
+          callback={setDisableSubmit}
         />
         <Input
           type="text"
@@ -142,6 +172,13 @@ export const Home = () => {
           value={cpf}
           onChange={setCpf}
           mask={maskCpf}
+          validators={[
+            {
+              validate: validateCpf,
+              errorMessage: 'CPF inválido',
+            },
+          ]}
+          callback={setDisableSubmit}
         />
         <Input
           type="text"
@@ -149,18 +186,34 @@ export const Home = () => {
           value={email}
           onChange={setEmail}
           mask={maskEmail}
+          validators={[
+            { validate: validateEmail, errorMessage: 'Email inválido' },
+          ]}
+          callback={setDisableSubmit}
         />
         <Input
           type="password"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
+          validators={[
+            { validate: validatePassword, errorMessage: 'Senha inválida' },
+          ]}
+          callback={setDisableSubmit}
         />
         <Input
           type="password"
           placeholder="Confirme sua senha"
           value={confirmPassword}
           onChange={setConfirmPassword}
+          validators={[
+            {
+              validate: () =>
+                validateConfirmPassword(password, confirmPassword),
+              errorMessage: 'Senha não confere',
+            },
+          ]}
+          callback={setDisableSubmit}
         />
         {renderBottomButtons()}
       </>
@@ -168,12 +221,12 @@ export const Home = () => {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <FormSubmit submitForm={handleSubmit}>
       {loading ? (
         renderLoading()
       ) : (
         <>{isLoginScreen ? renderLogin() : renderRegister()}</>
       )}
-    </div>
+    </FormSubmit>
   );
 };
