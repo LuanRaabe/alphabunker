@@ -1,3 +1,11 @@
+import {
+  ArrowLeft,
+  IdentificationCard,
+  UserCircle,
+  Vault,
+} from 'phosphor-react';
+import { useNavigate } from 'react-router-dom';
+import { WhiteCard } from '../../components/WhiteCard';
 import { useUser } from '../../providers/UserProvider';
 
 /**
@@ -12,6 +20,53 @@ import { useUser } from '../../providers/UserProvider';
 
 export const Profile = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
 
-  return <h1 className="text-white">{user?.name}</h1>;
+  return (
+    <div className="flex flex-col w-full h-full">
+      <div className="fixed top-0 flex flex-col items-center w-full h-52 rounded-b-3xl z-10 bg-brand-base">
+        <ArrowLeft
+          weight="bold"
+          className="absolute left-5 top-5 w-6 h-6 text-icon-light"
+          onClick={() => navigate(-1)}
+        />
+        <div className="rounded-full w-20 h-20 mt-11">
+          {user?.photo ? (
+            <img
+              src={user?.photo}
+              alt={user?.name + ' photo'}
+              className="w-full h-full"
+            />
+          ) : (
+            <UserCircle className="w-full h-full text-icon-light" />
+          )}
+        </div>
+        <span className="text-white text-xl mt-3">{user?.name}</span>
+      </div>
+      <div className="flex flex-col items-center mt-60 w-full">
+        <WhiteCard
+          icon={<IdentificationCard />}
+          title="Meu Dados"
+          childs={[
+            <>
+              <span>Nome: {user?.name}</span>
+              <span>Data de nascimento: {user?.birthDate}</span>
+              <span>CPF: {user?.cpf}</span>
+            </>,
+          ]}
+          className="mb-9"
+        />
+        <WhiteCard
+          icon={<Vault />}
+          title="Minhas contas correntes"
+          childs={user?.accounts.map((account) => (
+            <div className="flex flex-col" key={account.id}>
+              <span>Agência: {account.agencyNumber}</span>
+              <span>Conta: {account.accountNumber}</span>
+            </div>
+          ))}
+        />
+      </div>
+    </div>
+  );
 };

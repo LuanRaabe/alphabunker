@@ -20,7 +20,7 @@ import {
  *
  * Date: 2022/07/20
  *
- * Author: Rey
+ * Author: Rey, Luan
  */
 
 export const Home = () => {
