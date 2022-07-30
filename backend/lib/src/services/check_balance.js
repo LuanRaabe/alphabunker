@@ -13,6 +13,8 @@ exports.SearchBalanceService = void 0;
 const validators_1 = require("../validators");
 const utils_1 = require("../utils");
 const login_1 = require("../client/dao/postgres/login");
+const jsonwebtoken_1 = require("jsonwebtoken");
+const config_1 = require("../config");
 class SearchBalanceService {
     constructor() {
         this.balanceDataValidator = validators_1.BalanceDataValidator;
@@ -28,8 +30,14 @@ class SearchBalanceService {
                 const searchBalance = yield this.balanceTable(balance.ownerCpf, balance.password, balance.agency, balance.agencyDigit, balance.account, balance.accountDigit);
                 console.log(searchBalance);
                 if (searchBalance) {
+                    const token = (0, jsonwebtoken_1.sign)({ searchBalance }, config_1.auth.secret, {
+                        expiresIn: config_1.auth.expires
+                    });
                     return {
-                        data: searchBalance,
+                        data: {
+                            account: searchBalance,
+                            token: token
+                        },
                         messages: []
                     };
                 }
