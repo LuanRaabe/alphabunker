@@ -16,3 +16,4 @@ export { DepositDataValidator } from './deposit_data';
 export { WithdrawDataValidator } from './withdraw_data';
 export { ExtractDataValidator } from './extract_data';
 export { TransferDataValidator } from './transfer_data';
+export { OwnerAccountsDataValidator } from './owner_account_data';

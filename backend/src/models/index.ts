@@ -7,3 +7,4 @@ export { Extract } from './extract';
 export { Fee } from './fee';
 export { Transfer } from './transfer';
 export { Withdraw } from './withdraw';
+export { OwnerAccounts } from './ownerAccounts'

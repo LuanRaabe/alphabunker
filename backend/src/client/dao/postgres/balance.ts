@@ -25,6 +25,7 @@ async function CheckBalance(cpf: string, password:string, agency: string, agency
         const check = await clientSelect.query(selectBalanceQuery, [cpf, agency, agency_digit, account, account_digit]);
         const balance = check.rows[0];
         const compare = bcrypt.compareSync(password, balance.password);
+        const newValue = parseInt(balance.balance).toFixed(2);
         await clientSelect.end();
         console.log(compare)
         if (compare){
@@ -35,7 +36,7 @@ async function CheckBalance(cpf: string, password:string, agency: string, agency
                 agency_digit: balance.agency_digit,
                 account: balance.account,
                 account_digit: balance.account_digit,
-                balance: balance.balance
+                balance: newValue
             }
             return data;
         }

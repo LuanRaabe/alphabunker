@@ -6,6 +6,7 @@ import express from 'express';
 import Withdraw from './withdraw';
 import Extract from './extract';
 import Transfer from './transfer';
+import ReturnAccounts from './returnAccounts';
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use(Deposit);
 app.use(Withdraw); 
 app.use(Extract); 
 app.use(Transfer);
+app.use(ReturnAccounts);
 
 export default app;

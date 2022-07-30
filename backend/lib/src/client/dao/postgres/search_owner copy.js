@@ -12,44 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CheckBalance = void 0;
+exports.SearchOwner = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { Client } = require('pg');
-const bcrypt_1 = __importDefault(require("bcrypt"));
-function CheckBalance(cpf, password, agency, agency_digit, account, account_digit) {
+function SearchOwner(cpf) {
     return __awaiter(this, void 0, void 0, function* () {
         const clientSelect = new Client();
         try {
-            console.log('procurando usuario');
+            console.log('search');
             yield clientSelect.connect();
-            console.log('conectado ao banco, pagina balance');
-            const selectBalanceQuery = `
-        SELECT * FROM public.accounts
-        WHERE
-            owners_cpf=$1 and 
-            agency=$2 and 
-            agency_digit=$3 and
-            account=$4 and
-            account_digit=$5
+            console.log('conectado ao banco');
+            const selectOwnerQuery = `
+            SELECT cpf, id FROM public.owners
+                WHERE cpf = $1
         `;
-            const check = yield clientSelect.query(selectBalanceQuery, [cpf, agency, agency_digit, account, account_digit]);
-            const balance = check.rows[0];
-            const compare = bcrypt_1.default.compareSync(password, balance.password);
-            const newValue = parseInt(balance.balance).toFixed(2);
+            const check = yield clientSelect.query(selectOwnerQuery, [cpf]);
+            let id = check.rows[0].id;
             yield clientSelect.end();
-            console.log(compare);
-            if (compare) {
-                const data = {
-                    id: balance.id,
-                    owners_cpf: balance.owners_cpf,
-                    agency: balance.agency,
-                    agency_digit: balance.agency_digit,
-                    account: balance.account,
-                    account_digit: balance.account_digit,
-                    balance: newValue
-                };
-                return data;
+            if (check.rows.length !== 0) {
+                return id;
             }
             return false;
         }
@@ -59,4 +41,4 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
         }
     });
 }
-exports.CheckBalance = CheckBalance;
+exports.SearchOwner = SearchOwner;

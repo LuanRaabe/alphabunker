@@ -5,3 +5,4 @@ export { MakeDeposit } from './create_deposit';
 export { MakeWithdraw } from './make_withdraw';
 export { SearchExtract } from './check_extract';
 export { MakeTransfer } from './make_transfer';
+export { SearchOwnerAccounts } from './get_accounts';
