@@ -5,3 +5,4 @@ export { CreateDepositService } from './create_deposit';
 export {CreateWithdrawService} from './make_withdraw';
 export { SearchExtractService } from './check_extract';
 export { CreateTransferService } from './make_transfer';
+export {SearchOwnerAccountsService} from './check_accounts';

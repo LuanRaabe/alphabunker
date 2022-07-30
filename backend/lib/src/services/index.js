@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateTransferService = exports.SearchExtractService = exports.CreateWithdrawService = exports.CreateDepositService = exports.SearchBalanceService = exports.CreateOwnerService = exports.CreateAccountService = void 0;
+exports.SearchOwnerAccountsService = exports.CreateTransferService = exports.SearchExtractService = exports.CreateWithdrawService = exports.CreateDepositService = exports.SearchBalanceService = exports.CreateOwnerService = exports.CreateAccountService = void 0;
 var create_account_1 = require("./create_account");
 Object.defineProperty(exports, "CreateAccountService", { enumerable: true, get: function () { return create_account_1.CreateAccountService; } });
 var create_owner_1 = require("./create_owner");
@@ -15,3 +15,5 @@ var check_extract_1 = require("./check_extract");
 Object.defineProperty(exports, "SearchExtractService", { enumerable: true, get: function () { return check_extract_1.SearchExtractService; } });
 var make_transfer_1 = require("./make_transfer");
 Object.defineProperty(exports, "CreateTransferService", { enumerable: true, get: function () { return make_transfer_1.CreateTransferService; } });
+var check_accounts_1 = require("./check_accounts");
+Object.defineProperty(exports, "SearchOwnerAccountsService", { enumerable: true, get: function () { return check_accounts_1.SearchOwnerAccountsService; } });

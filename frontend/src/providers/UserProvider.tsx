@@ -6,6 +6,8 @@ import {
   useEffect,
 } from 'react';
 
+//import { api, createSession } from '../libs/api';
+
 interface ContextTypes {
   user: UserTypes;
   loading: boolean;
@@ -23,9 +25,13 @@ interface UserTypes {
 
 interface AccountTypes {
   id: string;
-  extract: number;
-  agencyNumber: string;
-  accountNumber: string;
+  cpf: string;
+  password: string;
+  agency: string;
+  agencyDigit: string;
+  account: string;
+  accountDigit: string;
+  balance: string;
 }
 
 export const UserContext = createContext<Partial<ContextTypes>>({});
@@ -33,6 +39,7 @@ export const UserContext = createContext<Partial<ContextTypes>>({});
 interface UserProviderTypes {
   children: ReactNode;
 }
+
 
 export const UserProvider = ({ children }: UserProviderTypes) => {
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
@@ -47,22 +54,34 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       accounts: [
         {
           id: '1',
-          extract: 234,
-          agencyNumber: '123',
-          accountNumber: '987654321',
+          cpf: '34515222617',
+          password: 'jubileu',
+          balance: '234',
+          agency: '123',
+          agencyDigit: '6',
+          account: '9876',
+          accountDigit: '5'
         },
         {
           id: '2',
-          extract: 100,
-          agencyNumber: '321',
-          accountNumber: '123456789',
+          cpf: '34515552617',
+          password: 'jubileu',
+          balance: '321',
+          agency: '564',
+          agencyDigit: '6',
+          account: '6658',
+          accountDigit: '5'
         },
       ],
       loggedAccount: {
         id: '1',
-        extract: 234,
-        agencyNumber: '123',
-        accountNumber: '987654321',
+        cpf: '34515222617',
+        password: 'jubileu',
+        balance: '234',
+        agency: '123',
+        agencyDigit: '6',
+        account: '9876',
+        accountDigit: '5'
       },
     });
   }, []);

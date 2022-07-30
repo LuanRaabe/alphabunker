@@ -58,10 +58,10 @@ export function Menu() {
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
             <span className="text-header-gold text-sm mr-2">
-              Agência: {user?.loggedAccount.agencyNumber}
+              Agência: {user?.loggedAccount.agency + '-' + user?.loggedAccount.agencyDigit}
             </span>
             <span className="text-header-gold text-sm">
-              Conta: {user?.loggedAccount.accountNumber}
+              Conta: {user?.loggedAccount.account + '-' + user?.loggedAccount.accountDigit}
             </span>
           </div>
           <CaretDown weight="bold" className="w-6 h-6 text-icon-dark-200" />
@@ -70,7 +70,7 @@ export function Menu() {
           <Eye weight="bold" className="w-6 h-6 mx-1 text-icon-dark-200" />
           <div className="flex flex-row items-end">
             <span className="text-2xl mr-1">
-              {user?.loggedAccount.extract?.toFixed(2)}
+              {user?.loggedAccount.balance}
             </span>
             <span className="text-sm">R$</span>
           </div>

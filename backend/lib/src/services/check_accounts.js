@@ -9,39 +9,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchBalanceService = void 0;
+exports.SearchOwnerAccountsService = void 0;
 const validators_1 = require("../validators");
 const utils_1 = require("../utils");
-const login_1 = require("../client/dao/postgres/login");
-class SearchBalanceService {
+const search_owner_accounts_1 = require("../client/dao/postgres/search_owner_accounts");
+class SearchOwnerAccountsService {
     constructor() {
-        this.balanceDataValidator = validators_1.BalanceDataValidator;
-        this.balanceTable = login_1.CheckBalance;
+        this.ownerAccountsDataValidator = validators_1.OwnerAccountsDataValidator;
+        this.searchAccount = search_owner_accounts_1.SearchOwnerAccount;
     }
-    execute(balance) {
+    execute(ownerAccounts) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const validBalanceData = new this.balanceDataValidator(balance);
-                if (validBalanceData.errors) {
-                    throw new Error(`400: ${validBalanceData.errors}`);
+                const validOwnerAccountData = new this.ownerAccountsDataValidator(ownerAccounts);
+                if (validOwnerAccountData.errors) {
+                    throw new Error(`400: ${validOwnerAccountData.errors}`);
                 }
-                const searchBalance = yield this.balanceTable(balance.ownerCpf, balance.password, balance.agency, balance.agencyDigit, balance.account, balance.accountDigit);
-                console.log(searchBalance);
-                if (searchBalance) {
+                const searchOwnerAccounts = yield this.searchAccount(ownerAccounts.cpf);
+                console.log(searchOwnerAccounts);
+                if (searchOwnerAccounts) {
                     return {
-                        data: searchBalance,
+                        data: searchOwnerAccounts,
                         messages: []
                     };
                 }
                 return {
                     data: {},
-                    messages: ["an error occurred while searching for the account"]
+                    messages: ["O usuário não foi encontrado"]
                 };
             }
             catch (error) {
-                throw new utils_1.ExceptionTreatment(error, 500, "an error occurred while searching for the account");
+                throw new utils_1.ExceptionTreatment(error, 500, "an error occurred while searching for the owner");
             }
         });
     }
 }
-exports.SearchBalanceService = SearchBalanceService;
+exports.SearchOwnerAccountsService = SearchOwnerAccountsService;
