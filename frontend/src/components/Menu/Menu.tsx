@@ -22,13 +22,13 @@ import { useUser } from '../../providers/UserProvider';
  */
 
 export function Menu() {
-  const { user } = useUser();
+  const { user, loggedAccount } = useUser();
   const navigate = useNavigate();
 
   return (
     <div
-      className="fixed top-0 flex flex-col items-center
-      w-full h-52
+      className="relative top-0 flex flex-col items-center
+      w-full h-52 mb-20
       bg-header-menu rounded-b-3xl
       text-white"
     >
@@ -58,10 +58,12 @@ export function Menu() {
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
             <span className="text-header-gold text-sm mr-2">
-              Agência: {user?.loggedAccount.agency + '-' + user?.loggedAccount.agencyDigit}
+              Agência:{' '}
+              {loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
             </span>
             <span className="text-header-gold text-sm">
-              Conta: {user?.loggedAccount.account + '-' + user?.loggedAccount.accountDigit}
+              Conta:{' '}
+              {loggedAccount?.account + '-' + loggedAccount?.accountDigit}
             </span>
           </div>
           <CaretDown weight="bold" className="w-6 h-6 text-icon-dark-200" />
@@ -69,9 +71,7 @@ export function Menu() {
         <div className="flex flex-row items-center text-brand-base">
           <Eye weight="bold" className="w-6 h-6 mx-1 text-icon-dark-200" />
           <div className="flex flex-row items-end">
-            <span className="text-2xl mr-1">
-              {user?.loggedAccount.balance}
-            </span>
+            <span className="text-2xl mr-1">{loggedAccount?.balance}</span>
             <span className="text-sm">R$</span>
           </div>
         </div>
