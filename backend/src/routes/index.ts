@@ -1,6 +1,6 @@
 import Owner from './owner';
 import Account from './account';
-import Balance from './balance';
+import Login from './login';
 import Deposit from './deposit';
 import express from 'express';
 import Withdraw from './withdraw';
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use(Owner);
 app.use(Account);
-app.use(Balance);
+app.use(Login);
 app.use(Deposit);
 app.use(Withdraw); 
 app.use(Extract); 

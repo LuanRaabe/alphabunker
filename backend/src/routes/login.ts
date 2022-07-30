@@ -3,7 +3,7 @@ import { Router } from 'express';
 
 const route = Router();
 
-route.route('/balance')
+route.route('/login')
     .post(new SearchBalance().handle.bind(new SearchBalance()));
 
 

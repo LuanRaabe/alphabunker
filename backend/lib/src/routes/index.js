@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const owner_1 = __importDefault(require("./owner"));
 const account_1 = __importDefault(require("./account"));
-const balance_1 = __importDefault(require("./balance"));
+const login_1 = __importDefault(require("./login"));
 const deposit_1 = __importDefault(require("./deposit"));
 const express_1 = __importDefault(require("express"));
 const withdraw_1 = __importDefault(require("./withdraw"));
@@ -17,7 +17,7 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use(express_1.default.json());
 app.use(owner_1.default);
 app.use(account_1.default);
-app.use(balance_1.default);
+app.use(login_1.default);
 app.use(deposit_1.default);
 app.use(withdraw_1.default);
 app.use(extract_1.default);

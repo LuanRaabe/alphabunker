@@ -24,21 +24,34 @@ async function CheckBalance(cpf: string, password:string, agency: string, agency
         `;
         const check = await clientSelect.query(selectBalanceQuery, [cpf, agency, agency_digit, account, account_digit]);
         const balance = check.rows[0];
+        if(balance === 0){
+            return false;
+        }
         const compare = bcrypt.compareSync(password, balance.password);
         const newValue = parseInt(balance.balance).toFixed(2);
-        await clientSelect.end();
         console.log(compare)
         if (compare){
-            const data = {
-                id: balance.id,
-                owners_cpf: balance.owners_cpf,
-                agency: balance.agency,
-                agency_digit: balance.agency_digit,
-                account: balance.account,
-                account_digit: balance.account_digit,
-                balance: newValue
+            const selectOwner = `
+            SELECT name FROM public.owners
+            WHERE
+                cpf=$1
+            `;
+            const checkName = await clientSelect.query(selectOwner, [cpf]);
+            const name = checkName.rows[0].name;
+            await clientSelect.end();
+            if(name !== 0){
+                const data = {
+                    id: balance.id,
+                    name: name,
+                    owners_cpf: balance.owners_cpf,
+                    agency: balance.agency,
+                    agency_digit: balance.agency_digit,
+                    account: balance.account,
+                    account_digit: balance.account_digit,
+                    balance: newValue
+                }
+                return data;
             }
-            return data;
         }
         
         return false

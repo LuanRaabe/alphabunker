@@ -1,7 +1,7 @@
 import { APIResponse, Balance } from '../models';
 import { BalanceDataValidator } from '../validators';
 import { ExceptionTreatment } from "../utils";
-import { CheckBalance } from '../client/dao/postgres/balance';
+import { CheckBalance } from '../client/dao/postgres/login';
 
 
 class SearchBalanceService{

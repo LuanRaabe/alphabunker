@@ -12,11 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SearchBalanceService = void 0;
 const validators_1 = require("../validators");
 const utils_1 = require("../utils");
-const balance_1 = require("../client/dao/postgres/balance");
+const login_1 = require("../client/dao/postgres/login");
 class SearchBalanceService {
     constructor() {
         this.balanceDataValidator = validators_1.BalanceDataValidator;
-        this.balanceTable = balance_1.CheckBalance;
+        this.balanceTable = login_1.CheckBalance;
     }
     execute(balance) {
         return __awaiter(this, void 0, void 0, function* () {
