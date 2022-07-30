@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { ReactNode } from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { useUser } from '../providers/UserProvider';
 
@@ -9,44 +9,40 @@ import { Deposit } from '../pages/Deposit';
 import { Withdraw } from '../pages/Withdraw';
 import { Profile } from '../pages/Profile';
 import { Transaction } from '../pages/Transaction';
-import { useMenu } from '../providers/MenuProviders';
+import { Menu } from '../components/Menu/Menu';
 
 interface ChildrenTypes {
-  callback: () => void;
-  children: ReactElement;
+  children: ReactNode;
 }
 
-const Private = ({ children, callback }: ChildrenTypes) => {
+const Private = ({ children }: ChildrenTypes): JSX.Element => {
   const { user } = useUser();
 
   if (!user) {
     return <Navigate to="/home" />;
   }
 
-  callback();
-  return children;
+  return <>{children}</>;
 };
 
-const Public = ({ children, callback }: ChildrenTypes) => {
+const Public = ({ children }: ChildrenTypes): JSX.Element => {
   const { user } = useUser();
 
   if (user) {
-    return <Navigate to="/deposit" />;
+    return <Navigate to="/extract" />;
   }
 
-  callback();
-  return children;
+  return <>{children}</>;
 };
 
 export const Router = () => {
-  const { toggleMenu } = useMenu();
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/home" />} />
       <Route
         path="/home"
         element={
-          <Public callback={() => toggleMenu(false)}>
+          <Public>
             <Home />
           </Public>
         }
@@ -54,7 +50,8 @@ export const Router = () => {
       <Route
         path="/deposit"
         element={
-          <Private callback={() => toggleMenu(true)}>
+          <Private>
+            <Menu />
             <Deposit />
           </Private>
         }
@@ -62,7 +59,8 @@ export const Router = () => {
       <Route
         path="/extract"
         element={
-          <Private callback={() => toggleMenu(true)}>
+          <Private>
+            <Menu />
             <Extract />
           </Private>
         }
@@ -70,7 +68,8 @@ export const Router = () => {
       <Route
         path="/transfer"
         element={
-          <Private callback={() => toggleMenu(true)}>
+          <Private>
+            <Menu />
             <Transfer />
           </Private>
         }
@@ -78,7 +77,8 @@ export const Router = () => {
       <Route
         path="/withdraw"
         element={
-          <Private callback={() => toggleMenu(true)}>
+          <Private>
+            <Menu />
             <Withdraw />
           </Private>
         }
@@ -86,7 +86,7 @@ export const Router = () => {
       <Route
         path="/profile"
         element={
-          <Private callback={() => toggleMenu(false)}>
+          <Private>
             <Profile />
           </Private>
         }

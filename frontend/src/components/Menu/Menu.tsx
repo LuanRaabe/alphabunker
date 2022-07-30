@@ -9,14 +9,7 @@ import {
 } from 'phosphor-react';
 import { SectionButton } from './SectionButton';
 import { useNavigate } from 'react-router-dom';
-
-interface MenuProps {
-  username: string;
-  userphoto?: string;
-  extract: number;
-  agencyNumber: string;
-  accountNumber: string;
-}
+import { useUser } from '../../providers/UserProvider';
 
 /**
  * Archive: src/components/Menu.tsx
@@ -28,7 +21,8 @@ interface MenuProps {
  * Author: Luan
  */
 
-export function Menu(props: MenuProps) {
+export function Menu() {
+  const { user } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -39,7 +33,7 @@ export function Menu(props: MenuProps) {
       text-white"
     >
       <div className="flex flex-row items-center justify-between my-7 w-4/5">
-        <span className="text-xl">Bem vindo, {props.username}!</span>
+        <span className="text-xl cursor-pointer">Bem vindo, {user?.name}!</span>
         <UserCircle
           weight="bold"
           className="w-6 h-6"
@@ -64,10 +58,10 @@ export function Menu(props: MenuProps) {
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
             <span className="text-header-gold text-sm mr-2">
-              Agência: {props.agencyNumber}
+              Agência: {user?.loggedAccount.agencyNumber}
             </span>
             <span className="text-header-gold text-sm">
-              Conta: {props.accountNumber}
+              Conta: {user?.loggedAccount.accountNumber}
             </span>
           </div>
           <CaretDown weight="bold" className="w-6 h-6 text-icon-dark-200" />
@@ -75,7 +69,9 @@ export function Menu(props: MenuProps) {
         <div className="flex flex-row items-center text-brand-base">
           <Eye weight="bold" className="w-6 h-6 mx-1 text-icon-dark-200" />
           <div className="flex flex-row items-end">
-            <span className="text-2xl mr-1">{props.extract.toFixed(2)}</span>
+            <span className="text-2xl mr-1">
+              {user?.loggedAccount.extract?.toFixed(2)}
+            </span>
             <span className="text-sm">R$</span>
           </div>
         </div>

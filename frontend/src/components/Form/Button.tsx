@@ -16,7 +16,7 @@ interface PropTypes {
  *
  * Date: 2022/07/22
  *
- * Author: Rey
+ * Author: Rey, Luan
  */
 
 export const Button = ({

@@ -18,6 +18,16 @@ interface InputProps {
   callback?: (value: boolean) => void;
 }
 
+/**
+ * Archive: src/components/Button.tsx
+ *
+ * Description: Button component
+ *
+ * Date: 2022/07/28
+ *
+ * Author: Luan
+ */
+
 export function Input(props: InputProps) {
   const [error, setError] = useState<string | undefined>(undefined);
 
