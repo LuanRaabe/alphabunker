@@ -40,7 +40,6 @@ interface UserProviderTypes {
   children: ReactNode;
 }
 
-
 export const UserProvider = ({ children }: UserProviderTypes) => {
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -60,7 +59,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
           agency: '123',
           agencyDigit: '6',
           account: '9876',
-          accountDigit: '5'
+          accountDigit: '5',
         },
         {
           id: '2',
@@ -70,7 +69,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
           agency: '564',
           agencyDigit: '6',
           account: '6658',
-          accountDigit: '5'
+          accountDigit: '5',
         },
       ],
       loggedAccount: {
@@ -81,7 +80,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agency: '123',
         agencyDigit: '6',
         account: '9876',
-        accountDigit: '5'
+        accountDigit: '5',
       },
     });
   }, []);
