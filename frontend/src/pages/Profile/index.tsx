@@ -27,7 +27,7 @@ export const Profile = () => {
       <div className="fixed top-0 flex flex-col items-center w-full h-52 rounded-b-3xl z-10 bg-brand-base">
         <ArrowLeft
           weight="bold"
-          className="absolute left-5 top-5 w-6 h-6 text-icon-light"
+          className="absolute left-5 top-5 w-6 h-6 text-icon-light cursor-pointer"
           onClick={() => navigate(-1)}
         />
         <div className="rounded-full w-20 h-20 mt-11">
@@ -45,7 +45,7 @@ export const Profile = () => {
       </div>
       <div className="flex flex-col items-center mt-60 w-full">
         <WhiteCard
-          icon={<IdentificationCard />}
+          icon={<IdentificationCard className="w-5 h-5" />}
           title="Meu Dados"
           childs={[
             <>
@@ -57,7 +57,7 @@ export const Profile = () => {
           className="mb-9"
         />
         <WhiteCard
-          icon={<Vault />}
+          icon={<Vault className="w-5 h-5" />}
           title="Minhas contas correntes"
           childs={user?.accounts.map((account) => (
             <div className="flex flex-col" key={account.id}>

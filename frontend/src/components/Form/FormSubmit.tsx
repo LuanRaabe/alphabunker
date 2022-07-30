@@ -6,9 +6,9 @@ interface FormSubmitProps {
 }
 
 /**
- * Archive: src/components/Button.tsx
+ * Archive: src/components/FormSubmit.tsx
  *
- * Description: Button component
+ * Description: FormSubmit component
  *
  * Date: 2022/07/28
  *

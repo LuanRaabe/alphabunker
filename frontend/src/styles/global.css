@@ -54,3 +54,8 @@ select {
 .bg-input {
   @apply bg-input-base;
 }
+
+.small-input {
+  @apply bg-input-base border-input-border disabled:bg-input-readonly
+  rounded-md p-3;
+}

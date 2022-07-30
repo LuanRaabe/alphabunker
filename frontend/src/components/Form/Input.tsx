@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-interface ValidatorsType {
+export interface ValidatorsType {
   validate: (value: string) => boolean;
   errorMessage: string;
 }
 
-interface InputProps {
+export interface InputProps {
   type?: string;
   placeholder?: string;
   required?: boolean;
@@ -19,9 +19,9 @@ interface InputProps {
 }
 
 /**
- * Archive: src/components/Button.tsx
+ * Archive: src/components/Form/Input.tsx
  *
- * Description: Button component
+ * Description: Input component
  *
  * Date: 2022/07/28
  *
