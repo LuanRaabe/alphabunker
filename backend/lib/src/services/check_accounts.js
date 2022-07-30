@@ -25,7 +25,7 @@ class SearchOwnerAccountsService {
                 if (validOwnerAccountData.errors) {
                     throw new Error(`400: ${validOwnerAccountData.errors}`);
                 }
-                const searchOwnerAccounts = yield this.searchAccount(ownerAccounts.cpf, ownerAccounts.name);
+                const searchOwnerAccounts = yield this.searchAccount(ownerAccounts.cpf);
                 console.log(searchOwnerAccounts);
                 if (searchOwnerAccounts) {
                     return {

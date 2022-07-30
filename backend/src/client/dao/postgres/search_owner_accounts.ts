@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const { Client } = require('pg');
 
-async function SearchOwnerAccount(cpf: string, name: string){
+async function SearchOwnerAccount(cpf: string){
    
     const clientSelect = new Client();
         
@@ -15,11 +15,10 @@ async function SearchOwnerAccount(cpf: string, name: string){
 
         const selectOwnerQuery = `
             SELECT cpf, id FROM public.owners
-                WHERE cpf = $1 AND
-                name = $2
+                WHERE cpf = $1 
         `;
 
-        const check = await clientSelect.query(selectOwnerQuery, [cpf, name]);
+        const check = await clientSelect.query(selectOwnerQuery, [cpf]);
         if (check.rows.length === 0){
             await clientSelect.end();
             console.log('foi')

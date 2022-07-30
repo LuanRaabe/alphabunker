@@ -18,7 +18,7 @@ class SearchOwnerAccountsService{
                 throw new Error(`400: ${validOwnerAccountData.errors}`);
             }
 
-            const searchOwnerAccounts = await this.searchAccount(ownerAccounts.cpf, ownerAccounts.name);
+            const searchOwnerAccounts = await this.searchAccount(ownerAccounts.cpf);
             console.log(searchOwnerAccounts);
 
             if(searchOwnerAccounts){

@@ -17,7 +17,7 @@ exports.SearchOwnerAccount = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { Client } = require('pg');
-function SearchOwnerAccount(cpf, name) {
+function SearchOwnerAccount(cpf) {
     return __awaiter(this, void 0, void 0, function* () {
         const clientSelect = new Client();
         try {
@@ -26,10 +26,9 @@ function SearchOwnerAccount(cpf, name) {
             console.log('conectado ao banco');
             const selectOwnerQuery = `
             SELECT cpf, id FROM public.owners
-                WHERE cpf = $1 AND
-                name = $2
+                WHERE cpf = $1 
         `;
-            const check = yield clientSelect.query(selectOwnerQuery, [cpf, name]);
+            const check = yield clientSelect.query(selectOwnerQuery, [cpf]);
             if (check.rows.length === 0) {
                 yield clientSelect.end();
                 console.log('foi');
