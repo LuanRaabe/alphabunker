@@ -33,7 +33,7 @@ export function Menu() {
       text-white"
     >
       <div className="flex flex-row items-center justify-between my-7 w-4/5">
-        <span className="text-xl">Bem vindo, {user?.name}!</span>
+        <span className="text-xl cursor-pointer">Bem vindo, {user?.name}!</span>
         <UserCircle
           weight="bold"
           className="w-6 h-6"

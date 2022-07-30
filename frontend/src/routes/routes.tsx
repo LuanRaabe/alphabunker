@@ -29,7 +29,7 @@ const Public = ({ children }: ChildrenTypes): JSX.Element => {
   const { user } = useUser();
 
   if (user) {
-    return <Navigate to="/deposit" />;
+    return <Navigate to="/extract" />;
   }
 
   return <>{children}</>;
