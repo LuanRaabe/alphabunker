@@ -59,3 +59,8 @@ export function validateUsername(username: string): boolean {
   const usernameFormatted = username.replace(/\s/g, '');
   return usernameFormatted.length >= 1;
 }
+
+export function validateValue(value: string): boolean {
+  const numberValue = Number(value.replace(/\D/g, ''));
+  return !(numberValue === 0);
+}
