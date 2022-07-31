@@ -41,7 +41,7 @@ export class BankAPI {
     cpf: string,
     birthdate: string,
   ) {
-    const response = await this.api.post('/create-account', {
+    const response = await this.api.post('/create', {
       name,
       email,
       cpf,
@@ -77,7 +77,7 @@ export class BankAPI {
     agencyDigit: string,
     value: number,
   ) {
-    const response = await this.api.post('/withdrawal', {
+    const response = await this.api.post('/withdraw', {
       ownerCpf,
       account,
       accountDigit,
@@ -95,7 +95,7 @@ export class BankAPI {
     agency: string,
     agencyDigit: string,
   ) {
-    const response = await this.api.post('/transactions', {
+    const response = await this.api.post('/extract', {
       ownerCpf,
       account,
       accountDigit,
@@ -132,6 +132,13 @@ export class BankAPI {
       transferAgency,
       transferAgencyDigit,
       value,
+    });
+    return response.data;
+  }
+
+  async getAccounts(ownerCpf: string) {
+    const response = await this.api.post('/accounts', {
+      ownerCpf,
     });
     return response.data;
   }
