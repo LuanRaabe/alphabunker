@@ -5,5 +5,5 @@ export const api = axios.create({
 });
 
 export const createSession = async (ownerCpf: string, password: string, account: string, accountDigit: string, agency: string, agencyDigit: string) => {
-  return api.post('/balance', {ownerCpf, password, account, accountDigit, agency, agencyDigit});
+  return api.post('/login', {ownerCpf, password, account, accountDigit, agency, agencyDigit});
 };

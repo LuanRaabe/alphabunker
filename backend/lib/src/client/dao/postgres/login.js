@@ -64,7 +64,7 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
                     return data;
                 }
             }
-            return 'Senha inválida';
+            return false;
         }
         catch (error) {
             yield clientSelect.end();
