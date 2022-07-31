@@ -1,5 +1,6 @@
 import { ArrowsLeftRight } from 'phosphor-react';
 import { useState } from 'react';
+import { Button } from '../../components/Form/Button';
 import { Input } from '../../components/Form/Input';
 import { SmallInput } from '../../components/Form/Panel/SmallInput';
 import { WhiteCard } from '../../components/WhiteCard';
@@ -17,7 +18,7 @@ import { maskAccountNumber, maskAgencyNumber } from '../../utils/Masks';
  */
 
 export const Transfer = () => {
-  const { user } = useUser();
+  const { user, loggedAccount } = useUser();
   const [agencyNumber, setAgencyNumber] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
@@ -34,12 +35,12 @@ export const Transfer = () => {
         <SmallInput
           title="Agência"
           isDisabled={true}
-          value={user?.loggedAccount.agency}
+          value={loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
         />
         <SmallInput
           title="Conta"
           isDisabled={true}
-          value={user?.loggedAccount.account}
+          value={loggedAccount?.account + '-' + loggedAccount?.accountDigit}
         />
       </div>
       <span className="text-base font-normal">Destino</span>
@@ -71,6 +72,7 @@ export const Transfer = () => {
         value={password}
         onChange={setPassword}
       />
+      <Button category="primary" label="Transferir" />
     </WhiteCard>
   );
 };

@@ -10,6 +10,8 @@ import {
 
 interface ContextTypes {
   user: UserTypes;
+  accounts: AccountTypes[];
+  loggedAccount: AccountTypes;
   loading: boolean;
 }
 
@@ -19,8 +21,6 @@ interface UserTypes {
   cpf: string;
   birthDate: string;
   photo?: string;
-  accounts: AccountTypes[];
-  loggedAccount: AccountTypes;
 }
 
 interface AccountTypes {
@@ -40,9 +40,14 @@ interface UserProviderTypes {
   children: ReactNode;
 }
 
-
 export const UserProvider = ({ children }: UserProviderTypes) => {
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
+  const [accounts, setAccounts] = useState<AccountTypes[] | undefined>(
+    undefined,
+  );
+  const [loggedAccount, setLoggedAccount] = useState<AccountTypes | undefined>(
+    undefined,
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -51,29 +56,9 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       email: 'fulano@mail.com',
       cpf: '123456789',
       birthDate: '01/01/2000',
-      accounts: [
-        {
-          id: '1',
-          cpf: '34515222617',
-          password: 'jubileu',
-          balance: '234',
-          agency: '123',
-          agencyDigit: '6',
-          account: '9876',
-          accountDigit: '5'
-        },
-        {
-          id: '2',
-          cpf: '34515552617',
-          password: 'jubileu',
-          balance: '321',
-          agency: '564',
-          agencyDigit: '6',
-          account: '6658',
-          accountDigit: '5'
-        },
-      ],
-      loggedAccount: {
+    });
+    setAccounts([
+      {
         id: '1',
         cpf: '34515222617',
         password: 'jubileu',
@@ -81,8 +66,28 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agency: '123',
         agencyDigit: '6',
         account: '9876',
-        accountDigit: '5'
+        accountDigit: '5',
       },
+      {
+        id: '2',
+        cpf: '34515552617',
+        password: 'jubileu',
+        balance: '321',
+        agency: '564',
+        agencyDigit: '6',
+        account: '6658',
+        accountDigit: '5',
+      },
+    ]);
+    setLoggedAccount({
+      id: '1',
+      cpf: '34515222617',
+      password: 'jubileu',
+      balance: '234',
+      agency: '123',
+      agencyDigit: '6',
+      account: '9876',
+      accountDigit: '5',
     });
   }, []);
 
@@ -90,6 +95,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     <UserContext.Provider
       value={{
         user,
+        accounts,
+        loggedAccount,
         loading,
       }}
     >
