@@ -43,7 +43,7 @@ class SearchBalanceService {
                 }
                 return {
                     data: {},
-                    messages: ["an error occurred while searching for the account"]
+                    messages: ["Senha ou conta inválidos"]
                 };
             }
             catch (error) {

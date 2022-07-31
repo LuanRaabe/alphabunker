@@ -35,10 +35,11 @@ class SearchBalanceService{
                     
                 } as APIResponse;
             }
+            
 
             return {
                 data: {},
-                messages: [ "an error occurred while searching for the account" ]
+                messages: [ "Senha ou conta inválidos" ]
             } as APIResponse;
 
         }
