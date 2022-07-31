@@ -5,6 +5,7 @@ import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
 import { useUser } from '../../providers/UserProvider';
 import { maskCpf, maskEmail } from '../../utils/Masks';
+import { InputReferences } from '../../utils/References';
 import {
   validateConfirmPassword,
   validateCpf,
@@ -24,6 +25,7 @@ import {
  */
 
 export const Home = () => {
+  const references = InputReferences();
   const navigate = useNavigate();
   const { loading } = useUser();
   const [loginOrRegister, setLoginOrRegister] = useState<'login' | 'register'>(
@@ -40,6 +42,10 @@ export const Home = () => {
   const isLoginScreen = loginOrRegister === 'login';
 
   function handleSubmit() {
+    //request api
+    //se der erro
+    // references.setError(name, mensagemdeerro);
+    //
     if (isLoginScreen) navigate('/deposit');
     else navigate('/deposit');
   }
@@ -108,6 +114,7 @@ export const Home = () => {
       <>
         {renderLogo()}
         <Input
+          name="cpflogin"
           type="text"
           placeholder="Digite seu CPF"
           value={cpf}
@@ -120,8 +127,10 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('cpflogin')}
         />
         <Input
+          name="passwordlogin"
           type="password"
           placeholder="Digite sua senha"
           value={password}
@@ -130,6 +139,7 @@ export const Home = () => {
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('passwordlogin')}
         />
         {renderBottomButtons()}
       </>
@@ -141,6 +151,7 @@ export const Home = () => {
       <>
         {renderLogo()}
         <Input
+          name="name"
           type="text"
           placeholder="Digite seu nome"
           value={username}
@@ -152,8 +163,10 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('name')}
         />
         <Input
+          name="date"
           type="date"
           placeholder="Digite sua data de nascimento"
           value={birthday}
@@ -165,8 +178,10 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('date')}
         />
         <Input
+          name="cpf"
           type="text"
           placeholder="Digite seu CPF"
           value={cpf}
@@ -179,8 +194,10 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('cpf')}
         />
         <Input
+          name="email"
           type="text"
           placeholder="Digite seu e-mail"
           value={email}
@@ -190,8 +207,10 @@ export const Home = () => {
             { validate: validateEmail, errorMessage: 'Email inválido' },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('email')}
         />
         <Input
+          name="password"
           type="password"
           placeholder="Digite sua senha"
           value={password}
@@ -200,8 +219,10 @@ export const Home = () => {
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('password')}
         />
         <Input
+          name="passwordconfirm"
           type="password"
           placeholder="Confirme sua senha"
           value={confirmPassword}
@@ -214,6 +235,7 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
+          ref={references.getOrCrateRef('passwordconfirm')}
         />
         {renderBottomButtons()}
       </>

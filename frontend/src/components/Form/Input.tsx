@@ -1,12 +1,19 @@
-import { useEffect, useState } from 'react';
+import {
+  forwardRef,
+  ForwardRefRenderFunction,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 
-export interface ValidatorsType {
+interface ValidatorsType {
   validate: (value: string) => boolean;
   errorMessage: string;
 }
 
-export interface InputProps {
+interface InputProps {
   type?: string;
+  name: string;
   placeholder?: string;
   required?: boolean;
   value: string;
@@ -18,6 +25,10 @@ export interface InputProps {
   callback?: (value: boolean) => void;
 }
 
+interface InputHandle {
+  triggerError: (name: string, error: string) => void;
+  resetError: () => void;
+}
 /**
  * Archive: src/components/Form/Input.tsx
  *
@@ -28,7 +39,10 @@ export interface InputProps {
  * Author: Luan
  */
 
-export function Input(props: InputProps) {
+const InputRef: ForwardRefRenderFunction<InputHandle, InputProps> = (
+  props: InputProps,
+  ref: any,
+) => {
   const [error, setError] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -49,6 +63,16 @@ export function Input(props: InputProps) {
     setError(undefined);
   }
 
+  useImperativeHandle(ref, () => ({
+    triggerError(error: string) {
+      console.log('chamou em', props.name);
+      setError(error ? error : 'Ocorreu um erro aqui');
+    },
+    resetError() {
+      setError(undefined);
+    },
+  }));
+
   return (
     <div className="relative flex flex-col">
       <input
@@ -56,7 +80,6 @@ export function Input(props: InputProps) {
         type={props.type ?? 'text'}
         placeholder={props.placeholder ?? ''}
         required={!!props.required}
-        value={props.value}
         onChange={(e) =>
           props.onChange(props.mask?.(e.target.value) || e.target.value)
         }
@@ -76,4 +99,6 @@ export function Input(props: InputProps) {
       )}
     </div>
   );
-}
+};
+
+export const Input = forwardRef(InputRef);
