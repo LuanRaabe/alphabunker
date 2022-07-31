@@ -32,7 +32,7 @@ export class BankAPI {
       agency,
       agencyDigit,
     });
-    return response.data;
+    return response;
   }
 
   async createAccount(
@@ -47,7 +47,7 @@ export class BankAPI {
       cpf,
       birthdate,
     });
-    return response.data;
+    return response;
   }
 
   async makeDeposit(
@@ -66,7 +66,7 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response.data;
+    return response;
   }
 
   async makeWithdrawal(
@@ -85,7 +85,7 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response.data;
+    return response;
   }
 
   async getTransactions(
@@ -102,7 +102,7 @@ export class BankAPI {
       agency,
       agencyDigit,
     });
-    return response.data;
+    return response;
   }
 
   async makeTransfer(
@@ -133,14 +133,14 @@ export class BankAPI {
       transferAgencyDigit,
       value,
     });
-    return response.data;
+    return response;
   }
 
   async getAccounts(ownerCpf: string) {
     const response = await this.api.post('/accounts', {
       ownerCpf,
     });
-    return response.data;
+    return response;
   }
 }
 export const bankAPI = new BankAPI();
