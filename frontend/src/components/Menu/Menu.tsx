@@ -72,7 +72,7 @@ export function Menu() {
           <Eye weight="bold" className="w-6 h-6 mx-1 text-icon-dark-200" />
           <div className="flex flex-row items-end">
             <span className="text-2xl mr-1">{loggedAccount?.balance}</span>
-            <span className="text-sm">R$</span>
+            <span className="text-sm mb-1">R$</span>
           </div>
         </div>
       </div>
