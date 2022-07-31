@@ -34,12 +34,12 @@ export const Transfer = () => {
         <SmallInput
           title="Agência"
           isDisabled={true}
-          value={user?.loggedAccount.agencyNumber}
+          value={user?.loggedAccount.agency}
         />
         <SmallInput
           title="Conta"
           isDisabled={true}
-          value={user?.loggedAccount.accountNumber}
+          value={user?.loggedAccount.account}
         />
       </div>
       <span className="text-base font-normal">Destino</span>
