@@ -1,10 +1,17 @@
 import { ArrowsLeftRight } from 'phosphor-react';
 import { useState } from 'react';
+import { Button } from '../../components/Form/Button';
 import { Input } from '../../components/Form/Input';
 import { SmallInput } from '../../components/Form/Panel/SmallInput';
 import { WhiteCard } from '../../components/WhiteCard';
 import { useUser } from '../../providers/UserProvider';
-import { maskAccountNumber, maskAgencyNumber } from '../../utils/Masks';
+import {
+  maskAccountNumber,
+  maskAgencyNumber,
+  maskValue,
+} from '../../utils/Masks';
+import { InputReferences } from '../../utils/References';
+import { validateValue, validatePassword } from '../../utils/Validators';
 
 /**
  * Archive: src/pages/Transfer.tsx
@@ -17,11 +24,19 @@ import { maskAccountNumber, maskAgencyNumber } from '../../utils/Masks';
  */
 
 export const Transfer = () => {
-  const { user } = useUser();
+  const references = InputReferences();
+  const { loggedAccount } = useUser();
   const [agencyNumber, setAgencyNumber] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>('0.00');
   const [password, setPassword] = useState<string>('');
+
+  function handleSubmit() {
+    //request api
+    //se der erro
+    // references.setError(name, mensagemdeerro);
+    //
+  }
 
   return (
     <WhiteCard
@@ -29,48 +44,66 @@ export const Transfer = () => {
       title="Transferência"
       blank={true}
     >
-      <span className="text-base font-normal">Origem</span>
-      <div className="flex flex-row justify-between mb-4">
-        <SmallInput
-          title="Agência"
-          isDisabled={true}
-          value={user?.loggedAccount.agency}
+      <form>
+        <span className="text-base font-normal">Origem</span>
+        <div className="flex flex-row justify-between mb-4">
+          <SmallInput
+            title="Agência"
+            isDisabled={true}
+            value={loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
+          />
+          <SmallInput
+            title="Conta"
+            isDisabled={true}
+            value={loggedAccount?.account + '-' + loggedAccount?.accountDigit}
+          />
+        </div>
+        <span className="text-base font-normal">Destino</span>
+        <div className="flex flex-row justify-between">
+          <SmallInput
+            title="Agência"
+            value={agencyNumber}
+            onChange={setAgencyNumber}
+            mask={maskAgencyNumber}
+            length={6}
+          />
+          <SmallInput
+            title="Conta"
+            value={accountNumber}
+            onChange={setAccountNumber}
+            mask={maskAccountNumber}
+            length={7}
+          />
+        </div>
+        <Input
+          name="value"
+          placeholder="Valor"
+          type="text"
+          value={amount}
+          onChange={setAmount}
+          mask={maskValue}
+          validators={[
+            { validate: validateValue, errorMessage: 'Valor inválido' },
+          ]}
+          ref={references.getOrCrateRef('value')}
         />
-        <SmallInput
-          title="Conta"
-          isDisabled={true}
-          value={user?.loggedAccount.account}
+        <Input
+          name="password"
+          placeholder="Senha"
+          type="text"
+          value={password}
+          onChange={setPassword}
+          validators={[
+            { validate: validatePassword, errorMessage: 'Senha inválida' },
+          ]}
+          ref={references.getOrCrateRef('password')}
         />
-      </div>
-      <span className="text-base font-normal">Destino</span>
-      <div className="flex flex-row justify-between">
-        <SmallInput
-          title="Agência"
-          value={agencyNumber}
-          onChange={setAgencyNumber}
-          mask={maskAgencyNumber}
-          length={6}
+        <Button
+          category="primary"
+          label="Transferir"
+          onClick={() => handleSubmit()}
         />
-        <SmallInput
-          title="Conta"
-          value={accountNumber}
-          onChange={setAccountNumber}
-          mask={maskAccountNumber}
-          length={7}
-        />
-      </div>
-      <Input
-        placeholder="Valor"
-        type="text"
-        value={amount}
-        onChange={setAmount}
-      />
-      <Input
-        placeholder="Senha"
-        type="text"
-        value={password}
-        onChange={setPassword}
-      />
+      </form>
     </WhiteCard>
   );
 };

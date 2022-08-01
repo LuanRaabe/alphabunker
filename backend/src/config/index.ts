@@ -6,6 +6,10 @@ const config = {
     POSTGRES: {
         CONNECTION_STRING: process.env.POSTGRES_CONNECTION_STRING
     }
-}   
+}
+const auth = {
+    secret: String(process.env.SECRET),
+    expires: '1h',
+}
 
-export { config };
+export { config, auth };

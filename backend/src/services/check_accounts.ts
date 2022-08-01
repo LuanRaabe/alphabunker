@@ -2,7 +2,7 @@ import { APIResponse, OwnerAccounts } from '../models';
 import { OwnerAccountsDataValidator } from '../validators';
 import { ExceptionTreatment } from "../utils";
 import { SearchOwnerAccount } from '../client/dao/postgres/search_owner_accounts';
-
+import { Jwt } from 'jsonwebtoken';
 
 class SearchOwnerAccountsService{
 

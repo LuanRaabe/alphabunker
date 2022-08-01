@@ -28,7 +28,7 @@ interface OrderedTransaction {
 }
 
 export const Extract = () => {
-  const { user } = useUser();
+  const { user, loggedAccount } = useUser();
   const [transactions, setTransactions] = useState<OrderedTransaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -37,7 +37,16 @@ export const Extract = () => {
   const fetchTransactions = async () => {
     setLoading(true);
     if (user !== undefined) {
-      const mockUser = user.loggedAccount;
+      const mockUser = {
+        id: '1',
+        cpf: '34515222617',
+        password: 'jubileu',
+        balance: '234',
+        agency: '123',
+        agencyDigit: '6',
+        account: '9876',
+        accountDigit: '5',
+      };
       try {
         const response = await bankAPI.getTransactions(
           mockUser.cpf,
@@ -89,8 +98,9 @@ export const Extract = () => {
           <div className="spinner" />
         </div>
       ) : (
-        <div className="text-center">
-          <div className="text-red-600">{error}</div>
+        <div>
+          {error && <div className="text-red-500 text-center">{error}</div>}
+          {success}
         </div>
       )}
     </WhiteCard>

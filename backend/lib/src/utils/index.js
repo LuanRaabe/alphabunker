@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.compareAccounts = exports.ExceptionTreatment = exports.GenerateAccount = exports.CreateResponse = void 0;
+exports.verifyToken = exports.compareAccounts = exports.ExceptionTreatment = exports.GenerateAccount = exports.CreateResponse = void 0;
 var create_response_1 = require("./create_response");
 Object.defineProperty(exports, "CreateResponse", { enumerable: true, get: function () { return create_response_1.CreateResponse; } });
 var generate_account_1 = require("./generate_account");
@@ -9,3 +9,5 @@ var exeption_1 = require("./exeption");
 Object.defineProperty(exports, "ExceptionTreatment", { enumerable: true, get: function () { return exeption_1.ExceptionTreatment; } });
 var compareAccounts_1 = require("./compareAccounts");
 Object.defineProperty(exports, "compareAccounts", { enumerable: true, get: function () { return compareAccounts_1.compareAccounts; } });
+var checkToken_1 = require("./checkToken");
+Object.defineProperty(exports, "verifyToken", { enumerable: true, get: function () { return checkToken_1.verifyToken; } });

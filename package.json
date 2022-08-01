@@ -8,5 +8,11 @@
   "scripts": {
     "dev:front": "cd ./frontend && npm run dev",
     "dev:back": "cd ./backend && npm run dev"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12"
   }
 }

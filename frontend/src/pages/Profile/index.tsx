@@ -19,7 +19,7 @@ import { useUser } from '../../providers/UserProvider';
  */
 
 export const Profile = () => {
-  const { user } = useUser();
+  const { user, accounts } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -59,10 +59,10 @@ export const Profile = () => {
         <WhiteCard
           icon={<Vault className="w-5 h-5" />}
           title="Minhas contas correntes"
-          childs={user?.accounts.map((account) => (
+          childs={accounts?.map((account) => (
             <div className="flex flex-col" key={account.id}>
-              <span>Agência: {account.agency}</span>
-              <span>Conta: {account.account}</span>
+              <span>Agência: {account.agency + '-' + account.agencyDigit}</span>
+              <span>Conta: {account.account + '-' + account.accountDigit}</span>
             </div>
           ))}
         />

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { SearchBalanceService } from '../services';
 import { CreateResponse } from '../utils';
 
+
 class SearchBalance{
 
     private balanceService = SearchBalanceService;

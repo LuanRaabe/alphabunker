@@ -22,7 +22,9 @@ const Private = ({ children }: ChildrenTypes): JSX.Element => {
     return <Navigate to="/home" />;
   }
 
-  return <>{children}</>;
+  return (
+    <div className="flex flex-col items-center w-full h-full">{children}</div>
+  );
 };
 
 const Public = ({ children }: ChildrenTypes): JSX.Element => {
@@ -32,7 +34,9 @@ const Public = ({ children }: ChildrenTypes): JSX.Element => {
     return <Navigate to="/extract" />;
   }
 
-  return <>{children}</>;
+  return (
+    <div className="flex flex-col items-center w-full h-full">{children}</div>
+  );
 };
 
 export const Router = () => {
