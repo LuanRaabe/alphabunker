@@ -74,7 +74,6 @@ export function validateValue(value: string): boolean {
   const numberValue = Number(value.replace(/\D/g, ''));
   return !(numberValue === 0);
 }
-<<<<<<< HEAD
 
 export function validateAgency(value: string): boolean {
   const agencyFormatted = value.replace(/\D/g, '');
@@ -85,5 +84,3 @@ export function validateAccount(value: string): boolean {
   const accountFormatted = value.replace(/\D/g, '');
   return accountFormatted.length === 6;
 }
-=======
->>>>>>> 3c36aa099fb622b6275db0c215152bcd0ac9b9a3
