@@ -27,10 +27,9 @@ export interface InputProps {
   autoFocus?: boolean;
 }
 
-export interface InputHandle {
-  triggerError: (error: string) => void;
+interface InputHandle {
+  triggerError: (name: string, error: string) => void;
   resetError: () => void;
-  runValidators: () => void;
 }
 /**
  * Archive: src/components/Form/Input.tsx
@@ -87,9 +86,6 @@ const InputRef: ForwardRefRenderFunction<InputHandle, InputProps> = (
     },
     resetError() {
       setError(undefined);
-    },
-    runValidators() {
-      runInputValidators();
     },
   }));
 

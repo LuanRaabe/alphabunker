@@ -9,39 +9,47 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SearchBalanceService = void 0;
+exports.SearchLoginService = void 0;
 const validators_1 = require("../validators");
 const utils_1 = require("../utils");
-const balance_1 = require("../client/dao/postgres/balance");
-class SearchBalanceService {
+const login_1 = require("../client/dao/postgres/login");
+const jsonwebtoken_1 = require("jsonwebtoken");
+const config_1 = require("../config");
+class SearchLoginService {
     constructor() {
-        this.balanceDataValidator = validators_1.BalanceDataValidator;
-        this.balanceTable = balance_1.CheckBalance;
+        this.loginValidator = validators_1.LoginValidator;
+        this.searchLogin = login_1.LoginDB;
     }
-    execute(balance) {
+    execute(login) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const validBalanceData = new this.balanceDataValidator(balance);
-                if (validBalanceData.errors) {
-                    throw new Error(`400: ${validBalanceData.errors}`);
+                const validLogin = new this.loginValidator(login);
+                if (validLogin.errors) {
+                    throw new Error(`400: ${validLogin.errors}`);
                 }
-                const searchBalance = yield this.balanceTable(balance.ownerCpf, balance.password, balance.agency, balance.agencyDigit, balance.account, balance.accountDigit);
-                console.log(searchBalance);
-                if (searchBalance) {
+                const findLogin = yield this.searchLogin(login.cpf, login.password);
+                console.log(findLogin);
+                if (findLogin) {
+                    const token = (0, jsonwebtoken_1.sign)({ findLogin }, config_1.auth.secret, {
+                        expiresIn: config_1.auth.expires
+                    });
                     return {
-                        data: searchBalance,
+                        data: {
+                            account: findLogin,
+                            token: token
+                        },
                         messages: []
                     };
                 }
                 return {
                     data: {},
-                    messages: ["Senha ou conta inválidos"]
+                    messages: ["Conta não encontrada"]
                 };
             }
             catch (error) {
-                throw new utils_1.ExceptionTreatment(error, 500, "an error occurred while searching for the account");
+                throw new utils_1.ExceptionTreatment(error, 500, "an error occurred while searching for the owner");
             }
         });
     }
 }
-exports.SearchBalanceService = SearchBalanceService;
+exports.SearchLoginService = SearchLoginService;

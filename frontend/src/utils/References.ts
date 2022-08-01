@@ -32,9 +32,5 @@ export function InputReferences() {
     getOrCrateRef(name).current.resetError();
   }
 
-  function runValidators(name: RefKey) {
-    getOrCrateRef(name).current.runValidators();
-  }
-
-  return { getOrCrateRef, setError, resetError, runValidators };
+  return { getOrCrateRef, setError, resetError };
 }

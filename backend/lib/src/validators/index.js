@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OwnerAccountsDataValidator = exports.TransferDataValidator = exports.ExtractDataValidator = exports.WithdrawDataValidator = exports.DepositDataValidator = exports.BalanceDataValidator = exports.AccountDataValidator = exports.OwnerDataValidator = exports.BalanceValidator = exports.ValueValidator = exports.AgencyDigitValidator = exports.AgencyValidator = exports.AccountDigitValidator = exports.AccountValidator = exports.CPFValidator = exports.EmailValidator = exports.NameValidator = exports.BirthdateValidator = exports.PasswordValidator = void 0;
+exports.LoginValidator = exports.OwnerAccountsDataValidator = exports.TransferDataValidator = exports.ExtractDataValidator = exports.WithdrawDataValidator = exports.DepositDataValidator = exports.BalanceDataValidator = exports.AccountDataValidator = exports.OwnerDataValidator = exports.BalanceValidator = exports.ValueValidator = exports.AgencyDigitValidator = exports.AgencyValidator = exports.AccountDigitValidator = exports.AccountValidator = exports.CPFValidator = exports.EmailValidator = exports.NameValidator = exports.BirthdateValidator = exports.PasswordValidator = void 0;
 var password_1 = require("./password");
 Object.defineProperty(exports, "PasswordValidator", { enumerable: true, get: function () { return password_1.PasswordValidator; } });
 var birthdate_1 = require("./birthdate");
@@ -39,3 +39,5 @@ var transfer_data_1 = require("./transfer_data");
 Object.defineProperty(exports, "TransferDataValidator", { enumerable: true, get: function () { return transfer_data_1.TransferDataValidator; } });
 var owner_account_data_1 = require("./owner_account_data");
 Object.defineProperty(exports, "OwnerAccountsDataValidator", { enumerable: true, get: function () { return owner_account_data_1.OwnerAccountsDataValidator; } });
+var login_validator_1 = require("./login_validator");
+Object.defineProperty(exports, "LoginValidator", { enumerable: true, get: function () { return login_validator_1.LoginValidator; } });

@@ -44,7 +44,7 @@ export const Transfer = () => {
   const { loggedAccount } = useUser();
   const [agencyNumber, setAgencyNumber] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
-  const [amount, setAmount] = useState<string>('');
+  const [amount, setAmount] = useState<string>('0.00');
   const [password, setPassword] = useState<string>('');
 
   function handleSubmit(e: FormEvent) {

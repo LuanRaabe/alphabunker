@@ -23,7 +23,7 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
         try {
             console.log('procurando usuario');
             yield clientSelect.connect();
-            console.log('conectado ao banco, pagina balance');
+            console.log('conectado ao banco, pagina de login');
             const selectBalanceQuery = `
         SELECT * FROM public.accounts
         WHERE
@@ -40,7 +40,7 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
             }
             const compare = bcrypt_1.default.compareSync(password, balance.password);
             const newValue = parseInt(balance.balance).toFixed(2);
-            console.log(compare);
+            //console.log(compare)
             if (compare) {
                 const selectOwner = `
             SELECT name FROM public.owners

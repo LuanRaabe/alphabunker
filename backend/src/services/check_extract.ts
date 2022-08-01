@@ -31,7 +31,7 @@ class SearchExtractService{
 
             return {
                 data: {},
-                messages: [ "an error occurred while searching for the extract" ]
+                messages: [ "nenhum extrato encontrado" ]
             } as APIResponse;
 
         }
