@@ -1,3 +1,13 @@
+/**
+ * Archive: src/utils/Maks.ts
+ *
+ * Description: Masks functions
+ *
+ * Date: 2022/07/30
+ *
+ * Author: Luan
+ */
+
 export const maskCpf = (value: string) =>
   value
     .replace(/\D/g, '')
