@@ -1,3 +1,13 @@
+/**
+ * Archive: src/utils/Validators.ts
+ *
+ * Description: Validators functions
+ *
+ * Date: 2022/07/30
+ *
+ * Author: Luan
+ */
+
 export function validateCpf(cpf: string): boolean {
   const cpfArray = cpf
     .replace(/\D/g, '')
@@ -63,4 +73,14 @@ export function validateUsername(username: string): boolean {
 export function validateValue(value: string): boolean {
   const numberValue = Number(value.replace(/\D/g, ''));
   return !(numberValue === 0);
+}
+
+export function validateAgency(value: string): boolean {
+  const agencyFormatted = value.replace(/\D/g, '');
+  return agencyFormatted.length === 5;
+}
+
+export function validateAccount(value: string): boolean {
+  const accountFormatted = value.replace(/\D/g, '');
+  return accountFormatted.length === 6;
 }
