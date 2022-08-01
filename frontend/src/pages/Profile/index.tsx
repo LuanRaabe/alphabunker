@@ -61,8 +61,8 @@ export const Profile = () => {
           title="Minhas contas correntes"
           childs={user?.accounts.map((account) => (
             <div className="flex flex-col" key={account.id}>
-              <span>Agência: {account.agencyNumber}</span>
-              <span>Conta: {account.accountNumber}</span>
+              <span>Agência: {account.agency}</span>
+              <span>Conta: {account.account}</span>
             </div>
           ))}
         />
