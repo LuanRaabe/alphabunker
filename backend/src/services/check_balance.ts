@@ -1,9 +1,7 @@
 import { APIResponse, Balance } from '../models';
 import { BalanceDataValidator } from '../validators';
 import { ExceptionTreatment } from "../utils";
-import { CheckBalance } from '../client/dao/postgres/login';
-import { sign } from 'jsonwebtoken';
-import {auth} from '../config';
+import { CheckBalance } from '../client/dao/postgres/balance';
 
 class SearchBalanceService{
 
@@ -23,14 +21,8 @@ class SearchBalanceService{
             console.log(searchBalance);
 
             if(searchBalance){
-                const token = sign({searchBalance}, auth.secret, {
-                    expiresIn: auth.expires
-                });
                 return {
-                    data: {
-                        account:searchBalance,
-                        token: token
-                    },
+                    data: searchBalance,
                     messages: []
                     
                 } as APIResponse;
