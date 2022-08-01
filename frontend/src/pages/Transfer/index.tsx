@@ -41,7 +41,7 @@ export const Transfer = () => {
   const [modal, setModal] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const references = InputReferences();
-  const { loggedAccount } = useUser();
+  const { loggedAccount, transactions } = useUser();
   const [agencyNumber, setAgencyNumber] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
   const [amount, setAmount] = useState<string>('0.00');
@@ -60,7 +60,7 @@ export const Transfer = () => {
       references.setError(name, message);
       return;
     }
-
+    navigate('/transaction', {state: {transactionId: });
     */
   }
 
@@ -68,7 +68,7 @@ export const Transfer = () => {
     <>
       {modal && (
         <Modal
-          title="Depósito"
+          title="Transferência"
           setModal={setModal}
           handleConfirmModal={confirSubmit}
         />
