@@ -44,16 +44,17 @@ class WithdrawTable extends PostgresDB{
                 
                 const insertWithdrawQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
     
                 const result = await client.query(insertWithdrawQuery, [
                     withdraw.id,
                     id,
                     'saque',
-                    withdraw.value
+                    withdraw.value,
+                    'debito'
                 ]);
 
                 console.log(result.rows)
@@ -63,9 +64,9 @@ class WithdrawTable extends PostgresDB{
 
                 const insertFeeQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
 
                 const passFee = String(fee);
@@ -75,7 +76,8 @@ class WithdrawTable extends PostgresDB{
                     feeId,
                     id,
                     'taxa',
-                    passFee
+                    passFee,
+                    'debito'
                 ]);
 
                 console.log(feeResult.rows)

@@ -11,6 +11,7 @@ import { SectionButton } from './SectionButton';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../providers/UserProvider';
 
+
 /**
  * Archive: src/components/Menu.tsx
  *
