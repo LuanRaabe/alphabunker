@@ -12,57 +12,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CheckBalance = void 0;
+exports.LoginDB = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const { Client } = require('pg');
 const bcrypt_1 = __importDefault(require("bcrypt"));
-function CheckBalance(cpf, password, agency, agency_digit, account, account_digit) {
+function LoginDB(cpf, password) {
     return __awaiter(this, void 0, void 0, function* () {
         const clientSelect = new Client();
         try {
-            console.log('procurando usuario');
+            console.log('começando login');
             yield clientSelect.connect();
-            console.log('conectado ao banco, pagina de login');
-            const selectBalanceQuery = `
-        SELECT * FROM public.accounts
-        WHERE
-            owners_cpf=$1 and 
-            agency=$2 and 
-            agency_digit=$3 and
-            account=$4 and
-            account_digit=$5
+            console.log('conectado ao banco');
+            const selectOwnerQuery = `
+            SELECT * FROM public.accounts
+                WHERE owners_cpf = $1
         `;
-            const check = yield clientSelect.query(selectBalanceQuery, [cpf, agency, agency_digit, account, account_digit]);
-            const balance = check.rows[0];
-            if (balance === 0) {
-                return false;
-            }
-            const compare = bcrypt_1.default.compareSync(password, balance.password);
-            const newValue = parseInt(balance.balance).toFixed(2);
-            //console.log(compare)
-            if (compare) {
-                const selectOwner = `
-            SELECT name FROM public.owners
-            WHERE
-                cpf=$1
-            `;
-                const checkName = yield clientSelect.query(selectOwner, [cpf]);
-                const name = checkName.rows[0].name;
-                yield clientSelect.end();
-                if (name !== 0) {
-                    const data = {
-                        id: balance.id,
-                        name: name,
-                        owners_cpf: balance.owners_cpf,
-                        agency: balance.agency,
-                        agency_digit: balance.agency_digit,
-                        account: balance.account,
-                        account_digit: balance.account_digit,
-                        balance: newValue
-                    };
-                    return data;
+            const check = yield clientSelect.query(selectOwnerQuery, [cpf]);
+            const passwords = check.rows;
+            let account;
+            for (let i = 0; i < passwords.length; i++) {
+                const compare = bcrypt_1.default.compareSync(password, passwords[i].password);
+                if (compare) {
+                    account = passwords[i];
                 }
+            }
+            console.log(account);
+            yield clientSelect.end();
+            if (account) {
+                return {
+                    id: account.id,
+                    owners_cpf: account.cpf,
+                    agency: account.agency,
+                    agency_digit: account.agency_digit,
+                    account: account.account,
+                    account_digit: account.account_digit,
+                    balance: account.balance.toFixed(2)
+                };
             }
             return false;
         }
@@ -72,4 +58,4 @@ function CheckBalance(cpf, password, agency, agency_digit, account, account_digi
         }
     });
 }
-exports.CheckBalance = CheckBalance;
+exports.LoginDB = LoginDB;

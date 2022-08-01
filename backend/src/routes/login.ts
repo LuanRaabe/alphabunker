@@ -1,10 +1,10 @@
-import { SearchBalance } from '../controller';
+import { MakeLogin } from '../controller';
 import { Router } from 'express';
 
 const route = Router();
 
 route.route('/login')
-    .post(new SearchBalance().handle.bind(new SearchBalance()));
+    .post(new MakeLogin().handle.bind(new MakeLogin()));
 
 
 

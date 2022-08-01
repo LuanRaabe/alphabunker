@@ -17,3 +17,4 @@ export { WithdrawDataValidator } from './withdraw_data';
 export { ExtractDataValidator } from './extract_data';
 export { TransferDataValidator } from './transfer_data';
 export { OwnerAccountsDataValidator } from './owner_account_data';
+export { LoginValidator } from './login_validator';
