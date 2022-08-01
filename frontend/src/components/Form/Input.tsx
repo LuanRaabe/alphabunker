@@ -11,7 +11,7 @@ interface ValidatorsType {
   errorMessage: string;
 }
 
-interface InputProps {
+export interface InputProps {
   type?: string;
   name: string;
   placeholder?: string;
@@ -23,6 +23,8 @@ interface InputProps {
   onBlur?: () => void;
   validators?: ValidatorsType[];
   callback?: (value: boolean) => void;
+  tabIndex?: number;
+  autoFocus?: boolean;
 }
 
 interface InputHandle {
@@ -58,6 +60,21 @@ const InputRef: ForwardRefRenderFunction<InputHandle, InputProps> = (
     });
   }
 
+  function handleChange(e: any) {
+    const maskedvalue = props.mask?.(e.target.value) ?? e.target.value;
+    props.onChange(maskedvalue);
+  }
+
+  function handleBlur() {
+    props.onBlur;
+    runInputValidators();
+  }
+
+  function handleFocus() {
+    props.onFocus;
+    resetError();
+  }
+
   function resetError() {
     props.callback?.(false);
     setError(undefined);
@@ -65,7 +82,6 @@ const InputRef: ForwardRefRenderFunction<InputHandle, InputProps> = (
 
   useImperativeHandle(ref, () => ({
     triggerError(error: string) {
-      console.log('chamou em', props.name);
       setError(error ? error : 'Ocorreu um erro aqui');
     },
     resetError() {
@@ -80,17 +96,18 @@ const InputRef: ForwardRefRenderFunction<InputHandle, InputProps> = (
         type={props.type ?? 'text'}
         placeholder={props.placeholder ?? ''}
         required={!!props.required}
-        onChange={(e) =>
-          props.onChange(props.mask?.(e.target.value) || e.target.value)
-        }
+        value={props.value}
+        onChange={(e) => {
+          handleChange(e);
+        }}
         onBlur={() => {
-          props.onBlur;
-          runInputValidators();
+          handleBlur();
         }}
         onFocus={() => {
-          props.onFocus;
-          resetError();
+          handleFocus();
         }}
+        tabIndex={props.tabIndex ?? 0}
+        autoFocus={props.autoFocus}
       />
       {error && (
         <span className="absolute top-8 left-2 text-xs font-bold text-input-error">
