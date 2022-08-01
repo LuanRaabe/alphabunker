@@ -25,3 +25,15 @@ export const maskAgencyNumber = (value: string): string => {
 export const maskAccountNumber = (value: string): string => {
   return value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
 };
+
+export const maskValue = (value: string): string => {
+  value = value.replace(/\D/g, '');
+  if (value.length > 15) value = value.substring(0, value.length - 1);
+
+  const options = { minimumFractionDigits: 2 };
+  const result = new Intl.NumberFormat('pt-BR', options).format(
+    parseFloat(value) / 100,
+  );
+
+  return 'R$' + result;
+};
