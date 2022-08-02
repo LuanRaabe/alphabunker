@@ -17,16 +17,16 @@ const TAB_INDEX = {
 };
 
 /**
- * Archive: src/pages/Transfer.tsx
+ * Archive: src/pages/Deposit.tsx
  *
- * Description: Transfer page
+ * Description: Deposit page
  *
  * Date: 2022/07/30
  *
  * Author: Rey, Luan
  */
 
-export const Transfer = () => {
+export const Deposit = () => {
   const [modal, setModal] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const references = InputReferences();

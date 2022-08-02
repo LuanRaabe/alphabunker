@@ -12,12 +12,14 @@ import { WhiteCard } from '../../components/WhiteCard';
 import { Bank } from 'phosphor-react';
 import { useUser } from '../../providers/UserProvider';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import bankAPI from '../../libs/api';
 
 interface Transaction {
   id: string;
   account_id: string;
   operation_name: string;
+  type: string;
   value: number;
   created_at: string;
 }
@@ -28,6 +30,7 @@ interface OrderedTransaction {
 }
 
 export const Extract = () => {
+  const navigate = useNavigate();
   const { user, loggedAccount } = useUser();
   const [transactions, setTransactions] = useState<OrderedTransaction[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -90,12 +93,14 @@ export const Extract = () => {
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
         value: 60,
+        type: 'debito',
         created_at: '2022-07-29T12:24:01.916Z',
       },
       {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-29T12:24:01.728Z',
       },
@@ -103,6 +108,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 300,
         created_at: '2022-07-29T12:24:01.728Z',
       },
@@ -110,6 +116,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 30,
         created_at: '2022-07-29T12:24:01.728Z',
       },
@@ -117,6 +124,7 @@ export const Extract = () => {
         id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 60,
         created_at: '2022-07-28T12:24:01.916Z',
       },
@@ -124,6 +132,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-28T12:24:01.728Z',
       },
@@ -131,6 +140,7 @@ export const Extract = () => {
         id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 60,
         created_at: '2022-07-27T12:24:01.916Z',
       },
@@ -138,6 +148,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-27T12:24:01.728Z',
       },
@@ -145,6 +156,7 @@ export const Extract = () => {
         id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 60,
         created_at: '2022-07-29T12:24:01.916Z',
       },
@@ -152,6 +164,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-29T12:24:01.728Z',
       },
@@ -159,6 +172,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 300,
         created_at: '2022-07-29T12:24:01.728Z',
       },
@@ -166,6 +180,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 30,
         created_at: '2022-07-29T12:24:01.728Z',
       },
@@ -173,6 +188,7 @@ export const Extract = () => {
         id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 60,
         created_at: '2022-07-28T12:24:01.916Z',
       },
@@ -180,6 +196,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-28T12:24:01.728Z',
       },
@@ -187,6 +204,7 @@ export const Extract = () => {
         id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
+        type: 'debito',
         value: 60,
         created_at: '2022-07-27T12:24:01.916Z',
       },
@@ -194,6 +212,7 @@ export const Extract = () => {
         id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-27T12:24:01.728Z',
       },
@@ -205,7 +224,7 @@ export const Extract = () => {
     <WhiteCard
       icon={<Bank className="w-6 h-6" />}
       title="Extrato de transações"
-      blank={true}
+      blank
       className="font-semibold h-3/6"
     >
       {loading ? (
@@ -216,14 +235,23 @@ export const Extract = () => {
         <div>
           {error ? (
             <div className="text-red-500 text-center">{error}</div>) : (
-            <div className='overflow-auto h-5/6'>
+            <div className='overflow-auto h-4/6'>
               {transactions.map((transactionDay) => (
                 <div className="transaction-day text-neutral-600" key={transactionDay.date}>
-                  <p className='font-semibold w-5/6'>{transactionDay.date}</p>
+                  <p className=' w-5/6'>{transactionDay.date}</p>
                   {transactionDay.transactions.map((transactionItem) => (
-                    <div className='flex flex-row justify-between items-center text-neutral-400' key={transactionItem.id}>
-                      <p>{transactionItem.operation_name}</p>
-                      <p>{transactionItem.value}</p>
+                    <div
+                      className='flex flex-row justify-between items-center text-neutral-400 mx-2'
+                      key={transactionItem.id}
+                      onClick={() => {
+                        navigate(`/transaction/${transactionItem.id}`);
+                      }}>
+                      <p className='font-normal'>{transactionItem.operation_name}</p>
+                      <p
+                        className={transactionItem.type === 'debito' ? 'text-red-500' : 'text-green-500'}
+                      >
+                        R${transactionItem.value.toFixed(2).replace('.', ',')}
+                      </p>
                     </div>
                   ))}
                 </div>
