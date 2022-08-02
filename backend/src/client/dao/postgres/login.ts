@@ -45,16 +45,20 @@ async function LoginDB(cpf: string, password: string){
         
         if (account){
             return {
-                id: account.id,
-                name: owner.name,
-                email: owner.email,
-                birthdate: owner.birthdate,
-                owners_cpf: account.cpf,
-                agency: account.agency,
-                agency_digit: account.agency_digit,
-                account: account.account,
-                account_digit: account.account_digit,
-                balance: account.balance.toFixed(2),
+                owner: {
+                    name: owner.name,
+                    email: owner.email,
+                    birthdate: owner.birthdate,
+                },
+                account: {
+                    id: account.id,
+                    owners_cpf: owner.cpf,
+                    agency: account.agency,
+                    agency_digit: account.agency_digit,
+                    account: account.account,
+                    account_digit: account.account_digit,
+                    balance: account.balance.toFixed(2),
+                } 
             };
         }
         return false

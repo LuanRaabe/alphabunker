@@ -28,7 +28,8 @@ class SearchLoginService{
                 });
                 return {
                     data: {
-                        account: findLogin,
+                        account: findLogin.account,
+                        owner: findLogin.owner,
                         token: token
                     },
                     messages: []
