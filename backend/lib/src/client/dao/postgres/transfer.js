@@ -70,9 +70,9 @@ class TransferTable extends _1.PostgresDB {
                     console.log('permitido');
                     const insertTransferQuery = `
                 INSERT INTO public.extracts
-                (id, account_id, operation_name, value, created_at, type ) 
+                    (id, account_id, operation_name, value, created_at, type ) 
                 VALUES 
-                ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const result = yield client.query(insertTransferQuery, [
                         transfer.id,

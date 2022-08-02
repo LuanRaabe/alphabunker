@@ -38,16 +38,28 @@ function LoginDB(cpf, password) {
                 }
             }
             console.log(account);
+            const getOwner = `
+            SELECT * FROM public.owners
+                WHERE cpf = $1
+        `;
+            const ownerQuery = yield clientSelect.query(getOwner, [cpf]);
+            const owner = ownerQuery.rows[0];
             yield clientSelect.end();
+            if (!owner) {
+                return false;
+            }
             if (account) {
                 return {
                     id: account.id,
+                    name: owner.name,
+                    email: owner.email,
+                    birthdate: owner.birthdate,
                     owners_cpf: account.cpf,
                     agency: account.agency,
                     agency_digit: account.agency_digit,
                     account: account.account,
                     account_digit: account.account_digit,
-                    balance: account.balance.toFixed(2)
+                    balance: account.balance.toFixed(2),
                 };
             }
             return false;
