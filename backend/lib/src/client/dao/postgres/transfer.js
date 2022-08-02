@@ -57,7 +57,6 @@ class TransferTable extends _1.PostgresDB {
                 account_digit=$4
             `;
                 const check2 = yield client.query(selectBalanceQuery, [transfer.transferAgency, transfer.transferAgencyDigit, transfer.transferAccount, transfer.transferAccountDigit]);
-                console.log(check2.rows);
                 const transferId = check2.rows[0].id;
                 if (!transferId || !ownerId) {
                     return false;
@@ -68,35 +67,38 @@ class TransferTable extends _1.PostgresDB {
                 const newFee = transferValue + fee;
                 const newValue = ownerAtualBalance - newFee;
                 if (newValue >= 0) {
-                    console.log('entrou');
+                    console.log('permitido');
                     const insertTransferQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type ) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const result = yield client.query(insertTransferQuery, [
                         transfer.id,
                         ownerId,
-                        'transferência',
-                        -transfer.value
+                        'transferência efetuada',
+                        transfer.value,
+                        'debito'
                     ]);
+                    console.log("feito");
                     console.log(result.rows);
                     if (result.rows.length !== 0) {
                         console.log("primeiro ok");
                     }
                     const insertTransferExtract = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const transferTableId = (0, uuid_1.v4)();
                     const depositResult = yield client.query(insertTransferExtract, [
                         transferTableId,
                         transferId,
-                        'transferência',
-                        transfer.value
+                        'transferência recebida',
+                        transfer.value,
+                        'credito'
                     ]);
                     console.log(result.rows);
                     if (depositResult.rows.length !== 0) {
@@ -104,9 +106,9 @@ class TransferTable extends _1.PostgresDB {
                     }
                     const insertFeeQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const passFee = String(fee);
                     const feeId = (0, uuid_1.v4)();
@@ -114,7 +116,8 @@ class TransferTable extends _1.PostgresDB {
                         feeId,
                         ownerId,
                         'taxa',
-                        passFee
+                        passFee,
+                        'debito'
                     ]);
                     console.log(feeResult.rows);
                     if (feeResult.rows.length !== 0) {

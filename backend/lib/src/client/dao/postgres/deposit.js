@@ -45,15 +45,16 @@ class DepositTable {
                 if (newValue >= 0) {
                     const insertDepositQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const result = yield client.query(insertDepositQuery, [
                         deposit.id,
                         id,
                         'deposito',
-                        deposit.value
+                        deposit.value,
+                        'credito'
                     ]);
                     console.log(result.rows);
                     if (result.rows.length !== 0) {
@@ -61,9 +62,9 @@ class DepositTable {
                     }
                     const insertFeeQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const passFee = String(fee);
                     const feeId = (0, uuid_1.v4)();
@@ -71,7 +72,8 @@ class DepositTable {
                         feeId,
                         id,
                         'taxa',
-                        passFee
+                        passFee,
+                        'debito'
                     ]);
                     if (feeResult.rows.length !== 0) {
                         console.log("segunda inserção");

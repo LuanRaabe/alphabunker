@@ -18,10 +18,10 @@ interface ChildrenTypes {
 const Private = ({ children }: ChildrenTypes): JSX.Element => {
   const { user } = useUser();
 
-  if (!user) {
+  /* if (!user) {
     return <Navigate to="/home" />;
   }
-
+ */
   return (
     <div className="flex flex-col items-center w-full h-full">{children}</div>
   );
@@ -30,9 +30,9 @@ const Private = ({ children }: ChildrenTypes): JSX.Element => {
 const Public = ({ children }: ChildrenTypes): JSX.Element => {
   const { user } = useUser();
 
-  if (user) {
+  /* if (user) {
     return <Navigate to="/extract" />;
-  }
+  } */
 
   return (
     <div className="flex flex-col items-center w-full h-full">{children}</div>
@@ -95,7 +95,15 @@ export const Router = () => {
           </Private>
         }
       />
-      <Route path="/transaction/:transactionId" element={<Transaction />} />
+      <Route
+        path="/transaction/:transactionId"
+        element={
+          <Private>
+            <Menu />
+            <Transaction />
+          </Private>
+        }
+      />
 
       <Route path="*" element={<h1 className="text-white">Error 404</h1>} />
     </Routes>

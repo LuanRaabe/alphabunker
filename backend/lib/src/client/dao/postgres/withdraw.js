@@ -52,15 +52,16 @@ class WithdrawTable extends _1.PostgresDB {
                     console.log('entrou');
                     const insertWithdrawQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const result = yield client.query(insertWithdrawQuery, [
                         withdraw.id,
                         id,
                         'saque',
-                        withdraw.value
+                        withdraw.value,
+                        'debito'
                     ]);
                     console.log(result.rows);
                     if (result.rows.length !== 0) {
@@ -68,9 +69,9 @@ class WithdrawTable extends _1.PostgresDB {
                     }
                     const insertFeeQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                     const passFee = String(fee);
                     const feeId = (0, uuid_1.v4)();
@@ -78,7 +79,8 @@ class WithdrawTable extends _1.PostgresDB {
                         feeId,
                         id,
                         'taxa',
-                        passFee
+                        passFee,
+                        'debito'
                     ]);
                     console.log(feeResult.rows);
                     if (feeResult.rows.length !== 0) {

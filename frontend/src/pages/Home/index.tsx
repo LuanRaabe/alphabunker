@@ -5,7 +5,6 @@ import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
 import { useUser } from '../../providers/UserProvider';
 import { maskCpf, maskEmail } from '../../utils/Masks';
-import { InputReferences } from '../../utils/References';
 import {
   validateConfirmPassword,
   validateCpf,
@@ -25,7 +24,6 @@ import {
  */
 
 export const Home = () => {
-  const references = InputReferences();
   const navigate = useNavigate();
   const { loading } = useUser();
   const [loginOrRegister, setLoginOrRegister] = useState<'login' | 'register'>(
@@ -39,14 +37,14 @@ export const Home = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
-  const isLoginScreen = loginOrRegister === 'login';
+  const isLoginScreen = () => loginOrRegister === 'login';
 
   function handleSubmit() {
     //request api
     //se der erro
     // references.setError(name, mensagemdeerro);
     //
-    if (isLoginScreen) navigate('/deposit');
+    if (isLoginScreen()) navigate('/deposit');
     else navigate('/deposit');
   }
 
@@ -58,7 +56,7 @@ export const Home = () => {
     setPassword('');
     setConfirmPassword('');
     setDisableSubmit(false);
-    setLoginOrRegister(isLoginScreen ? 'register' : 'login');
+    setLoginOrRegister(isLoginScreen() ? 'register' : 'login');
   }
 
   function renderLoading() {
@@ -68,22 +66,22 @@ export const Home = () => {
   function renderLogo() {
     return (
       <>
-        <div className={`mb-4 ${isLoginScreen ? 'h-[103px]' : 'h-[69px]'}`}>
-          <img src="public/logo.svg" alt="logo" className="h-full" />
+        <div className={`mb-4 ${isLoginScreen() ? 'h-[103px]' : 'h-[69px]'}`}>
+          <img src="/logo.svg" alt="logo" className="h-full" />
         </div>
         <span
           className={`text-brand-base text-2xl ${
-            isLoginScreen ? 'mb-14' : 'mb-3'
+            isLoginScreen() ? 'mb-14' : 'mb-3'
           }`}
         >
           Alpha Bunker
         </span>
         <span
           className={`text-paragraph-dark text-xl ${
-            isLoginScreen ? 'mb-6' : 'mb-7'
+            isLoginScreen() ? 'mb-6' : 'mb-7'
           }`}
         >
-          {isLoginScreen ? 'Login' : 'Crie sua conta'}
+          {isLoginScreen() ? 'Login' : 'Crie sua conta'}
         </span>
       </>
     );
@@ -95,7 +93,7 @@ export const Home = () => {
         <Button
           category="primary"
           type="submit"
-          label={isLoginScreen ? 'Entrar' : 'Cadastrar'}
+          label={isLoginScreen() ? 'Entrar' : 'Cadastrar'}
           className="mb-2"
           isDisabled={disableSubmit}
         />
@@ -103,7 +101,7 @@ export const Home = () => {
           className="text-sm text-paragraph-dark cursor-pointer"
           onClick={() => changeScreen()}
         >
-          {isLoginScreen ? 'Crie sua conta' : 'Entrar'}
+          {isLoginScreen() ? 'Crie sua conta' : 'Entrar'}
         </span>
       </>
     );
@@ -127,7 +125,7 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('cpflogin')}
+          autoFocus={isLoginScreen()}
         />
         <Input
           name="passwordlogin"
@@ -139,7 +137,6 @@ export const Home = () => {
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('passwordlogin')}
         />
         {renderBottomButtons()}
       </>
@@ -163,7 +160,7 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('name')}
+          autoFocus={!isLoginScreen()}
         />
         <Input
           name="date"
@@ -178,7 +175,6 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('date')}
         />
         <Input
           name="cpf"
@@ -194,7 +190,6 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('cpf')}
         />
         <Input
           name="email"
@@ -207,7 +202,6 @@ export const Home = () => {
             { validate: validateEmail, errorMessage: 'Email inválido' },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('email')}
         />
         <Input
           name="password"
@@ -219,7 +213,6 @@ export const Home = () => {
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('password')}
         />
         <Input
           name="passwordconfirm"
@@ -235,7 +228,6 @@ export const Home = () => {
             },
           ]}
           callback={setDisableSubmit}
-          ref={references.getOrCrateRef('passwordconfirm')}
         />
         {renderBottomButtons()}
       </>
@@ -247,7 +239,7 @@ export const Home = () => {
       {loading ? (
         renderLoading()
       ) : (
-        <>{isLoginScreen ? renderLogin() : renderRegister()}</>
+        <>{isLoginScreen() ? renderLogin() : renderRegister()}</>
       )}
     </FormSubmit>
   );

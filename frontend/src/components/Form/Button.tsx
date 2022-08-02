@@ -7,6 +7,7 @@ interface PropTypes {
   type?: 'button' | 'submit';
   onClick?: MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
+  tabIndex?: number;
 }
 
 /**
@@ -26,6 +27,7 @@ export const Button = ({
   onClick,
   category,
   isDisabled,
+  tabIndex,
 }: PropTypes) => (
   <button
     className={`w-64 h-8 flex items-center justify-center text-white rounded-md btn-${category} ${
@@ -34,6 +36,7 @@ export const Button = ({
     type={type}
     onClick={onClick}
     disabled={isDisabled}
+    tabIndex={tabIndex ?? 0}
   >
     {label}
   </button>

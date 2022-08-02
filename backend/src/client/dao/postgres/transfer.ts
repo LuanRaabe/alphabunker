@@ -51,7 +51,6 @@ class TransferTable extends PostgresDB{
             `;
 
             const check2 = await client.query(selectBalanceQuery, [transfer.transferAgency, transfer.transferAgencyDigit, transfer.transferAccount, transfer.transferAccountDigit]);
-            console.log(check2.rows)
             const transferId = check2.rows[0].id;
             
             if(!transferId || !ownerId){
@@ -67,22 +66,24 @@ class TransferTable extends PostgresDB{
             const newValue = ownerAtualBalance - newFee;
             
             if(newValue >= 0){
-                console.log('entrou')
+                console.log('permitido')
                 
                 const insertTransferQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type ) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
-    
+                
                 const result = await client.query(insertTransferQuery, [
                     transfer.id,
                     ownerId,
-                    'transferência',
-                    -transfer.value
+                    'transferência efetuada',
+                    transfer.value,
+                    'debito'
                 ]);
 
+                console.log("feito")
                 console.log(result.rows)
                 if (result.rows.length !== 0){
                     console.log("primeiro ok")
@@ -90,17 +91,18 @@ class TransferTable extends PostgresDB{
 
                 const insertTransferExtract = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
                 const transferTableId = v4();
     
                 const depositResult = await client.query(insertTransferExtract, [
                     transferTableId,
                     transferId,
-                    'transferência',
-                    transfer.value
+                    'transferência recebida',
+                    transfer.value,
+                    'credito'
                 ]);
 
                 console.log(result.rows)
@@ -110,9 +112,9 @@ class TransferTable extends PostgresDB{
 
                 const insertFeeQuery = `
                 INSERT INTO public.extracts
-                    (id, account_id, operation_name, value, created_at) 
+                    (id, account_id, operation_name, value, created_at, type) 
                 VALUES 
-                    ( $1, $2, $3, $4, NOW() ) RETURNING id
+                    ( $1, $2, $3, $4, NOW(), $5 ) RETURNING id
                 `;
 
                 const passFee = String(fee);
@@ -122,7 +124,8 @@ class TransferTable extends PostgresDB{
                     feeId,
                     ownerId,
                     'taxa',
-                    passFee
+                    passFee,
+                    'debito'
                 ]);
 
                 console.log(feeResult.rows)
