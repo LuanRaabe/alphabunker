@@ -48,10 +48,9 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
   }
 
   function renderValue() {
-    const isPositive = (transaction?.value || 0) > 0;
     return (
-      <span className={isPositive ? 'text-green-500' : 'text-red-500'}>
-        {isPositive ? '+ $' : '- $'}
+      <span className={transaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'}>
+        {transaction?.type === 'credito' ? '+ $' : '- $'}
         {transaction?.value}
       </span>
     );

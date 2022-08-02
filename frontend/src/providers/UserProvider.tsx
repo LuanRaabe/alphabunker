@@ -28,10 +28,11 @@ interface AccountTypes {
   balance: string;
 }
 
-interface TransactionTypes {
+interface ITransaction {
   id: string;
   account_id: string;
   operation_name: string;
+  type: string;
   value: number;
   created_at: string;
 }
@@ -40,8 +41,9 @@ interface ContextTypes {
   user: UserTypes;
   accounts: AccountTypes[];
   loggedAccount: AccountTypes;
-  transactions: TransactionTypes[];
+  transactions: ITransaction[];
   loading: boolean;
+  error: string;
   loginUser: (cpf: string, password: string) => void;
   createAccount: (
     name: string,
@@ -88,6 +90,7 @@ interface UserProviderTypes {
 }
 
 export const UserProvider = ({ children }: UserProviderTypes) => {
+  const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
   const [accounts, setAccounts] = useState<AccountTypes[] | undefined>(
     undefined,
@@ -96,7 +99,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     undefined,
   );
   const [transactions, setTansactions] = useState<
-    TransactionTypes[] | undefined
+    ITransaction[] | undefined
   >(undefined);
   const [loading, setLoading] = useState(false);
 
@@ -109,7 +112,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         setUser({ name, email, cpf, birthDate, photo });
         cookie.ObjectToCookies(user);
       })
-      .then(() => setLoading(false));
+      .then(() => setLoading(false))
+      .catch((e) => setError(e));
   }
 
   function createAccount(
@@ -145,7 +149,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         });
         cookie.ObjectToCookies(account);
       })
-      .then(() => setLoading(false));
+      .then(() => setLoading(false))
+      .catch((e) => setError(e));
   }
 
   function makeDeposit(
@@ -168,7 +173,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       )
       .then(() => {
         setLoading(false);
-      });
+      })
+      .catch((e) => setError(e));
   }
 
   function makeWithdraw(
@@ -191,7 +197,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       )
       .then(() => {
         setLoading(false);
-      });
+      })
+      .catch((e) => setError(e));
   }
 
   function makeTransfer(
@@ -222,7 +229,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       transferAccountDigit,
       transferAgency,
       transferAgencyDigit,
-    );
+    )
+      .catch((e) => setError(e));
   }
 
   useEffect(() => {
@@ -267,14 +275,128 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'taxa',
         value: 60,
+        type: 'debito',
         created_at: '2022-07-29T12:24:01.916Z',
       },
       {
-        id: 'f6903dc3-fc8d-4a30-b1ec-90684bda2e23',
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
         account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
         operation_name: 'deposito',
+        type: 'credito',
         value: 6000,
         created_at: '2022-07-29T12:24:01.728Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 300,
+        created_at: '2022-07-29T12:24:01.728Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 30,
+        created_at: '2022-07-29T12:24:01.728Z',
+      },
+      {
+        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 60,
+        created_at: '2022-07-28T12:24:01.916Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 6000,
+        created_at: '2022-07-28T12:24:01.728Z',
+      },
+      {
+        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 60,
+        created_at: '2022-07-27T12:24:01.916Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 6000,
+        created_at: '2022-07-27T12:24:01.728Z',
+      },
+      {
+        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 60,
+        created_at: '2022-07-29T12:24:01.916Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 6000,
+        created_at: '2022-07-29T12:24:01.728Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 300,
+        created_at: '2022-07-29T12:24:01.728Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 30,
+        created_at: '2022-07-29T12:24:01.728Z',
+      },
+      {
+        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 60,
+        created_at: '2022-07-28T12:24:01.916Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 6000,
+        created_at: '2022-07-28T12:24:01.728Z',
+      },
+      {
+        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'taxa',
+        type: 'debito',
+        value: 60,
+        created_at: '2022-07-27T12:24:01.916Z',
+      },
+      {
+        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+        operation_name: 'deposito',
+        type: 'credito',
+        value: 6000,
+        created_at: '2022-07-27T12:24:01.728Z',
       },
     ]);
   }, []);
@@ -287,6 +409,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         loggedAccount,
         transactions,
         loading,
+        error,
         loginUser,
         createAccount,
         makeDeposit,
