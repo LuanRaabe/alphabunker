@@ -57,7 +57,7 @@ function LoginDB(cpf, password) {
                     },
                     account: {
                         id: account.id,
-                        owners_cpf: account.cpf,
+                        owners_cpf: owner.cpf,
                         agency: account.agency,
                         agency_digit: account.agency_digit,
                         account: account.account,
