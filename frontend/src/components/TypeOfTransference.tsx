@@ -49,7 +49,11 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
 
   function renderValue() {
     return (
-      <span className={transaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'}>
+      <span
+        className={
+          transaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'
+        }
+      >
         {transaction?.type === 'credito' ? '+ $' : '- $'}
         {transaction?.value}
       </span>

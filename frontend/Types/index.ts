@@ -10,20 +10,18 @@ export interface Transaction {
 export interface Owner {
   name: string;
   email: string;
-  cpf: string;
-  birthDate: string;
+  birthdate: string;
   photo?: string;
-  id: string;
 }
 
 export interface Account {
-  id: string;
-  ownerCpf: string;
-  password: string;
+  id?: string;
+  owners_cpf: string;
+  password?: string;
   agency: string;
-  agencyDigit: string;
+  agency_digit: string;
   account: string;
-  accountDigit: string;
+  account_digit: string;
   balance: string;
 }
 
@@ -48,12 +46,12 @@ export interface ResponseLogin {
 }
 
 export interface DataExtract {
-  owner: Owner;
+  account: Account;
+  extract: Transaction[];
 }
 
 export interface ResponseExtract {
   data: DataExtract;
-  extract: Transaction[];
   message: string[];
 }
 

@@ -51,13 +51,6 @@ export function validatePassword(password: string): boolean {
   return passwordFormatted.length >= 4 && passwordFormatted.length <= 20;
 }
 
-export function validateConfirmPassword(
-  password: string,
-  confirmPassword: string,
-): boolean {
-  return password === confirmPassword;
-}
-
 export function validateDate(inputDate: string): boolean {
   const date = new Date(inputDate);
   if (isNaN(date.getTime())) return false;

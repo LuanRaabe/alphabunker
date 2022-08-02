@@ -11,7 +11,6 @@ import { SectionButton } from './SectionButton';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../providers/UserProvider';
 
-
 /**
  * Archive: src/components/Menu.tsx
  *
@@ -60,11 +59,11 @@ export function Menu() {
           <div className="flex flex-row">
             <span className="text-header-gold text-sm mr-2">
               Agência:{' '}
-              {loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
+              {loggedAccount?.agency + '-' + loggedAccount?.agency_digit}
             </span>
             <span className="text-header-gold text-sm">
               Conta:{' '}
-              {loggedAccount?.account + '-' + loggedAccount?.accountDigit}
+              {loggedAccount?.account + '-' + loggedAccount?.account_digit}
             </span>
           </div>
           <CaretDown weight="bold" className="w-6 h-6 text-icon-dark-200" />

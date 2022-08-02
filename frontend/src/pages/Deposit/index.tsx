@@ -71,12 +71,12 @@ export const Deposit = () => {
             <SmallInput
               title="Agência"
               isDisabled={true}
-              value={loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
+              value={loggedAccount?.agency + '-' + loggedAccount?.agency_digit}
             />
             <SmallInput
               title="Conta"
               isDisabled={true}
-              value={loggedAccount?.account + '-' + loggedAccount?.accountDigit}
+              value={loggedAccount?.account + '-' + loggedAccount?.account_digit}
             />
           </div>
           <Input

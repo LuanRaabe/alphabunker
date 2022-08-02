@@ -25,12 +25,12 @@ export class BankAPI {
     });
   }
 
-  async createSession(ownerCpf: string, password: string) {
+  async createSession(cpf: string, password: string) {
     const response = await this.api.post('/login', {
-      ownerCpf,
+      cpf,
       password,
     });
-    return response as unknown as ResponseLogin;
+    return response.data as unknown as ResponseLogin;
   }
 
   async createAccount(
@@ -45,7 +45,8 @@ export class BankAPI {
       cpf,
       birthdate,
     });
-    return response as unknown as ResponseCreateAccount;
+    console.log(response.data);
+    return response.data as unknown as ResponseCreateAccount;
   }
 
   async makeDeposit(
@@ -64,7 +65,7 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response as unknown as ResponseDeposit;
+    return response.data as unknown as ResponseDeposit;
   }
 
   async makeWithdraw(
@@ -83,11 +84,12 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response as unknown as ResponseWithdraw;
+    return response.data as unknown as ResponseWithdraw;
   }
 
   async getTransactions(
     ownerCpf: string,
+    password: string,
     account: string,
     accountDigit: string,
     agency: string,
@@ -96,11 +98,12 @@ export class BankAPI {
     const response = await this.api.post('/extract', {
       ownerCpf,
       account,
+      password,
       accountDigit,
       agency,
       agencyDigit,
     });
-    return response as unknown as ResponseExtract;
+    return response.data as unknown as ResponseExtract;
   }
 
   async makeTransfer(
@@ -131,14 +134,14 @@ export class BankAPI {
       transferAgencyDigit,
       value,
     });
-    return response as unknown as ResponseTransfer;
+    return response.data as unknown as ResponseTransfer;
   }
 
   async getAccounts(ownerCpf: string) {
     const response = await this.api.post('/search', {
       ownerCpf,
     });
-    return response as unknown as ResponseAccounts;
+    return response.data as unknown as ResponseAccounts;
   }
 }
 export const bankAPI = new BankAPI();
