@@ -17,16 +17,16 @@ const TAB_INDEX = {
 };
 
 /**
- * Archive: src/pages/Transfer.tsx
+ * Archive: src/pages/Withdraw.tsx
  *
- * Description: Transfer page
+ * Description: Withdraw page
  *
  * Date: 2022/07/30
  *
  * Author: Rey, Luan
  */
 
-export const Transfer = () => {
+export const Withdraw = () => {
   const [modal, setModal] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const references = InputReferences();
@@ -39,7 +39,7 @@ export const Transfer = () => {
     setModal(true);
   }
 
-  function confirSubmit() {
+  function confirmSubmit() {
     /* const response = request;
     const {data, error} = response;
     if(error){
@@ -57,7 +57,7 @@ export const Transfer = () => {
         <Modal
           title="Saque"
           setModal={setModal}
-          handleConfirmModal={confirSubmit}
+          handleConfirmModal={confirmSubmit}
         />
       )}
       <WhiteCard

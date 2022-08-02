@@ -23,9 +23,8 @@ interface WhiteCardProps {
 export function WhiteCard(props: WhiteCardProps) {
   return (
     <div
-      className={`flex flex-col w-4/5 px-4 py-3 bg-white rounded-lg ${
-        props.className ?? ''
-      }`}
+      className={`flex flex-col w-4/5 px-4 py-3 bg-white rounded-lg
+      ${props.className ?? ''}`}
     >
       <div className="flex flex-row justify-between items-center mb-6">
         <div className="flex flex-row items-center">
@@ -40,7 +39,7 @@ export function WhiteCard(props: WhiteCardProps) {
       </div>
       <div className="flex flex-col">
         {props.blank ? (
-          <div className="flex flex-col w-11/12">{props.children}</div>
+          <div className="flex flex-col">{props.children}</div>
         ) : (
           props.childs?.map((child, index) => (
             <div

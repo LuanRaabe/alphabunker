@@ -2,6 +2,15 @@
 // Path: frontend\src\libs\api.ts
 
 import axios, { Axios } from 'axios';
+import {
+  ResponseCreateAccount,
+  ResponseLogin,
+  ResponseExtract,
+  ResponseAccounts,
+  ResponseDeposit,
+  ResponseWithdraw,
+  ResponseTransfer,
+} from '../../Types';
 
 export const api = axios.create({
   baseURL: 'http://localhost:8000/',
@@ -16,23 +25,12 @@ export class BankAPI {
     });
   }
 
-  async createSession(
-    ownerCpf: string,
-    password: string,
-    account: string,
-    accountDigit: string,
-    agency: string,
-    agencyDigit: string,
-  ) {
+  async createSession(ownerCpf: string, password: string) {
     const response = await this.api.post('/login', {
       ownerCpf,
       password,
-      account,
-      accountDigit,
-      agency,
-      agencyDigit,
     });
-    return response;
+    return response as unknown as ResponseLogin;
   }
 
   async createAccount(
@@ -47,7 +45,7 @@ export class BankAPI {
       cpf,
       birthdate,
     });
-    return response;
+    return response as unknown as ResponseCreateAccount;
   }
 
   async makeDeposit(
@@ -66,10 +64,10 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response;
+    return response as unknown as ResponseDeposit;
   }
 
-  async makeWithdrawal(
+  async makeWithdraw(
     ownerCpf: string,
     account: string,
     accountDigit: string,
@@ -85,7 +83,7 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response;
+    return response as unknown as ResponseWithdraw;
   }
 
   async getTransactions(
@@ -102,7 +100,7 @@ export class BankAPI {
       agency,
       agencyDigit,
     });
-    return response;
+    return response as unknown as ResponseExtract;
   }
 
   async makeTransfer(
@@ -133,14 +131,14 @@ export class BankAPI {
       transferAgencyDigit,
       value,
     });
-    return response;
+    return response as unknown as ResponseTransfer;
   }
 
   async getAccounts(ownerCpf: string) {
-    const response = await this.api.post('/accounts', {
+    const response = await this.api.post('/search', {
       ownerCpf,
     });
-    return response;
+    return response as unknown as ResponseAccounts;
   }
 }
 export const bankAPI = new BankAPI();
