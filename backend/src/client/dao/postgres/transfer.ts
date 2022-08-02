@@ -7,6 +7,7 @@ const { Client } = require('pg');
 import { v4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import {compareAccounts} from '../../../utils'
+import { DataRowMessage } from "pg-protocol/dist/messages";
 
 class TransferTable extends PostgresDB{
     
@@ -181,7 +182,8 @@ class TransferTable extends PostgresDB{
                         agency: transfer.ownerAgency,
                         agencyDigit: transfer.ownerAgencyDigit,
                         account: transfer.ownerAccount,
-                        accountDigit: transfer.ownerAccountDigit
+                        accountDigit: transfer.ownerAccountDigit,
+                        createdAt: new Date()
                     },
                     transfer_in: {
                         id: transferTableId,
@@ -189,7 +191,8 @@ class TransferTable extends PostgresDB{
                         agency: transfer.transferAgency,
                         agencyDigit: transfer.transferAgencyDigit,
                         account: transfer.transferAccount,
-                        accountDigit: transfer.transferAccountDigit
+                        accountDigit: transfer.transferAccountDigit,
+                        createdAt: new Date()
                     },
                     fee: {
                         id: feeId,

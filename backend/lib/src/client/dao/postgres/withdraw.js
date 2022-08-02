@@ -113,7 +113,8 @@ class WithdrawTable extends _1.PostgresDB {
                             agency: withdraw.agency,
                             agencyDigit: withdraw.agencyDigit,
                             account: withdraw.account,
-                            accountDigit: withdraw.accountDigit
+                            accountDigit: withdraw.accountDigit,
+                            createdAt: new Date()
                         },
                         fee: {
                             id: feeId,

@@ -104,11 +104,12 @@ class DepositTable {
                             agency: deposit.agency,
                             agencyDigit: deposit.agencyDigit,
                             account: deposit.account,
-                            accountDigit: deposit.accountDigit
+                            accountDigit: deposit.accountDigit,
+                            createdAt: new Date()
                         },
                         fee: {
                             id: feeId,
-                            value: passFee
+                            value: passFee,
                         }
                     };
                     yield client.end();
