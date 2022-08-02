@@ -5,16 +5,10 @@ import {
   useContext,
   useEffect,
 } from 'react';
+import bankAPI from '../libs/api';
+import { cookie } from '../libs/cookie';
 
 //import { api, createSession } from '../libs/api';
-
-interface ContextTypes {
-  user: UserTypes;
-  accounts: AccountTypes[];
-  loggedAccount: AccountTypes;
-  transactions: TransactionTypes[];
-  loading: boolean;
-}
 
 interface UserTypes {
   name: string;
@@ -27,7 +21,6 @@ interface UserTypes {
 interface AccountTypes {
   id: string;
   cpf: string;
-  password: string;
   agency: string;
   agencyDigit: string;
   account: string;
@@ -41,6 +34,51 @@ interface TransactionTypes {
   operation_name: string;
   value: number;
   created_at: string;
+}
+
+interface ContextTypes {
+  user: UserTypes;
+  accounts: AccountTypes[];
+  loggedAccount: AccountTypes;
+  transactions: TransactionTypes[];
+  loading: boolean;
+  loginUser: (cpf: string, password: string) => void;
+  createAccount: (
+    name: string,
+    email: string,
+    cpf: string,
+    birthDate: string,
+  ) => void;
+  makeDeposit: (
+    ownerCpf: string,
+    account: string,
+    accountDigit: string,
+    agency: string,
+    agencyDigit: string,
+    value: number,
+  ) => void;
+  makeWithdraw: (
+    ownerCpf: string,
+    account: string,
+    accountDigit: string,
+    agency: string,
+    agencyDigit: string,
+    value: number,
+  ) => void;
+  makeTransfer: (
+    ownerCpf: string,
+    ownerPassword: string,
+    onweraccount: string,
+    onweraccountDigit: string,
+    onweragency: string,
+    onweragencyDigit: string,
+    value: number,
+    transferCpf: string,
+    transferAccount: string,
+    transferAccountDigit: string,
+    transferAgency: string,
+    transferAgencyDigit: string,
+  ) => void;
 }
 
 export const UserContext = createContext<Partial<ContextTypes>>({});
@@ -62,6 +100,131 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
   >(undefined);
   const [loading, setLoading] = useState(false);
 
+  function loginUser(cpf: string, password: string) {
+    setLoading(true);
+    bankAPI
+      .createSession(cpf, password)
+      .then((response) => {
+        const { name, email, cpf, birthDate, photo } = response.data.owner;
+        setUser({ name, email, cpf, birthDate, photo });
+        cookie.ObjectToCookies(user);
+      })
+      .then(() => setLoading(false));
+  }
+
+  function createAccount(
+    name: string,
+    email: string,
+    cpf: string,
+    birthDate: string,
+  ) {
+    setLoading(true);
+    bankAPI
+      .createAccount(name, email, cpf, birthDate)
+      .then((response) => {
+        const { name, email, cpf, birthDate, photo } = response.data.owner;
+        setUser({ name, email, cpf, birthDate, photo });
+        cookie.ObjectToCookies(user);
+        const {
+          id,
+          ownerCpf,
+          account,
+          accountDigit,
+          agency,
+          agencyDigit,
+          balance,
+        } = response.data.account;
+        setLoggedAccount({
+          id,
+          cpf: ownerCpf,
+          account,
+          accountDigit,
+          agency,
+          agencyDigit,
+          balance,
+        });
+        cookie.ObjectToCookies(account);
+      })
+      .then(() => setLoading(false));
+  }
+
+  function makeDeposit(
+    ownerCpf: string,
+    account: string,
+    accountDigit: string,
+    agency: string,
+    agencyDigit: string,
+    valueTransaction: number,
+  ) {
+    setLoading(true);
+    bankAPI
+      .makeDeposit(
+        ownerCpf,
+        account,
+        accountDigit,
+        agency,
+        agencyDigit,
+        valueTransaction,
+      )
+      .then(() => {
+        setLoading(false);
+      });
+  }
+
+  function makeWithdraw(
+    ownerCpf: string,
+    account: string,
+    accountDigit: string,
+    agency: string,
+    agencyDigit: string,
+    valueTransaction: number,
+  ) {
+    setLoading(true);
+    bankAPI
+      .makeWithdraw(
+        ownerCpf,
+        account,
+        accountDigit,
+        agency,
+        agencyDigit,
+        valueTransaction,
+      )
+      .then(() => {
+        setLoading(false);
+      });
+  }
+
+  function makeTransfer(
+    ownerCpf: string,
+    ownerPassword: string,
+    onweraccount: string,
+    onweraccountDigit: string,
+    onweragency: string,
+    onweragencyDigit: string,
+    value: number,
+    transferCpf: string,
+    transferAccount: string,
+    transferAccountDigit: string,
+    transferAgency: string,
+    transferAgencyDigit: string,
+  ) {
+    setLoading(true);
+    bankAPI.makeTransfer(
+      ownerCpf,
+      ownerPassword,
+      onweraccount,
+      onweraccountDigit,
+      onweragency,
+      onweragencyDigit,
+      value,
+      transferCpf,
+      transferAccount,
+      transferAccountDigit,
+      transferAgency,
+      transferAgencyDigit,
+    );
+  }
+
   useEffect(() => {
     setUser({
       name: 'Fulano',
@@ -73,7 +236,6 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       {
         id: '1',
         cpf: '34515222617',
-        password: 'jubileu',
         balance: '234',
         agency: '123',
         agencyDigit: '6',
@@ -83,7 +245,6 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       {
         id: '2',
         cpf: '34515552617',
-        password: 'jubileu',
         balance: '321',
         agency: '564',
         agencyDigit: '6',
@@ -94,7 +255,6 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     setLoggedAccount({
       id: '1',
       cpf: '34515222617',
-      password: 'jubileu',
       balance: '234',
       agency: '123',
       agencyDigit: '6',
@@ -127,6 +287,11 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         loggedAccount,
         transactions,
         loading,
+        loginUser,
+        createAccount,
+        makeDeposit,
+        makeWithdraw,
+        makeTransfer,
       }}
     >
       {children}
