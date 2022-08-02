@@ -31,7 +31,9 @@ const orderTransactions = (extract: Transaction[]) => {
   const orderedTransactions: OrderedTransaction[] = [];
   extract.forEach((item) => {
     const date = item.created_at.split('T')[0];
-    const formatedDate = `${date.split('-')[2]}/${date.split('-')[1]}/${date.split('-')[0]}`;
+    const formatedDate = `${date.split('-')[2]}/${date.split('-')[1]}/${
+      date.split('-')[0]
+    }`;
     const dateFound = orderedTransactions.find((transaction) => {
       return transaction.date === formatedDate;
     });
@@ -65,25 +67,37 @@ export const Extract = () => {
           <div className="animate-pulse" />
         </div>
       ) : (
-        <div>
+        <div className="w-full">
           {error ? (
-            <div className="text-red-500 text-center">{error}</div>) : (
-            <div className='overflow-auto h-4/6'>
+            <div className="text-red-500 text-center">{error}</div>
+          ) : (
+            <div className="overflow-auto w-full h-4/6">
               {orderedTransactions.map((transactionDay) => (
-                <div className="transaction-day text-neutral-600" key={transactionDay.date}>
-                  <p className=' w-5/6'>{transactionDay.date}</p>
+                <div
+                  className="transaction-day text-neutral-600"
+                  key={transactionDay.date}
+                >
+                  <p className=" w-5/6">{transactionDay.date}</p>
                   {transactionDay.transactions.map((transactionItem) => (
                     <div
-                      className='flex flex-row justify-between items-center text-neutral-400 mx-2'
+                      className="flex flex-row justify-between items-center text-neutral-400 mx-2"
                       key={transactionItem.id}
                       onClick={() => {
                         navigate(`/transaction/${transactionItem.id}`);
-                      }}>
-                      <p className='font-normal'>{transactionItem.operation_name}</p>
+                      }}
+                    >
+                      <p className="font-normal">
+                        {transactionItem.operation_name}
+                      </p>
                       <p
-                        className={transactionItem.type === 'debito' ? 'text-red-500' : 'text-green-500'}
+                        className={
+                          transactionItem.type === 'debito'
+                            ? 'text-red-500'
+                            : 'text-green-500'
+                        }
                       >
-                        {transactionItem?.type === 'credito' ? '+ $' : '- $'} R${transactionItem.value.toFixed(2).replace('.', ',')}
+                        {transactionItem?.type === 'credito' ? '+ $' : '- $'} R$
+                        {transactionItem.value.toFixed(2).replace('.', ',')}
                       </p>
                     </div>
                   ))}

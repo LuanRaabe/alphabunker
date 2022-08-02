@@ -17,7 +17,10 @@ interface FormSubmitProps {
 
 export function FormSubmit(props: FormSubmitProps) {
   return (
-    <form className="flex flex-col items-center" onSubmit={props.submitForm}>
+    <form
+      className="flex flex-col items-center justify-center w-full h-full"
+      onSubmit={props.submitForm}
+    >
       {props.children}
     </form>
   );

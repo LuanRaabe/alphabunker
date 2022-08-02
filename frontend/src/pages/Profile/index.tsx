@@ -23,7 +23,7 @@ export const Profile = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full bg-white dark:bg-body-dark">
       <div className="fixed top-0 flex flex-col items-center w-full h-52 rounded-b-3xl z-10 bg-brand-base">
         <ArrowLeft
           weight="bold"
