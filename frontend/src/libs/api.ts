@@ -10,6 +10,7 @@ import {
   ResponseDeposit,
   ResponseWithdraw,
   ResponseTransfer,
+  ResponseBalance,
 } from '../../Types';
 
 export const api = axios.create({
@@ -75,6 +76,7 @@ export class BankAPI {
     agency: string,
     agencyDigit: string,
     value: string,
+    password: string,
   ) {
     const response = await this.api.post('/withdraw', {
       ownerCpf,
@@ -83,6 +85,7 @@ export class BankAPI {
       agency,
       agencyDigit,
       value,
+      password,
     });
     return response.data as unknown as ResponseWithdraw;
   }
@@ -142,6 +145,25 @@ export class BankAPI {
       ownerCpf,
     });
     return response.data as unknown as ResponseAccounts;
+  }
+
+  async getBalance(
+    ownerCpf: string,
+    account: string,
+    accountDigit: string,
+    agency: string,
+    agencyDigit: string,
+    password: string,
+  ) {
+    const response = await this.api.post('/balance', {
+      ownerCpf,
+      account,
+      accountDigit,
+      agency,
+      agencyDigit,
+      password,
+    });
+    return response.data as unknown as ResponseBalance;
   }
 }
 export const bankAPI = new BankAPI();

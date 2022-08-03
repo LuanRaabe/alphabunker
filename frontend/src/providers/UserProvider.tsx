@@ -3,7 +3,6 @@ import {
   createContext,
   useState,
   useContext,
-  useEffect,
 } from 'react';
 import bankAPI from '../libs/api';
 import { cookie } from '../libs/cookie';
@@ -50,8 +49,10 @@ interface ContextTypes {
   loggedAccount: AccountTypes;
   transactions: ITransaction[];
   orderedTransactions: OrderedTransaction[];
+  balance: string;
   loading: boolean;
   error: string;
+  setBalance: (balance: string) => void;
   setOrderedTransactions: (orderedTransactions: OrderedTransaction[]) => void;
   setTransactions: (transactions: ITransaction[]) => void;
   loginUser: (cpf: string, password: string) => void;
@@ -76,6 +77,7 @@ interface ContextTypes {
     agency: string,
     agencyDigit: string,
     value: string,
+    password: string,
   ) => void;
   makeTransfer: (
     ownerCpf: string,
@@ -102,6 +104,7 @@ interface UserProviderTypes {
 export const UserProvider = ({ children }: UserProviderTypes) => {
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
+  const [balance, setBalance] = useState<string>('0,00');
   const [accounts, setAccounts] = useState<AccountTypes[] | undefined>(
     undefined,
   );
@@ -130,6 +133,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
           account_digit: response.data.account.account_digit,
           balance: response.data.account.balance,
         });
+        setBalance(response.data.account.balance);
         //cookie.ObjectToCookies(user); // TODO: n funfa tem que ve
       })
       .catch((e) => setError(e));
@@ -182,6 +186,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     agency: string,
     agencyDigit: string,
     valueTransaction: string,
+    password: string,
   ) {
     setLoading(true);
     bankAPI
@@ -192,10 +197,10 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agency,
         agencyDigit,
         valueTransaction,
+        password
       )
       .catch((e) => setError(e));
     setLoading(false);
-
   }
 
   function makeTransfer(
@@ -404,6 +409,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     <UserContext.Provider
       value={{
         user,
+        balance,
         accounts,
         loggedAccount,
         transactions,
@@ -411,6 +417,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         loading,
         error,
         loginUser,
+        setBalance,
         createAccount,
         makeDeposit,
         makeWithdraw,

@@ -39,7 +39,7 @@ const orderTransactions = (extract: ITransaction[]) => {
 
 export const Extract = () => {
   const navigate = useNavigate();
-  const { setTransactions, orderedTransactions, setOrderedTransactions, loggedAccount, error, loading } = useUser();
+  const { setBalance, setTransactions, orderedTransactions, setOrderedTransactions, loggedAccount, error, loading } = useUser();
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -58,6 +58,18 @@ export const Extract = () => {
       }
     };
     fetchTransactions();
+    if (loggedAccount?.id === undefined) return;
+    (async () => {
+      const newBalance = await bankAPI.getBalance(
+        loggedAccount?.owners_cpf,
+        loggedAccount?.account,
+        loggedAccount?.account_digit,
+        loggedAccount?.agency,
+        loggedAccount?.agency_digit,
+        loggedAccount?.password,
+      );
+      setBalance?.(newBalance.data.balance);
+    })();
   }, []);
 
   return (

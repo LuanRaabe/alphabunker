@@ -10,6 +10,7 @@ import {
 import { SectionButton } from './SectionButton';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../providers/UserProvider';
+import { useEffect } from 'react';
 
 /**
  * Archive: src/components/Menu.tsx
@@ -22,7 +23,7 @@ import { useUser } from '../../providers/UserProvider';
  */
 
 export function Menu() {
-  const { user, loggedAccount } = useUser();
+  const { user, loggedAccount, balance } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -71,7 +72,7 @@ export function Menu() {
         <div className="flex flex-row items-center text-brand-base">
           <Eye weight="bold" className="w-6 h-6 mx-1 text-icon-dark-200" />
           <div className="flex flex-row items-end">
-            <span className="text-2xl mr-1">{loggedAccount?.balance}</span>
+            <span className="text-2xl mr-1">{balance}</span>
             <span className="text-sm mb-1">R$</span>
           </div>
         </div>

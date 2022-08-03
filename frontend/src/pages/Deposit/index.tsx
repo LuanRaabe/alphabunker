@@ -69,7 +69,6 @@ export const Deposit = () => {
       setModal(false);
       return;
     }
-    console.log('deposito realizado com sucesso');
     setModal(false);
     navigate('/extract');
   }

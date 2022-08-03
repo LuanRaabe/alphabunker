@@ -60,6 +60,17 @@ export interface ResponseAccounts {
   messages: string[];
 }
 
+export interface BalanceData {
+  id: string;
+  name: string;
+  owners_cpf: string;
+  agency: string;
+  agencyDigit: string;
+  account: string;
+  accountDigit: string;
+  balance: string;
+}
+
 export interface Transaction {
   id: string;
   value: string;
@@ -92,6 +103,11 @@ export interface WithdrawData {
 
 export interface ResponseWithdraw {
   data: WithdrawData;
+  messages: string[];
+}
+
+export interface ResponseBalance {
+  data: BalanceData;
   messages: string[];
 }
 
