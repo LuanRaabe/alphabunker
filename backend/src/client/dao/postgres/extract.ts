@@ -36,9 +36,7 @@ async function CheckExtract(
       account,
       account_digit,
     ]);
-    console.log(check.rows[0]);
     const compare = bcrypt.compareSync(password, check.rows[0].password);
-    console.log(compare);
     if (!compare) {
       return false;
     }

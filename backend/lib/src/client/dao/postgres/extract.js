@@ -40,9 +40,7 @@ function CheckExtract(cpf, password, agency, agency_digit, account, account_digi
                 account,
                 account_digit,
             ]);
-            console.log(check.rows[0]);
             const compare = bcrypt_1.default.compareSync(password, check.rows[0].password);
-            console.log(compare);
             if (!compare) {
                 return false;
             }

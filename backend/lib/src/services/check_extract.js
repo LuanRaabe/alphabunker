@@ -26,16 +26,15 @@ class SearchExtractService {
                     throw new Error(`400: ${validExtractData.errors}`);
                 }
                 const searchExtract = yield this.extractTable(extract.ownerCpf, extract.password, extract.agency, extract.agencyDigit, extract.account, extract.accountDigit);
-                console.log(searchExtract);
                 if (searchExtract) {
                     return {
                         data: searchExtract,
-                        messages: []
+                        messages: [],
                     };
                 }
                 return {
                     data: {},
-                    messages: ["nenhum extrato encontrado"]
+                    messages: ["nenhum extrato encontrado"],
                 };
             }
             catch (error) {

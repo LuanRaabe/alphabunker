@@ -39,8 +39,7 @@ const orderTransactions = (extract: ITransaction[]) => {
 
 export const Extract = () => {
   const navigate = useNavigate();
-  const { loggedAccount, error, loading } = useUser();
-  const [extract, setExtract] = useState<OrderedTransaction[]>([]);
+  const { setTransactions, orderedTransactions, setOrderedTransactions, loggedAccount, error, loading } = useUser();
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -54,7 +53,8 @@ export const Extract = () => {
         loggedAccount?.agency_digit,
       );
       if (response.data.extract) {
-        setExtract(orderTransactions(response.data.extract) || []);
+        setOrderedTransactions?.(orderTransactions(response.data.extract) || []);
+        setTransactions?.(response.data.extract || []);
       }
     };
     fetchTransactions();
@@ -76,8 +76,8 @@ export const Extract = () => {
           {error ? (
             <div className="text-red-500 text-center">{error}</div>
           ) : (
-            <div className="overflow-auto h-4/6">
-              {extract.map((transactionDay) => (
+            <div className="overflow-auto">
+              {orderedTransactions?.map((transactionDay) => (
                 <div
                   className="transaction-day text-neutral-600"
                   key={transactionDay.date}
@@ -101,8 +101,8 @@ export const Extract = () => {
                             : 'text-green-500'
                         }
                       >
-                        {transactionItem?.type === 'credito' ? '+ $' : '- $'} R$
-                        {transactionItem.value}
+                        {transactionItem?.type === 'credito' ? '+' : '-'} R$
+                        {parseFloat(transactionItem.value).toFixed(2).replace('.', ',')}
                       </p>
                     </div>
                   ))}

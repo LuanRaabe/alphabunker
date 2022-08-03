@@ -48,10 +48,12 @@ interface ContextTypes {
   user: UserTypes;
   accounts: AccountTypes[];
   loggedAccount: AccountTypes;
-  transactions: OrderedTransaction[];
+  transactions: ITransaction[];
+  orderedTransactions: OrderedTransaction[];
   loading: boolean;
   error: string;
-  setTransactions: (transactions: OrderedTransaction[]) => void;
+  setOrderedTransactions: (orderedTransactions: OrderedTransaction[]) => void;
+  setTransactions: (transactions: ITransaction[]) => void;
   loginUser: (cpf: string, password: string) => void;
   createAccount: (
     name: string,
@@ -65,7 +67,7 @@ interface ContextTypes {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
   ) => void;
   makeWithdraw: (
     ownerCpf: string,
@@ -73,7 +75,7 @@ interface ContextTypes {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
   ) => void;
   makeTransfer: (
     ownerCpf: string,
@@ -82,7 +84,7 @@ interface ContextTypes {
     onweraccountDigit: string,
     onweragency: string,
     onweragencyDigit: string,
-    value: number,
+    value: string,
     transferCpf: string,
     transferAccount: string,
     transferAccountDigit: string,
@@ -106,7 +108,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
   const [loggedAccount, setLoggedAccount] = useState<AccountTypes | undefined>(
     undefined,
   );
-  const [transactions, setTransactions] = useState<OrderedTransaction[]>([]);
+  const [orderedTransactions, setOrderedTransactions] = useState<OrderedTransaction[]>([]);
+  const [transactions, setTransactions] = useState<ITransaction[]>([]);
   const [loading, setLoading] = useState(false);
 
   function loginUser(cpf: string, password: string) {
@@ -116,7 +119,6 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       .createSession(cpf, password)
       .then((response) => {
         const { name, email, birthdate, photo } = response.data.owner;
-        console.log(response.data.owner);
         setUser({ name, email, cpf: response.data.account.owners_cpf, birthdate, password, photo });
         setLoggedAccount({
           id: response.data.account.id,
@@ -158,7 +160,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    valueTransaction: number,
+    valueTransaction: string,
   ) {
     setLoading(true);
     bankAPI
@@ -179,7 +181,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    valueTransaction: number,
+    valueTransaction: string,
   ) {
     setLoading(true);
     bankAPI
@@ -203,7 +205,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     onweraccountDigit: string,
     onweragency: string,
     onweragencyDigit: string,
-    value: number,
+    value: string,
     transferCpf: string,
     transferAccount: string,
     transferAccountDigit: string,
@@ -405,6 +407,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         accounts,
         loggedAccount,
         transactions,
+        orderedTransactions,
         loading,
         error,
         loginUser,
@@ -412,7 +415,8 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         makeDeposit,
         makeWithdraw,
         makeTransfer,
-        setTransactions
+        setTransactions,
+        setOrderedTransactions
       }}
     >
       {children}

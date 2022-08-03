@@ -45,7 +45,6 @@ class OwnerTable extends PostgresDB {
           account.accountDigit,
           account.balance,
         ];
-        console.log(queryValues);
         const result = await client.query(insertAccountQuery, queryValues);
         console.log("completo");
         await client.end();

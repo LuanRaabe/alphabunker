@@ -28,23 +28,22 @@ class SearchLoginService {
                     throw new Error(`400: ${validLogin.errors}`);
                 }
                 const findLogin = yield this.searchLogin(login.cpf, login.password);
-                console.log(findLogin);
                 if (findLogin) {
                     const token = (0, jsonwebtoken_1.sign)({ findLogin }, config_1.auth.secret, {
-                        expiresIn: config_1.auth.expires
+                        expiresIn: config_1.auth.expires,
                     });
                     return {
                         data: {
                             account: findLogin.account,
                             owner: findLogin.owner,
-                            token: token
+                            token: token,
                         },
-                        messages: []
+                        messages: [],
                     };
                 }
                 return {
                     data: {},
-                    messages: ["Conta não encontrada"]
+                    messages: ["Conta não encontrada"],
                 };
             }
             catch (error) {

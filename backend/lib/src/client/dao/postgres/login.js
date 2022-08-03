@@ -37,7 +37,7 @@ function LoginDB(cpf, password) {
                     account = passwords[i];
                 }
             }
-            console.log(account);
+            // console.log(account)
             const getOwner = `
             SELECT * FROM public.owners
                 WHERE cpf = $1

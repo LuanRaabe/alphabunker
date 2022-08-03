@@ -55,7 +55,7 @@ export class BankAPI {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
   ) {
     const response = await this.api.post('/deposit', {
       ownerCpf,
@@ -74,7 +74,7 @@ export class BankAPI {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
   ) {
     const response = await this.api.post('/withdraw', {
       ownerCpf,
@@ -113,7 +113,7 @@ export class BankAPI {
     onweraccountDigit: string,
     onweragency: string,
     onweragencyDigit: string,
-    value: number,
+    value: string,
     transferCpf: string,
     transferAccount: string,
     transferAccountDigit: string,

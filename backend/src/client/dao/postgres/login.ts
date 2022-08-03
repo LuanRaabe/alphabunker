@@ -28,7 +28,7 @@ async function LoginDB(cpf: string, password: string){
             }
         }
         
-        console.log(account)
+        // console.log(account)
 
         const getOwner = `
             SELECT * FROM public.owners

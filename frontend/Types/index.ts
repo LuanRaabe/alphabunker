@@ -32,7 +32,7 @@ export interface DataCreateAccount {
 
 export interface ResponseCreateAccount {
   data: DataCreateAccount;
-  message: string[];
+  messages: string[];
 }
 
 export interface DataLogin {
@@ -42,7 +42,7 @@ export interface DataLogin {
 
 export interface ResponseLogin {
   data: DataLogin;
-  message: string[];
+  messages: string[];
 }
 
 export interface DataExtract {
@@ -52,12 +52,12 @@ export interface DataExtract {
 
 export interface ResponseExtract {
   data: DataExtract;
-  message: string[];
+  messages: string[];
 }
 
 export interface ResponseAccounts {
   data: Partial<Account>[];
-  message: string[];
+  messages: string[];
 }
 
 export interface Transaction {
@@ -77,7 +77,7 @@ export interface DepositData {
 
 export interface ResponseDeposit {
   data: DepositData;
-  message: string[];
+  messages: string[];
 }
 
 export interface Fee {
@@ -92,7 +92,7 @@ export interface WithdrawData {
 
 export interface ResponseWithdraw {
   data: WithdrawData;
-  message: string[];
+  messages: string[];
 }
 
 export interface TransferData {
@@ -103,5 +103,5 @@ export interface TransferData {
 
 export interface ResponseTransfer {
   data: TransferData;
-  message: string[];
+  messages: string[];
 }
