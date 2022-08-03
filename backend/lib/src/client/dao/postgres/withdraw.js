@@ -69,7 +69,6 @@ class WithdrawTable extends _1.PostgresDB {
                         withdraw.value,
                         "debito",
                     ]);
-                    console.log(result.rows);
                     if (result.rows.length !== 0) {
                         console.log("primeiro ok");
                     }
@@ -101,6 +100,7 @@ class WithdrawTable extends _1.PostgresDB {
                     account_digit=$6
                     RETURNING balance
                 `;
+                    console.log(newFee);
                     const final = yield client.query(alterBalance, [
                         newFee,
                         withdraw.ownerCpf,
@@ -109,6 +109,7 @@ class WithdrawTable extends _1.PostgresDB {
                         withdraw.account,
                         withdraw.accountDigit,
                     ]);
+                    console.log(final.rows[0]);
                     console.log("withdraw completo");
                     const data = {
                         withdraw: {

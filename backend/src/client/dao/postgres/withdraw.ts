@@ -42,11 +42,11 @@ class WithdrawTable extends PostgresDB {
       const id = balance.id;
       const atualBalance = parseFloat(balance.balance);
       const withdrawValue = parseFloat(withdraw.value);
-
+      
       const fee = 4;
       const newFee = withdrawValue + fee;
       const newValue = atualBalance - newFee;
-
+      
       if (newValue >= 0) {
         console.log("entrou");
 
@@ -65,7 +65,6 @@ class WithdrawTable extends PostgresDB {
           "debito",
         ]);
 
-        console.log(result.rows);
         if (result.rows.length !== 0) {
           console.log("primeiro ok");
         }
@@ -101,7 +100,7 @@ class WithdrawTable extends PostgresDB {
                     account_digit=$6
                     RETURNING balance
                 `;
-
+        console.log(newFee)
         const final = await client.query(alterBalance, [
           newFee,
           withdraw.ownerCpf,
@@ -110,6 +109,7 @@ class WithdrawTable extends PostgresDB {
           withdraw.account,
           withdraw.accountDigit,
         ]);
+        console.log(final.rows[0]);
         console.log("withdraw completo");
 
         const data = {
