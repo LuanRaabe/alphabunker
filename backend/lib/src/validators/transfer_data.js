@@ -11,7 +11,7 @@ class TransferDataValidator {
         this.accountValidator = _1.AccountValidator;
         this.accountDigitValidator = _1.AccountDigitValidator;
         this.valueValidator = _1.ValueValidator;
-        this.errors = '';
+        this.errors = "";
         this.transfer = this.validation(transfer);
     }
     validation(transfer) {
@@ -21,7 +21,7 @@ class TransferDataValidator {
         const validOwnerAgencyDigit = new this.agencyDigitValidator(transfer.ownerAgencyDigit);
         const validOwnerAccount = new this.accountValidator(transfer.ownerAccount);
         const validOwnerAcountDigit = new this.accountDigitValidator(transfer.ownerAccountDigit);
-        const validTransferCpf = new this.cpfValidator(transfer.ownerCpf);
+        const validTransferCpf = new this.cpfValidator(transfer.transferCpf);
         const validTransferAgency = new this.agencyValidator(transfer.transferAgency);
         const validTransferAgencyDigit = new this.agencyDigitValidator(transfer.transferAgencyDigit);
         const validTransferAccount = new this.accountValidator(transfer.transferAccount);
@@ -40,7 +40,7 @@ class TransferDataValidator {
             transferAgencyDigit: validTransferAgencyDigit.agencyDigit,
             transferAccount: validTransferAccount.account,
             transferAccountDigit: validAcountDigit.accountDigit,
-            value: validValue.value
+            value: validValue.value,
         };
         return transferData;
     }

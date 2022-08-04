@@ -39,7 +39,7 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
       deposito: 'Depósito',
       transferência: 'Transferência',
       'transferência recebida': 'Transferência recebida',
-      'transferência enviada': 'Transferência enviada',
+      'transferência efetuada': 'Transferência enviada',
       taxa: 'Taxa',
     };
     return transactionTypes[
@@ -51,10 +51,7 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
     return (
       <span
         className={
-          foundTransaction?.type === 'credito'
-            ? 'text-green-500'
-            : 'text-red-500'
-        }
+          foundTransaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'}
       >
         {foundTransaction?.type === 'credito' ? '+ R$' : '- R$'}
         {foundTransaction?.value
@@ -65,18 +62,18 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
   }
 
   return (
-    <div>
-      <p>Tipo: {renderType()}</p>
-      <p>Data: {maskDate(foundTransaction?.created_at ?? '')}</p>
+    <div className=' bg-body-light-100 dark:bg-body-dark'>
+      <p className='text-paragraph-light-100 flex'>Tipo: {renderType()}</p>
+      <p className='text-paragraph-light-200'>Data: {maskDate(foundTransaction?.created_at ?? '')}</p>
       {isTransfer && (
         <>
-          <p>Dados de {isSameUser ? 'destino' : 'origem'}</p>
-          <p>Nome: </p>
-          <p>Agência: </p>
-          <p>Conta: </p>
+          <p className='text-paragraph-light-100'>Dados de {isSameUser ? 'destino' : 'origem'}</p>
+          <p className='text-paragraph-light-100'>Nome: </p>
+          <p className='text-paragraph-light-100'>Agência: </p>
+          <p className='text-paragraph-light-100'>Conta: </p>
         </>
       )}
-      <div>Valor: {renderValue()}</div>
+      <div className='text-paragraph-light-100'>Valor: {renderValue()}</div>
     </div>
   );
 }

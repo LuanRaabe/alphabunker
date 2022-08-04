@@ -60,3 +60,8 @@ select {
   @apply bg-input-base border-input-border disabled:bg-input-readonly
   rounded-md p-3;
 }
+
+.error {
+  @apply text-red-500;
+  @apply text-center;
+}

@@ -25,7 +25,7 @@ import {
 
 export const Home = () => {
   const navigate = useNavigate();
-  const { loading, loginUser, createAccount } = useUser();
+  const { error, loading, loginUser, createAccount } = useUser();
   const [loginOrRegister, setLoginOrRegister] = useState<'login' | 'register'>(
     'login',
   );
@@ -47,11 +47,14 @@ export const Home = () => {
     if (isLoginScreen()) {
       console.log('login');
       loginUser?.(cpf.replace(/\D/g, ''), password);
-      navigate('/deposit');
+      if (!error) {
+        navigate('/deposit');
+      }
     } else {
-      createAccount?.(username, email, cpf.replace(/\D/g, ''), birthday);
-
-      navigate('/home');
+      createAccount?.(username, email, password, cpf.replace(/\D/g, ''), birthday);
+      if (!error) {
+        navigate('/home');
+      }
     }
   }
 
@@ -82,9 +85,7 @@ export const Home = () => {
           Alpha Bunker
         </span>
         <span
-          className={`text-paragraph-dark text-xl dark:text-white ${
-            isLoginScreen() ? 'mb-6' : 'mb-7'
-          }`}
+          className={`text-paragraph-dark text-xl dark:text-white ${isLoginScreen() ? 'mb-6' : 'mb-7'}`}
         >
           {isLoginScreen() ? 'Login' : 'Crie sua conta'}
         </span>
@@ -134,7 +135,7 @@ export const Home = () => {
         />
         <Input
           name="passwordlogin"
-          type="text"
+          type="password"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
@@ -210,7 +211,7 @@ export const Home = () => {
         />
         <Input
           name="passwordregister"
-          type="text"
+          type="password"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
@@ -225,7 +226,7 @@ export const Home = () => {
         />
         <Input
           name="passwordconfirm"
-          type="text"
+          type="password"
           placeholder="Confirme sua senha"
           value={confirmPassword}
           onChange={setConfirmPassword}
@@ -239,6 +240,7 @@ export const Home = () => {
           ]}
           callback={setDisableSubmit}
         />
+        {error && <span className="error">{error}</span>}
         {renderBottomButtons()}
       </>
     );

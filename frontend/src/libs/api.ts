@@ -37,12 +37,14 @@ export class BankAPI {
   async createAccount(
     name: string,
     email: string,
+    password: string,
     cpf: string,
     birthdate: string,
   ) {
     const response = await this.api.post('/create', {
       name,
       email,
+      password,
       cpf,
       birthdate,
     });

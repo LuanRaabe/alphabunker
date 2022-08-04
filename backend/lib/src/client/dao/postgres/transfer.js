@@ -16,7 +16,7 @@ exports.TransferTable = void 0;
 const _1 = require(".");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const { Client } = require('pg');
+const { Client } = require("pg");
 const uuid_1 = require("uuid");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const utils_1 = require("../../../utils");
@@ -30,7 +30,7 @@ class TransferTable extends _1.PostgresDB {
                     return false;
                 }
                 yield client.connect();
-                console.log('conectado ao banco transfer');
+                console.log("conectado ao banco transfer");
                 const selectOwnerBalanceQuery = `
             SELECT * FROM public.accounts
             WHERE
@@ -40,12 +40,18 @@ class TransferTable extends _1.PostgresDB {
             account=$4 and
             account_digit=$5
             `;
-                const check = yield client.query(selectOwnerBalanceQuery, [transfer.ownerCpf, transfer.ownerAgency, transfer.ownerAgencyDigit, transfer.ownerAccount, transfer.ownerAccountDigit]);
+                const check = yield client.query(selectOwnerBalanceQuery, [
+                    transfer.ownerCpf,
+                    transfer.ownerAgency,
+                    transfer.ownerAgencyDigit,
+                    transfer.ownerAccount,
+                    transfer.ownerAccountDigit,
+                ]);
                 const compare = bcrypt_1.default.compareSync(transfer.ownerPassword, check.rows[0].password);
                 if (!compare) {
                     return false;
                 }
-                console.log('conectado ao banco transfer2');
+                console.log("conectado ao banco transfer2");
                 const ownerBalance = check.rows[0];
                 const ownerId = ownerBalance.id;
                 const selectBalanceQuery = `
@@ -56,7 +62,12 @@ class TransferTable extends _1.PostgresDB {
                 account=$3 and
                 account_digit=$4
             `;
-                const check2 = yield client.query(selectBalanceQuery, [transfer.transferAgency, transfer.transferAgencyDigit, transfer.transferAccount, transfer.transferAccountDigit]);
+                const check2 = yield client.query(selectBalanceQuery, [
+                    transfer.transferAgency,
+                    transfer.transferAgencyDigit,
+                    transfer.transferAccount,
+                    transfer.transferAccountDigit,
+                ]);
                 const transferId = check2.rows[0].id;
                 if (!transferId || !ownerId) {
                     return false;
@@ -67,7 +78,7 @@ class TransferTable extends _1.PostgresDB {
                 const newFee = transferValue + fee;
                 const newValue = ownerAtualBalance - newFee;
                 if (newValue >= 0) {
-                    console.log('permitido');
+                    console.log("permitido");
                     const insertTransferQuery = `
                 INSERT INTO public.extracts
                     (id, account_id, operation_name, value, created_at, type ) 
@@ -77,9 +88,9 @@ class TransferTable extends _1.PostgresDB {
                     const result = yield client.query(insertTransferQuery, [
                         transfer.id,
                         ownerId,
-                        'transferência efetuada',
+                        "transferência efetuada",
                         transfer.value,
-                        'debito'
+                        "debito",
                     ]);
                     console.log("feito");
                     if (result.rows.length !== 0) {
@@ -95,9 +106,9 @@ class TransferTable extends _1.PostgresDB {
                     const depositResult = yield client.query(insertTransferExtract, [
                         transferTableId,
                         transferId,
-                        'transferência recebida',
+                        "transferência recebida",
                         transfer.value,
-                        'credito'
+                        "credito",
                     ]);
                     console.log(result.rows);
                     if (depositResult.rows.length !== 0) {
@@ -114,9 +125,9 @@ class TransferTable extends _1.PostgresDB {
                     const feeResult = yield client.query(insertFeeQuery, [
                         feeId,
                         ownerId,
-                        'taxa',
+                        "taxa",
                         passFee,
-                        'debito'
+                        "debito",
                     ]);
                     if (feeResult.rows.length !== 0) {
                         console.log("terceiro ok");
@@ -131,14 +142,17 @@ class TransferTable extends _1.PostgresDB {
                     account_digit=$6
                     RETURNING balance
                 `;
-                    const ownerBalance = yield client.query(alterBalanceOwner, [
+                    const alterBalanceOwnerValues = [
                         newFee,
                         transfer.ownerCpf,
                         transfer.ownerAgency,
                         transfer.ownerAgencyDigit,
                         transfer.ownerAccount,
-                        transfer.ownerAccountDigit
-                    ]);
+                        transfer.ownerAccountDigit,
+                    ];
+                    console.log(alterBalanceOwnerValues);
+                    console.log("antes do balance do owner");
+                    const ownerBalance = yield client.query(alterBalanceOwner, alterBalanceOwnerValues);
                     const alterBalanceTransfer = `
                 UPDATE public.accounts SET balance = balance + $1
                 WHERE
@@ -149,14 +163,18 @@ class TransferTable extends _1.PostgresDB {
                     account_digit=$6
                     RETURNING balance
                 `;
-                    const transferBalance = yield client.query(alterBalanceTransfer, [
+                    const alterBalanceTransferValues = [
                         newFee,
                         transfer.transferCpf,
                         transfer.transferAgency,
                         transfer.transferAgencyDigit,
                         transfer.transferAccount,
-                        transfer.transferAccountDigit
-                    ]);
+                        transfer.transferAccountDigit,
+                    ];
+                    console.log(alterBalanceTransferValues);
+                    console.log("antes do balance do transfer");
+                    const transferBalance = yield client.query(alterBalanceTransfer, alterBalanceTransferValues);
+                    console.log(transferBalance.rows[0].balance);
                     const data = {
                         transfer_out: {
                             id: transferId.id,
@@ -166,7 +184,7 @@ class TransferTable extends _1.PostgresDB {
                             agencyDigit: transfer.ownerAgencyDigit,
                             account: transfer.ownerAccount,
                             accountDigit: transfer.ownerAccountDigit,
-                            createdAt: new Date()
+                            createdAt: new Date(),
                         },
                         transfer_in: {
                             id: transferTableId,
@@ -175,12 +193,12 @@ class TransferTable extends _1.PostgresDB {
                             agencyDigit: transfer.transferAgencyDigit,
                             account: transfer.transferAccount,
                             accountDigit: transfer.transferAccountDigit,
-                            createdAt: new Date()
+                            createdAt: new Date(),
                         },
                         fee: {
                             id: feeId,
-                            value: passFee
-                        }
+                            value: passFee,
+                        },
                     };
                     yield client.end();
                     return data;
