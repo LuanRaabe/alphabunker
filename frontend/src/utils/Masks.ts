@@ -21,7 +21,7 @@ export const maskAgencyNumber = (value: string): string => {
 };
 
 export const maskAccountNumber = (value: string): string => {
-  return value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
+  return value.replace(/\D/g, '').replace(/^(\d{4})(\d)/, '$1-$2');
 };
 
 export const maskValue = (value: string): string => {

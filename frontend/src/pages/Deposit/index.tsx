@@ -35,7 +35,7 @@ export const Deposit = () => {
   const [modal, setModal] = useState(false);
   const [error, setError] = useState('');
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
-  const [amount, setAmount] = useState<string>('0.00');
+  const [amount, setAmount] = useState<string>('R$0,00');
   const [password, setPassword] = useState<string>('');
 
   function handleSubmit(e: FormEvent) {

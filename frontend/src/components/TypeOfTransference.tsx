@@ -33,19 +33,15 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
   const isSameUser = loggedAccount?.id === foundTransaction?.account_id;
 
   function renderType() {
-    const type = foundTransaction?.operation_name;
-    switch (type) {
-      case 'saque':
-        return 'Saque';
-      case 'deposito':
-        return 'Depósito';
-      case 'transfêrencia recebida':
-        return 'Transferência recebida';
-      case 'transfêrencia enviada':
-        return 'Transferência enviada';
-      case 'taxa':
-        return 'Taxa';
-    }
+    const transactionTypes = {
+      saque: 'Saque',
+      deposito: 'Depósito',
+      transferência: 'Transferência',
+      'transferência recebida': 'Transferência recebida',
+      'transferência enviada': 'Transferência enviada',
+      taxa: 'Taxa',
+    };
+    return transactionTypes[foundTransaction?.operation_name as keyof typeof transactionTypes];
   }
 
   function renderDate() {

@@ -75,5 +75,5 @@ export function validateAgency(value: string): boolean {
 
 export function validateAccount(value: string): boolean {
   const accountFormatted = value.replace(/\D/g, '');
-  return accountFormatted.length === 6;
+  return accountFormatted.length === 5;
 }

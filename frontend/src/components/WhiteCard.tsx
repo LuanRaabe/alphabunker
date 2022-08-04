@@ -37,7 +37,7 @@ export function WhiteCard(props: WhiteCardProps) {
           </span>
         )}{' '}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col overflow-auto">
         {props.blank ? (
           <div className="flex flex-col">{props.children}</div>
         ) : (
