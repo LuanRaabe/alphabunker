@@ -12,7 +12,7 @@ import { WhiteCard } from '../../components/WhiteCard';
 import { Bank } from 'phosphor-react';
 import { useUser } from '../../providers/UserProvider';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { bankAPI } from '../../libs/api';
 import { ITransaction, OrderedTransaction } from '../../providers/UserProvider';
 
