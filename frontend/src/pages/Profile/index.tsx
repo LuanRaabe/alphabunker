@@ -51,7 +51,7 @@ export const Profile = () => {
           childs={[
             <>
               <span>Nome: {user?.name}</span>
-              <span>Data de nascimento: {maskDate(user?.birthDate ?? '')}</span>
+              <span>Data de nascimento: {maskDate(user?.birthdate ?? '')}</span>
               <span>CPF: {maskCpf(user?.cpf ?? '')}</span>
             </>,
           ]}
@@ -62,8 +62,12 @@ export const Profile = () => {
           title="Minhas contas correntes"
           childs={accounts?.map((account) => (
             <div className="flex flex-col" key={account.id}>
-              <span>Agência: {account.agency + '-' + account.agencyDigit}</span>
-              <span>Conta: {account.account + '-' + account.accountDigit}</span>
+              <span>
+                Agência: {account.agency + '-' + account.agency_digit}
+              </span>
+              <span>
+                Conta: {account.account + '-' + account.account_digit}
+              </span>
             </div>
           ))}
         />

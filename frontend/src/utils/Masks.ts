@@ -33,7 +33,7 @@ export const maskValue = (value: string): string => {
     parseFloat(value) / 100,
   );
 
-  return 'R$' + result;
+  return result;
 };
 
 export function maskDate(value: string): string {
