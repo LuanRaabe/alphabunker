@@ -51,13 +51,6 @@ export function validatePassword(password: string): boolean {
   return passwordFormatted.length >= 4 && passwordFormatted.length <= 20;
 }
 
-export function validateConfirmPassword(
-  password: string,
-  confirmPassword: string,
-): boolean {
-  return password === confirmPassword;
-}
-
 export function validateDate(inputDate: string): boolean {
   const date = new Date(inputDate);
   if (isNaN(date.getTime())) return false;
@@ -82,5 +75,5 @@ export function validateAgency(value: string): boolean {
 
 export function validateAccount(value: string): boolean {
   const accountFormatted = value.replace(/\D/g, '');
-  return accountFormatted.length === 6;
+  return accountFormatted.length === 5;
 }

@@ -50,8 +50,6 @@ class DepositTable{
                     deposit.value,
                     'credito'
                 ]);
-
-                console.log(result.rows)
                 if (result.rows.length !== 0){
                     console.log("primeira inserção")
                 }

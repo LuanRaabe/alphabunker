@@ -25,8 +25,8 @@ import { maskValue } from '../../utils/Masks';
  */
 
 export function Menu() {
+  const { user, loggedAccount, balance } = useUser();
   const [showBalance, setShowBalance] = useState(true);
-  const { user, loggedAccount } = useUser();
   const navigate = useNavigate();
 
   function toggleBalance() {
@@ -67,11 +67,11 @@ export function Menu() {
           <div className="flex flex-row">
             <span className="text-header-gold text-sm mr-2">
               Agência:{' '}
-              {loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
+              {loggedAccount?.agency + '-' + loggedAccount?.agency_digit}
             </span>
             <span className="text-header-gold text-sm">
               Conta:{' '}
-              {loggedAccount?.account + '-' + loggedAccount?.accountDigit}
+              {loggedAccount?.account + '-' + loggedAccount?.account_digit}
             </span>
           </div>
           <CaretDown weight="bold" className="w-6 h-6 text-icon-dark-200" />
@@ -91,7 +91,7 @@ export function Menu() {
           <div className="flex flex-row items-end">
             <span className="text-2xl font-bold mr-1">
               {showBalance
-                ? maskValue(loggedAccount?.balance + '00' ?? '0')
+                ? maskValue(balance)
                 : '-----'}
             </span>
             <span className="text-sm mb-1">R$</span>

@@ -12,28 +12,16 @@ import { WhiteCard } from '../../components/WhiteCard';
 import { Bank } from 'phosphor-react';
 import { useUser } from '../../providers/UserProvider';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { bankAPI } from '../../libs/api';
+import { ITransaction, OrderedTransaction } from '../../providers/UserProvider';
 
-interface Transaction {
-  id: string;
-  account_id: string;
-  operation_name: string;
-  type: string;
-  value: number;
-  created_at: string;
-}
-
-interface OrderedTransaction {
-  date: string;
-  transactions: Transaction[];
-}
-
-const orderTransactions = (extract: Transaction[]) => {
+const orderTransactions = (extract: ITransaction[]) => {
   const orderedTransactions: OrderedTransaction[] = [];
   extract.forEach((item) => {
     const date = item.created_at.split('T')[0];
-    const formatedDate = `${date.split('-')[2]}/${date.split('-')[1]}/${
-      date.split('-')[0]
-    }`;
+    const formatedDate = `
+    ${date.split('-')[2]}/${date.split('-')[1]}/${date.split('-')[0]}`;
     const dateFound = orderedTransactions.find((transaction) => {
       return transaction.date === formatedDate;
     });
@@ -51,9 +39,47 @@ const orderTransactions = (extract: Transaction[]) => {
 
 export const Extract = () => {
   const navigate = useNavigate();
-  const { transactions, error, loading } = useUser();
-  const allTransactions = transactions ?? [];
-  const orderedTransactions = orderTransactions(allTransactions);
+  const { setBalance, setTransactions, orderedTransactions, setOrderedTransactions, loggedAccount, error, loading } = useUser();
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      if (loggedAccount?.id === undefined) return;
+      const response = await bankAPI.getTransactions(
+        loggedAccount?.owners_cpf,
+        loggedAccount?.password,
+        loggedAccount?.account,
+        loggedAccount?.account_digit,
+        loggedAccount?.agency,
+        loggedAccount?.agency_digit,
+      );
+      if (response.data.extract) {
+        setOrderedTransactions?.(orderTransactions(response.data.extract) || []);
+        setTransactions?.(response.data.extract || []);
+      }
+    };
+    fetchTransactions();
+    if (loggedAccount?.id === undefined) return;
+    (async () => {
+      const newBalance = await bankAPI.getBalance(
+        loggedAccount?.owners_cpf,
+        loggedAccount?.account,
+        loggedAccount?.account_digit,
+        loggedAccount?.agency,
+        loggedAccount?.agency_digit,
+        loggedAccount?.password,
+      );
+      setBalance?.(newBalance.data.balance);
+    })();
+  }, []);
+
+  const transactionTypes = {
+    saque: 'Saque',
+    deposito: 'Depósito',
+    transferência: 'Transferência',
+    'transferência recebida': 'Transf. recebida',
+    'transferência efetuada': 'Transf. enviada',
+    taxa: 'Taxa',
+  };
 
   return (
     <WhiteCard
@@ -71,8 +97,8 @@ export const Extract = () => {
           {error ? (
             <div className="text-red-500 text-center">{error}</div>
           ) : (
-            <div className="overflow-auto w-full h-4/6">
-              {orderedTransactions.map((transactionDay) => (
+            <div className="overflow-auto h-full">
+              {orderedTransactions?.map((transactionDay) => (
                 <div
                   className="transaction-day text-neutral-600"
                   key={transactionDay.date}
@@ -87,7 +113,7 @@ export const Extract = () => {
                       }}
                     >
                       <p className="font-normal">
-                        {transactionItem.operation_name}
+                        {transactionTypes[transactionItem.operation_name as keyof typeof transactionTypes]}
                       </p>
                       <p
                         className={
@@ -96,8 +122,8 @@ export const Extract = () => {
                             : 'text-green-500'
                         }
                       >
-                        {transactionItem?.type === 'credito' ? '+ $' : '- $'} R$
-                        {transactionItem.value.toFixed(2).replace('.', ',')}
+                        {transactionItem?.type === 'credito' ? '+' : '-'} R$
+                        {parseFloat(transactionItem.value).toFixed(2).replace('.', ',')}
                       </p>
                     </div>
                   ))}

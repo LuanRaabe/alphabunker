@@ -1,10 +1,12 @@
 import { DownloadSimple } from 'phosphor-react';
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Form/Button';
 import { Input } from '../../components/Form/Input';
 import { SmallInput } from '../../components/Form/Panel/SmallInput';
 import { Modal } from '../../components/Modal';
 import { WhiteCard } from '../../components/WhiteCard';
+import bankAPI from '../../libs/api';
 import { useUser } from '../../providers/UserProvider';
 import { maskValue } from '../../utils/Masks';
 import { InputReferences } from '../../utils/References';
@@ -28,10 +30,12 @@ const TAB_INDEX = {
 
 export const Withdraw = () => {
   const [modal, setModal] = useState(false);
+  const navigate = useNavigate();
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const references = InputReferences();
   const { loggedAccount } = useUser();
-  const [amount, setAmount] = useState<string>('0.00');
+  const [amount, setAmount] = useState<string>('R$0,00');
+  const [error, setError] = useState('');
   const [password, setPassword] = useState<string>('');
 
   function handleSubmit(e: FormEvent) {
@@ -39,16 +43,34 @@ export const Withdraw = () => {
     setModal(true);
   }
 
-  function confirmSubmit() {
-    /* const response = request;
-    const {data, error} = response;
-    if(error){
-      const {name, message} = error;
-      references.setError(name, message);
+  async function confirmSubmit() {
+    if (!loggedAccount) {
+      navigate('/');
       return;
     }
-    navigate('/transaction', {state: {transactionId: });
-    */
+    const {
+      owners_cpf,
+      agency,
+      agency_digit,
+      account,
+      account_digit } = loggedAccount;
+    const withdrawValue = amount.replace('R$', '').replaceAll('.', '').replace(',', '.');
+    const response = await bankAPI.makeWithdraw(
+      owners_cpf,
+      account,
+      account_digit,
+      agency,
+      agency_digit,
+      withdrawValue,
+      password
+    );
+    if (response.messages.length > 0) {
+      setError(response.messages[0]);
+      setModal(false);
+      return;
+    }
+    setModal(false);
+    navigate('/extract');
   }
 
   return (
@@ -71,12 +93,12 @@ export const Withdraw = () => {
             <SmallInput
               title="Agência"
               isDisabled={true}
-              value={loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
+              value={loggedAccount?.agency + '-' + loggedAccount?.agency_digit}
             />
             <SmallInput
               title="Conta"
               isDisabled={true}
-              value={loggedAccount?.account + '-' + loggedAccount?.accountDigit}
+              value={loggedAccount?.account + '-' + loggedAccount?.account_digit}
             />
           </div>
           <Input
@@ -97,7 +119,7 @@ export const Withdraw = () => {
           <Input
             name="password"
             placeholder="Senha"
-            type="text"
+            type="password"
             value={password}
             onChange={setPassword}
             validators={[
@@ -114,6 +136,7 @@ export const Withdraw = () => {
             isDisabled={disableSubmit}
             tabIndex={TAB_INDEX.BUTTON}
           />
+          {error && <span className="text-red-600">{error}</span>}
         </form>
       </WhiteCard>
     </>

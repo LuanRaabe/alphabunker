@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { useUser } from '../providers/UserProvider';
 
 interface TypeOfTransferenceProps {
@@ -24,22 +25,27 @@ type keyOfTT = keyof typeof TRANSACTION_TYPES;
 
 export function TypeOfTransference(props: TypeOfTransferenceProps) {
   const { loggedAccount, transactions } = useUser();
-  const transaction = transactions?.find(
+  const foundTransaction = transactions?.find(
     (transaction) => transaction.id === props.id,
   );
-  const type = TRANSACTION_TYPES[transaction?.operation_name as keyOfTT];
+  const type = TRANSACTION_TYPES[foundTransaction?.operation_name as keyOfTT];
   const isTransfer = type === TRANSACTION_TYPES.transfer;
-  const isSameUser = loggedAccount?.id === transaction?.account_id;
+  const isSameUser = loggedAccount?.id === foundTransaction?.account_id;
 
   function renderType() {
-    if (isTransfer) {
-      return type + ' - ' + isSameUser ? 'Enviada' : 'Recebida';
-    }
-    return type;
+    const transactionTypes = {
+      saque: 'Saque',
+      deposito: 'Depósito',
+      transferência: 'Transferência',
+      'transferência recebida': 'Transferência recebida',
+      'transferência enviada': 'Transferência enviada',
+      taxa: 'Taxa',
+    };
+    return transactionTypes[foundTransaction?.operation_name as keyof typeof transactionTypes];
   }
 
   function renderDate() {
-    const today = new Date(transaction?.created_at ?? '');
+    const today = new Date(foundTransaction?.created_at ?? '');
     const dd = String(today.getDate()).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); //janvier = 0
     const yyyy = today.getFullYear();
@@ -49,23 +55,27 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
 
   function renderValue() {
     return (
-      <span className={transaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'}>
-        {transaction?.type === 'credito' ? '+ $' : '- $'}
-        {transaction?.value}
+      <span
+        className={
+          foundTransaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'
+        }
+      >
+        {foundTransaction?.type === 'credito' ? '+ R$' : '- R$'}
+        {foundTransaction?.value ? parseFloat(foundTransaction.value).toFixed(2).replace('.', ',') : '0.00'}
       </span>
     );
   }
 
   return (
     <div>
-      <span>Tipo: {renderType()}</span>
-      <span>Data: {renderDate()}</span>
+      <p>Tipo: {renderType()}</p>
+      <p>Data: {renderDate()}</p>
       {isTransfer && (
         <>
-          <span>Dados de {isSameUser ? 'destino' : 'origem'}</span>
-          <span>Nome: </span>
-          <span>Agência: </span>
-          <span>Conta: </span>
+          <p>Dados de {isSameUser ? 'destino' : 'origem'}</p>
+          <p>Nome: </p>
+          <p>Agência: </p>
+          <p>Conta: </p>
         </>
       )}
       <div>Valor: {renderValue()}</div>

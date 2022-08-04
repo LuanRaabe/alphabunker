@@ -82,7 +82,6 @@ class TransferTable extends _1.PostgresDB {
                         'debito'
                     ]);
                     console.log("feito");
-                    console.log(result.rows);
                     if (result.rows.length !== 0) {
                         console.log("primeiro ok");
                     }
@@ -119,7 +118,6 @@ class TransferTable extends _1.PostgresDB {
                         passFee,
                         'debito'
                     ]);
-                    console.log(feeResult.rows);
                     if (feeResult.rows.length !== 0) {
                         console.log("terceiro ok");
                     }
