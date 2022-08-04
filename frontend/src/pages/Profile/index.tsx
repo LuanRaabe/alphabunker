@@ -25,16 +25,14 @@ export const Profile = () => {
   const { user, accounts, setAccounts } = useUser();
   const navigate = useNavigate();
 
+  async function getAllAccounts() {
+    const resp = await bankAPI.getAccounts(user?.cpf ?? '');
+    setAccounts?.(resp.data);
+  }
+
   useEffect(() => {
-    if (user?.cpf === undefined) return;
-    const fetchAccounts = async () => {
-      const response = await bankAPI.getAccounts(user?.cpf);
-      if (response.data) {
-        setAccounts?.(response.data);
-      }
-    };
-    fetchAccounts();
-  }, [user]);
+    getAllAccounts();
+  }, []);
 
   return (
     <div className="flex flex-col w-full h-full bg-white dark:bg-body-dark">

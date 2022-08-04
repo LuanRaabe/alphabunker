@@ -63,7 +63,7 @@ export interface DataAccounts {
 }
 
 export interface ResponseAccounts {
-  data: DataAccounts[];
+  data: Account[];
   messages: string[];
 }
 

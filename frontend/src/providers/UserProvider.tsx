@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  createContext,
-  useState,
-  useContext,
-} from 'react';
-import { DataAccounts } from '../../Types';
+import { ReactNode, createContext, useState, useContext } from 'react';
 import bankAPI from '../libs/api';
 import { cookie } from '../libs/cookie';
 
@@ -23,7 +17,7 @@ interface AccountTypes {
   id?: string;
   owners_cpf: string;
   agency: string;
-  password: string;
+  password?: string;
   agency_digit: string;
   account: string;
   account_digit: string;
@@ -46,7 +40,7 @@ export interface OrderedTransaction {
 
 interface ContextTypes {
   user: UserTypes;
-  accounts: DataAccounts[];
+  accounts: AccountTypes[];
   loggedAccount: AccountTypes;
   transactions: ITransaction[];
   orderedTransactions: OrderedTransaction[];
@@ -54,7 +48,7 @@ interface ContextTypes {
   loading: boolean;
   error: string;
   setBalance: (balance: string) => void;
-  setAccounts: (accounts: DataAccounts[]) => void;
+  setAccounts: (accounts: AccountTypes[]) => void;
   setOrderedTransactions: (orderedTransactions: OrderedTransaction[]) => void;
   setTransactions: (transactions: ITransaction[]) => void;
   loginUser: (cpf: string, password: string) => void;
@@ -108,13 +102,15 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
   const [balance, setBalance] = useState<string>('0,00');
-  const [accounts, setAccounts] = useState<DataAccounts[] | undefined>(
+  const [accounts, setAccounts] = useState<AccountTypes[] | undefined>(
     undefined,
   );
   const [loggedAccount, setLoggedAccount] = useState<AccountTypes | undefined>(
     undefined,
   );
-  const [orderedTransactions, setOrderedTransactions] = useState<OrderedTransaction[]>([]);
+  const [orderedTransactions, setOrderedTransactions] = useState<
+    OrderedTransaction[]
+  >([]);
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -130,7 +126,14 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
           return;
         }
         const { name, email, birthdate, photo } = response.data.owner;
-        setUser({ name, email, cpf: response.data.account.owners_cpf, birthdate, password, photo });
+        setUser({
+          name,
+          email,
+          cpf: response.data.account.owners_cpf,
+          birthdate,
+          password,
+          photo,
+        });
         setLoggedAccount({
           id: response.data.account.id,
           owners_cpf: response.data.account.owners_cpf,
@@ -209,7 +212,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agency,
         agencyDigit,
         valueTransaction,
-        password
+        password,
       )
       .catch((e) => setError(e));
     setLoading(false);
@@ -268,7 +271,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         makeWithdraw,
         makeTransfer,
         setTransactions,
-        setOrderedTransactions
+        setOrderedTransactions,
       }}
     >
       {children}
