@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Form/Button';
 import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
+import { PasswordModal } from '../../components/PasswordModal';
 import { useUser } from '../../providers/UserProvider';
 import { maskCpf } from '../../utils/Masks';
 import {
@@ -85,8 +86,9 @@ export const Home = () => {
           Alpha Bunker
         </span>
         <span
-          className={`text-paragraph-dark text-xl
-          ${isLoginScreen() ? 'mb-6' : 'mb-7'}`}
+          className={`text-paragraph-dark text-xl dark:text-white ${
+            isLoginScreen() ? 'mb-6' : 'mb-7'
+          }`}
         >
           {isLoginScreen() ? 'Login' : 'Crie sua conta'}
         </span>
@@ -105,7 +107,7 @@ export const Home = () => {
           isDisabled={disableSubmit}
         />
         <span
-          className="text-sm text-paragraph-dark cursor-pointer"
+          className="text-sm text-paragraph-dark cursor-pointer dark:text-paragraph-light-100"
           onClick={() => changeScreen()}
         >
           {isLoginScreen() ? 'Crie sua conta' : 'Entrar'}
@@ -221,6 +223,7 @@ export const Home = () => {
       ) : (
         <>{isLoginScreen() ? renderLogin() : renderRegister()}</>
       )}
+      <PasswordModal password="123456" />
     </FormSubmit>
   );
 };

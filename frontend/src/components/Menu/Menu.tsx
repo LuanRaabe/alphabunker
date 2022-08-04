@@ -4,13 +4,15 @@ import {
   CaretDown,
   DownloadSimple,
   Eye,
+  EyeSlash,
   UploadSimple,
   UserCircle,
 } from 'phosphor-react';
 import { SectionButton } from './SectionButton';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../providers/UserProvider';
-import { useEffect } from 'react';
+import { useState } from 'react';
+import { maskValue } from '../../utils/Masks';
 
 /**
  * Archive: src/components/Menu.tsx
@@ -24,7 +26,12 @@ import { useEffect } from 'react';
 
 export function Menu() {
   const { user, loggedAccount, balance } = useUser();
+  const [showBalance, setShowBalance] = useState(true);
   const navigate = useNavigate();
+
+  function toggleBalance() {
+    setShowBalance(!showBalance);
+  }
 
   return (
     <div
@@ -69,10 +76,24 @@ export function Menu() {
           </div>
           <CaretDown weight="bold" className="w-6 h-6 text-icon-dark-200" />
         </div>
-        <div className="flex flex-row items-center text-brand-base">
-          <Eye weight="bold" className="w-6 h-6 mx-1 text-icon-dark-200" />
+        <div
+          className="flex flex-row items-center text-brand-base"
+          onClick={() => toggleBalance()}
+        >
+          {showBalance ? (
+            <Eye weight="bold" className="w-4 h-4 mx-1 text-icon-dark-200" />
+          ) : (
+            <EyeSlash
+              weight="bold"
+              className="w-4 h-4 mx-1 text-icon-dark-200"
+            />
+          )}
           <div className="flex flex-row items-end">
-            <span className="text-2xl mr-1">{balance}</span>
+            <span className="text-2xl font-bold mr-1">
+              {showBalance
+                ? maskValue(balance)
+                : '-----'}
+            </span>
             <span className="text-sm mb-1">R$</span>
           </div>
         </div>

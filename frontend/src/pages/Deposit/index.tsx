@@ -114,6 +114,7 @@ export const Deposit = () => {
             ref={references.getOrCrateRef('value')}
             callback={setDisableSubmit}
             tabIndex={TAB_INDEX.VALUE}
+            autoFocus
           />
           <Input
             name="password"

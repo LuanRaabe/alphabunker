@@ -93,7 +93,7 @@ export const Extract = () => {
           <div className="animate-pulse" />
         </div>
       ) : (
-        <div>
+        <div className="w-full">
           {error ? (
             <div className="text-red-500 text-center">{error}</div>
           ) : (
