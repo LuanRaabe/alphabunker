@@ -4,7 +4,7 @@ import { Button } from '../../components/Form/Button';
 import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
 import { useUser } from '../../providers/UserProvider';
-import { maskCpf } from '../../utils/Masks';
+import { maskCpf, maskPassword } from '../../utils/Masks';
 import {
   validateConfirmPassword,
   validateCpf,
@@ -134,10 +134,11 @@ export const Home = () => {
         />
         <Input
           name="passwordlogin"
-          type="password"
+          type="text"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
+          mask={maskPassword}
           validators={[
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
@@ -209,26 +210,31 @@ export const Home = () => {
         />
         <Input
           name="passwordregister"
-          type="password"
+          type="text"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
+          mask={maskPassword}
           validators={[
-            { validate: validatePassword, errorMessage: 'Senha inválida' },
+            {
+              validate: validatePassword,
+              errorMessage: 'Senha deve conter 4 dígitos',
+            },
           ]}
           callback={setDisableSubmit}
         />
         <Input
           name="passwordconfirm"
-          type="password"
+          type="text"
           placeholder="Confirme sua senha"
           value={confirmPassword}
           onChange={setConfirmPassword}
+          mask={maskPassword}
           validators={[
             {
               validate: () =>
                 validateConfirmPassword(password, confirmPassword),
-              errorMessage: 'Senha inválida',
+              errorMessage: 'Senha não confere',
             },
           ]}
           callback={setDisableSubmit}

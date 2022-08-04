@@ -43,3 +43,7 @@ export function maskDate(value: string): string {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 }
+
+export function maskPassword(value: string): string {
+  return value.replace(/\D/g, '');
+}
