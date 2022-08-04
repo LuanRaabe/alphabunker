@@ -7,6 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WhiteCard } from '../../components/WhiteCard';
 import { useUser } from '../../providers/UserProvider';
+import { maskCpf, maskDate } from '../../utils/Masks';
 
 /**
  * Archive: src/pages/Profile.tsx
@@ -23,7 +24,7 @@ export const Profile = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full bg-white dark:bg-body-dark">
       <div className="fixed top-0 flex flex-col items-center w-full h-52 rounded-b-3xl z-10 bg-brand-base">
         <ArrowLeft
           weight="bold"
@@ -50,8 +51,8 @@ export const Profile = () => {
           childs={[
             <>
               <span>Nome: {user?.name}</span>
-              <span>Data de nascimento: {user?.birthdate}</span>
-              <span>CPF: {user?.cpf}</span>
+              <span>Data de nascimento: {maskDate(user?.birthdate ?? '')}</span>
+              <span>CPF: {maskCpf(user?.cpf ?? '')}</span>
             </>,
           ]}
           className="mb-9"
@@ -61,8 +62,12 @@ export const Profile = () => {
           title="Minhas contas correntes"
           childs={accounts?.map((account) => (
             <div className="flex flex-col" key={account.id}>
-              <span>Agência: {account.agency + '-' + account.agency_digit}</span>
-              <span>Conta: {account.account + '-' + account.account_digit}</span>
+              <span>
+                Agência: {account.agency + '-' + account.agency_digit}
+              </span>
+              <span>
+                Conta: {account.account + '-' + account.account_digit}
+              </span>
             </div>
           ))}
         />

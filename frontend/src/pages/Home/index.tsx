@@ -4,8 +4,9 @@ import { Button } from '../../components/Form/Button';
 import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
 import { useUser } from '../../providers/UserProvider';
-import { maskCpf } from '../../utils/Masks';
+import { maskCpf, maskPassword } from '../../utils/Masks';
 import {
+  validateConfirmPassword,
   validateCpf,
   validateDate,
   validateEmail,
@@ -33,6 +34,7 @@ export const Home = () => {
   const [cpf, setCpf] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const isLoginScreen = () => loginOrRegister === 'login';
@@ -47,12 +49,7 @@ export const Home = () => {
       loginUser?.(cpf.replace(/\D/g, ''), password);
       navigate('/deposit');
     } else {
-      createAccount?.(
-        username,
-        email,
-        cpf.replace(/\D/g, ''),
-        birthday,
-      );
+      createAccount?.(username, email, cpf.replace(/\D/g, ''), birthday);
 
       navigate('/home');
     }
@@ -85,8 +82,9 @@ export const Home = () => {
           Alpha Bunker
         </span>
         <span
-          className={`text-paragraph-dark text-xl
-          ${isLoginScreen() ? 'mb-6' : 'mb-7'}`}
+          className={`text-paragraph-dark text-xl dark:text-white ${
+            isLoginScreen() ? 'mb-6' : 'mb-7'
+          }`}
         >
           {isLoginScreen() ? 'Login' : 'Crie sua conta'}
         </span>
@@ -105,7 +103,7 @@ export const Home = () => {
           isDisabled={disableSubmit}
         />
         <span
-          className="text-sm text-paragraph-dark cursor-pointer"
+          className="text-sm text-paragraph-dark cursor-pointer dark:text-paragraph-light-100"
           onClick={() => changeScreen()}
         >
           {isLoginScreen() ? 'Crie sua conta' : 'Entrar'}
@@ -136,10 +134,11 @@ export const Home = () => {
         />
         <Input
           name="passwordlogin"
-          type="password"
+          type="text"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
+          mask={maskPassword}
           validators={[
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
@@ -206,6 +205,37 @@ export const Home = () => {
           onChange={setEmail}
           validators={[
             { validate: validateEmail, errorMessage: 'Email inválido' },
+          ]}
+          callback={setDisableSubmit}
+        />
+        <Input
+          name="passwordregister"
+          type="text"
+          placeholder="Digite sua senha"
+          value={password}
+          onChange={setPassword}
+          mask={maskPassword}
+          validators={[
+            {
+              validate: validatePassword,
+              errorMessage: 'Senha deve conter 4 dígitos',
+            },
+          ]}
+          callback={setDisableSubmit}
+        />
+        <Input
+          name="passwordconfirm"
+          type="text"
+          placeholder="Confirme sua senha"
+          value={confirmPassword}
+          onChange={setConfirmPassword}
+          mask={maskPassword}
+          validators={[
+            {
+              validate: () =>
+                validateConfirmPassword(password, confirmPassword),
+              errorMessage: 'Senha não confere',
+            },
           ]}
           callback={setDisableSubmit}
         />

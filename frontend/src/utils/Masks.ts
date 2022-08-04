@@ -21,7 +21,7 @@ export const maskAgencyNumber = (value: string): string => {
 };
 
 export const maskAccountNumber = (value: string): string => {
-  return value.replace(/\D/g, '').replace(/^(\d{5})(\d)/, '$1-$2');
+  return value.replace(/\D/g, '').replace(/^(\d{4})(\d)/, '$1-$2');
 };
 
 export const maskValue = (value: string): string => {
@@ -33,5 +33,17 @@ export const maskValue = (value: string): string => {
     parseFloat(value) / 100,
   );
 
-  return 'R$' + result;
+  return result;
 };
+
+export function maskDate(value: string): string {
+  const date = new Date(value);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
+export function maskPassword(value: string): string {
+  return value.replace(/\D/g, '');
+}

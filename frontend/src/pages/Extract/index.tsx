@@ -72,6 +72,15 @@ export const Extract = () => {
     })();
   }, []);
 
+  const transactionTypes = {
+    saque: 'Saque',
+    deposito: 'Depósito',
+    transferência: 'Transferência',
+    'transferência recebida': 'Transf. recebida',
+    'transferência efetuada': 'Transf. enviada',
+    taxa: 'Taxa',
+  };
+
   return (
     <WhiteCard
       icon={<Bank className="w-6 h-6" />}
@@ -84,11 +93,11 @@ export const Extract = () => {
           <div className="animate-pulse" />
         </div>
       ) : (
-        <div>
+        <div className="w-full">
           {error ? (
             <div className="text-red-500 text-center">{error}</div>
           ) : (
-            <div className="overflow-auto">
+            <div className="overflow-auto h-full">
               {orderedTransactions?.map((transactionDay) => (
                 <div
                   className="transaction-day text-neutral-600"
@@ -104,7 +113,7 @@ export const Extract = () => {
                       }}
                     >
                       <p className="font-normal">
-                        {transactionItem.operation_name}
+                        {transactionTypes[transactionItem.operation_name as keyof typeof transactionTypes]}
                       </p>
                       <p
                         className={

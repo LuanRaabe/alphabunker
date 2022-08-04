@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import { useUser } from '../providers/UserProvider';
+import { maskDate } from '../utils/Masks';
 
 interface TypeOfTransferenceProps {
   id: string;
@@ -33,28 +34,17 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
   const isSameUser = loggedAccount?.id === foundTransaction?.account_id;
 
   function renderType() {
-    const type = foundTransaction?.operation_name;
-    switch (type) {
-      case 'saque':
-        return 'Saque';
-      case 'deposito':
-        return 'Depósito';
-      case 'transfêrencia recebida':
-        return 'Transferência recebida';
-      case 'transfêrencia enviada':
-        return 'Transferência enviada';
-      case 'taxa':
-        return 'Taxa';
-    }
-  }
-
-  function renderDate() {
-    const today = new Date(foundTransaction?.created_at ?? '');
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //janvier = 0
-    const yyyy = today.getFullYear();
-
-    return dd + '/' + mm + '/' + yyyy;
+    const transactionTypes = {
+      saque: 'Saque',
+      deposito: 'Depósito',
+      transferência: 'Transferência',
+      'transferência recebida': 'Transferência recebida',
+      'transferência enviada': 'Transferência enviada',
+      taxa: 'Taxa',
+    };
+    return transactionTypes[
+      foundTransaction?.operation_name as keyof typeof transactionTypes
+    ];
   }
 
   function renderValue() {
@@ -64,7 +54,9 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
           foundTransaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'}
       >
         {foundTransaction?.type === 'credito' ? '+ R$' : '- R$'}
-        {foundTransaction?.value ? parseFloat(foundTransaction.value).toFixed(2).replace('.', ',') : '0.00'}
+        {foundTransaction?.value
+          ? parseFloat(foundTransaction.value).toFixed(2).replace('.', ',')
+          : '0.00'}
       </span>
     );
   }
@@ -72,7 +64,7 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
   return (
     <div className=' bg-body-light-100 dark:bg-body-dark'>
       <p className='text-paragraph-light-100 flex'>Tipo: {renderType()}</p>
-      <p className='text-paragraph-light-200'>Data: {renderDate()}</p>
+      <p className='text-paragraph-light-200'>Data: {maskDate(foundTransaction?.created_at ?? '')}</p>
       {isTransfer && (
         <>
           <p className='text-paragraph-light-100'>Dados de {isSameUser ? 'destino' : 'origem'}</p>

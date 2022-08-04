@@ -34,7 +34,7 @@ export const Withdraw = () => {
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
   const references = InputReferences();
   const { loggedAccount } = useUser();
-  const [amount, setAmount] = useState<string>('0.00');
+  const [amount, setAmount] = useState<string>('R$0,00');
   const [error, setError] = useState('');
   const [password, setPassword] = useState<string>('');
 
@@ -114,6 +114,7 @@ export const Withdraw = () => {
             ref={references.getOrCrateRef('value')}
             callback={setDisableSubmit}
             tabIndex={TAB_INDEX.VALUE}
+            autoFocus
           />
           <Input
             name="password"
