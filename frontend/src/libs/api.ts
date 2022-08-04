@@ -142,9 +142,9 @@ export class BankAPI {
     return response.data as unknown as ResponseTransfer;
   }
 
-  async getAccounts(ownerCpf: string) {
+  async getAccounts(cpf: string) {
     const response = await this.api.post('/search', {
-      ownerCpf,
+      cpf,
     });
     return response.data as unknown as ResponseAccounts;
   }

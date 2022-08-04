@@ -55,8 +55,15 @@ export interface ResponseExtract {
   messages: string[];
 }
 
+export interface DataAccounts {
+  agency: string;
+  agency_digit: string;
+  account: string;
+  account_digit: string;
+}
+
 export interface ResponseAccounts {
-  data: Partial<Account>[];
+  data: DataAccounts[];
   messages: string[];
 }
 

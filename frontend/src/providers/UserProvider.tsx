@@ -4,6 +4,7 @@ import {
   useState,
   useContext,
 } from 'react';
+import { DataAccounts } from '../../Types';
 import bankAPI from '../libs/api';
 import { cookie } from '../libs/cookie';
 
@@ -45,7 +46,7 @@ export interface OrderedTransaction {
 
 interface ContextTypes {
   user: UserTypes;
-  accounts: AccountTypes[];
+  accounts: DataAccounts[];
   loggedAccount: AccountTypes;
   transactions: ITransaction[];
   orderedTransactions: OrderedTransaction[];
@@ -53,6 +54,7 @@ interface ContextTypes {
   loading: boolean;
   error: string;
   setBalance: (balance: string) => void;
+  setAccounts: (accounts: DataAccounts[]) => void;
   setOrderedTransactions: (orderedTransactions: OrderedTransaction[]) => void;
   setTransactions: (transactions: ITransaction[]) => void;
   loginUser: (cpf: string, password: string) => void;
@@ -106,7 +108,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
   const [balance, setBalance] = useState<string>('0,00');
-  const [accounts, setAccounts] = useState<AccountTypes[] | undefined>(
+  const [accounts, setAccounts] = useState<DataAccounts[] | undefined>(
     undefined,
   );
   const [loggedAccount, setLoggedAccount] = useState<AccountTypes | undefined>(
@@ -260,6 +262,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         error,
         loginUser,
         setBalance,
+        setAccounts,
         createAccount,
         makeDeposit,
         makeWithdraw,

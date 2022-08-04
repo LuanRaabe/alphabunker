@@ -4,8 +4,10 @@ import {
   UserCircle,
   Vault,
 } from 'phosphor-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WhiteCard } from '../../components/WhiteCard';
+import bankAPI from '../../libs/api';
 import { useUser } from '../../providers/UserProvider';
 import { maskCpf, maskDate } from '../../utils/Masks';
 
@@ -20,8 +22,19 @@ import { maskCpf, maskDate } from '../../utils/Masks';
  */
 
 export const Profile = () => {
-  const { user, accounts } = useUser();
+  const { user, accounts, setAccounts } = useUser();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.cpf === undefined) return;
+    const fetchAccounts = async () => {
+      const response = await bankAPI.getAccounts(user?.cpf);
+      if (response.data) {
+        setAccounts?.(response.data);
+      }
+    };
+    fetchAccounts();
+  }, [user]);
 
   return (
     <div className="flex flex-col w-full h-full bg-white dark:bg-body-dark">
@@ -61,7 +74,7 @@ export const Profile = () => {
           icon={<Vault className="w-5 h-5" />}
           title="Minhas contas correntes"
           childs={accounts?.map((account) => (
-            <div className="flex flex-col" key={account.id}>
+            <div className="flex flex-col" key={account.account}>
               <span>
                 Agência: {account.agency + '-' + account.agency_digit}
               </span>
