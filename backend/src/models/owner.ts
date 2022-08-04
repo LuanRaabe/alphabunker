@@ -1,9 +1,10 @@
 interface Owner {
-    id: string
-    name: string
-    email: string
-    birthdate: string
-    cpf: string
+  id: string;
+  name: string;
+  password: string;
+  email: string;
+  birthdate: string;
+  cpf: string;
 }
 
-export {Owner};
+export { Owner };

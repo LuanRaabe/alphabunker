@@ -20,7 +20,7 @@ class CreateOwnerService {
     try {
       let insertOwner;
       const validOwnerData = new this.ownerDataValidator(owner);
-      const newAccount = GenerateAccount(owner.cpf);
+      const newAccount = GenerateAccount(owner.cpf, owner.password);
       const bancAccount = newAccount;
       const password = bancAccount.password;
       const hash = bcrypt.hashSync(bancAccount.password!, salt);
