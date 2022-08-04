@@ -1,9 +1,4 @@
-import {
-  ReactNode,
-  createContext,
-  useState,
-  useContext,
-} from 'react';
+import { ReactNode, createContext, useState, useContext } from 'react';
 import bankAPI from '../libs/api';
 import { cookie } from '../libs/cookie';
 
@@ -22,7 +17,7 @@ interface AccountTypes {
   id?: string;
   owners_cpf: string;
   agency: string;
-  password: string;
+  password?: string;
   agency_digit: string;
   account: string;
   account_digit: string;
@@ -53,6 +48,7 @@ interface ContextTypes {
   loading: boolean;
   error: string;
   setBalance: (balance: string) => void;
+  setAccounts: (accounts: AccountTypes[]) => void;
   setOrderedTransactions: (orderedTransactions: OrderedTransaction[]) => void;
   setTransactions: (transactions: ITransaction[]) => void;
   loginUser: (cpf: string, password: string) => void;
@@ -111,7 +107,9 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
   const [loggedAccount, setLoggedAccount] = useState<AccountTypes | undefined>(
     undefined,
   );
-  const [orderedTransactions, setOrderedTransactions] = useState<OrderedTransaction[]>([]);
+  const [orderedTransactions, setOrderedTransactions] = useState<
+    OrderedTransaction[]
+  >([]);
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -122,7 +120,14 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
       .createSession(cpf, password)
       .then((response) => {
         const { name, email, birthdate, photo } = response.data.owner;
-        setUser({ name, email, cpf: response.data.account.owners_cpf, birthdate, password, photo });
+        setUser({
+          name,
+          email,
+          cpf: response.data.account.owners_cpf,
+          birthdate,
+          password,
+          photo,
+        });
         setLoggedAccount({
           id: response.data.account.id,
           owners_cpf: response.data.account.owners_cpf,
@@ -197,7 +202,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agency,
         agencyDigit,
         valueTransaction,
-        password
+        password,
       )
       .catch((e) => setError(e));
     setLoading(false);
@@ -418,12 +423,13 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         error,
         loginUser,
         setBalance,
+        setAccounts,
         createAccount,
         makeDeposit,
         makeWithdraw,
         makeTransfer,
         setTransactions,
-        setOrderedTransactions
+        setOrderedTransactions,
       }}
     >
       {children}

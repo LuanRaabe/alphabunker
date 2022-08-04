@@ -56,7 +56,7 @@ export interface ResponseExtract {
 }
 
 export interface ResponseAccounts {
-  data: Partial<Account>[];
+  data: Account[];
   messages: string[];
 }
 

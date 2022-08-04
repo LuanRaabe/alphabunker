@@ -4,8 +4,10 @@ import {
   UserCircle,
   Vault,
 } from 'phosphor-react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { WhiteCard } from '../../components/WhiteCard';
+import bankAPI from '../../libs/api';
 import { useUser } from '../../providers/UserProvider';
 import { maskCpf, maskDate } from '../../utils/Masks';
 
@@ -20,8 +22,17 @@ import { maskCpf, maskDate } from '../../utils/Masks';
  */
 
 export const Profile = () => {
-  const { user, accounts } = useUser();
+  const { user, accounts, setAccounts } = useUser();
   const navigate = useNavigate();
+
+  async function getAllAccounts() {
+    const resp = await bankAPI.getAccounts(user?.cpf ?? '');
+    setAccounts?.(resp.data);
+  }
+
+  useEffect(() => {
+    getAllAccounts();
+  }, []);
 
   return (
     <div className="flex flex-col w-full h-full bg-white dark:bg-body-dark">
