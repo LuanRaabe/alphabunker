@@ -79,7 +79,7 @@ export const Transfer = () => {
         blank={true}
       >
         <form onSubmit={(e) => handleSubmit(e)}>
-          <span className="text-base font-normal">Origem</span>
+          <span className="text-base font-normal text-paragraph-dark dark:text-header-light">Origem</span>
           <div className="flex flex-row justify-between mb-4">
             <SmallInput
               title="Agência"
@@ -92,7 +92,7 @@ export const Transfer = () => {
               value={loggedAccount?.account + '-' + loggedAccount?.account_digit}
             />
           </div>
-          <span className="text-base font-normal">Destino</span>
+          <span className="text-base font-normal text-paragraph-dark dark:text-header-light">Destino</span>
           <div className="flex flex-row justify-between">
             <SmallInput
               title="Agência"

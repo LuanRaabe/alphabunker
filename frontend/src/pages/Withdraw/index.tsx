@@ -88,7 +88,7 @@ export const Withdraw = () => {
         blank={true}
       >
         <form onSubmit={(e) => handleSubmit(e)}>
-          <span className="text-base font-normal">Dados para saque</span>
+          <span className="text-base font-normal text-paragraph-dark dark:text-header-light">Dados para saque</span>
           <div className="flex flex-row justify-between mb-4">
             <SmallInput
               title="Agência"
