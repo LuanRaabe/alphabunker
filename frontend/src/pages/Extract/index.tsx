@@ -86,7 +86,7 @@ export const Extract = () => {
       icon={<Bank className="w-6 h-6" />}
       title="Extrato de transações"
       blank
-      className="font-semibold h-3/6"
+      className="font-normal h-3/6"
     >
       {loading ? (
         <div className="text-center">
@@ -95,12 +95,12 @@ export const Extract = () => {
       ) : (
         <div className="w-full">
           {error ? (
-            <div className="text-red-500 text-center">{error}</div>
+            <div className="error">{error}</div>
           ) : (
-            <div className="overflow-auto h-full">
+            <div className="overflow-auto h-full w-full">
               {orderedTransactions?.map((transactionDay) => (
                 <div
-                  className="transaction-day text-neutral-600"
+                  className="transaction-day text-neutral-600 dark:text-paragraph-light-100 w-full"
                   key={transactionDay.date}
                 >
                   <p className=" w-5/6">{transactionDay.date}</p>

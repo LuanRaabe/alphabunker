@@ -136,7 +136,7 @@ export const Withdraw = () => {
             isDisabled={disableSubmit}
             tabIndex={TAB_INDEX.BUTTON}
           />
-          {error && <span className="text-red-600">{error}</span>}
+          {error && <span className="error">{error}</span>}
         </form>
       </WhiteCard>
     </>

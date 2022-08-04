@@ -37,15 +37,15 @@ export function WhiteCard(props: WhiteCardProps) {
           </span>
         )}{' '}
       </div>
-      <div className="flex flex-col overflow-auto">
+      <div className="flex flex-col overflow-auto w-full items-center">
         {props.blank ? (
-          <div className="flex flex-col items-center w-11/12">
+          <div className="flex flex-col items-center w-full">
             {props.children}
           </div>
         ) : (
           props.childs?.map((child, index) => (
             <div
-              className="flex flex-col items-center w-11/12 mb-4 bg-body-light-100 text-input-placeholder"
+              className="flex flex-col items-center w-11/12 mb-4 bg-body-light-100 dark:bg-body-dark dark:text-paragraph-light-100 text-input-placeholder"
               key={props.title + index}
             >
               {child}

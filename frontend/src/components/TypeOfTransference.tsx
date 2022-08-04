@@ -39,7 +39,7 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
       deposito: 'Depósito',
       transferência: 'Transferência',
       'transferência recebida': 'Transferência recebida',
-      'transferência enviada': 'Transferência enviada',
+      'transferência efetuada': 'Transferência enviada',
       taxa: 'Taxa',
     };
     return transactionTypes[
