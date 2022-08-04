@@ -15,15 +15,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CheckExtract = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const { Client } = require('pg');
+const { Client } = require("pg");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 function CheckExtract(cpf, password, agency, agency_digit, account, account_digit) {
     return __awaiter(this, void 0, void 0, function* () {
         const clientSelect = new Client();
         try {
-            console.log('searching');
+            console.log("searching");
             yield clientSelect.connect();
-            console.log('conectado ao banco, pagina de extrato');
+            console.log("conectado ao banco, pagina de extrato");
             const selectBalanceQuery = `
         SELECT * FROM public.accounts
         WHERE
@@ -33,10 +33,14 @@ function CheckExtract(cpf, password, agency, agency_digit, account, account_digi
             account=$4 and
             account_digit=$5
         `;
-            const check = yield clientSelect.query(selectBalanceQuery, [cpf, agency, agency_digit, account, account_digit]);
-            console.log(check.rows[0]);
+            const check = yield clientSelect.query(selectBalanceQuery, [
+                cpf,
+                agency,
+                agency_digit,
+                account,
+                account_digit,
+            ]);
             const compare = bcrypt_1.default.compareSync(password, check.rows[0].password);
-            console.log(compare);
             if (!compare) {
                 return false;
             }
@@ -50,11 +54,11 @@ function CheckExtract(cpf, password, agency, agency_digit, account, account_digi
             const check2 = yield clientSelect.query(selectExtractQuery, [id]);
             const extract = check2.rows;
             const accountInfo = {
-                cpf: cpf,
+                owners_cpf: cpf,
                 account: account,
                 account_digit: account_digit,
                 agency: agency,
-                agency_digit: agency_digit
+                agency_digit: agency_digit,
             };
             yield clientSelect.end();
             if (check.rows.length !== 0) {

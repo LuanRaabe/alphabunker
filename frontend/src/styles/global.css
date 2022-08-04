@@ -12,6 +12,7 @@ html {
 
 body {
   @apply w-screen h-screen flex flex-col justify-center items-center text-base overflow-x-hidden;
+  @apply overflow-hidden;
 }
 
 #root {

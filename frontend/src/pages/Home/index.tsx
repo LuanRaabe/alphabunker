@@ -5,9 +5,8 @@ import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
 import { PasswordModal } from '../../components/PasswordModal';
 import { useUser } from '../../providers/UserProvider';
-import { maskCpf, maskEmail } from '../../utils/Masks';
+import { maskCpf } from '../../utils/Masks';
 import {
-  validateConfirmPassword,
   validateCpf,
   validateDate,
   validateEmail,
@@ -26,7 +25,7 @@ import {
 
 export const Home = () => {
   const navigate = useNavigate();
-  const { loading } = useUser();
+  const { loading, loginUser, createAccount } = useUser();
   const [loginOrRegister, setLoginOrRegister] = useState<'login' | 'register'>(
     'login',
   );
@@ -35,7 +34,6 @@ export const Home = () => {
   const [cpf, setCpf] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const isLoginScreen = () => loginOrRegister === 'login';
@@ -45,8 +43,20 @@ export const Home = () => {
     //se der erro
     // references.setError(name, mensagemdeerro);
     //
-    if (isLoginScreen()) navigate('/deposit');
-    else navigate('/deposit');
+    if (isLoginScreen()) {
+      console.log('login');
+      loginUser?.(cpf.replace(/\D/g, ''), password);
+      navigate('/deposit');
+    } else {
+      createAccount?.(
+        username,
+        email,
+        cpf.replace(/\D/g, ''),
+        birthday,
+      );
+
+      navigate('/home');
+    }
   }
 
   function changeScreen() {
@@ -55,7 +65,6 @@ export const Home = () => {
     setCpf('');
     setEmail('');
     setPassword('');
-    setConfirmPassword('');
     setDisableSubmit(false);
     setLoginOrRegister(isLoginScreen() ? 'register' : 'login');
   }
@@ -71,9 +80,8 @@ export const Home = () => {
           <img src="/logo.svg" alt="logo" className="h-full" />
         </div>
         <span
-          className={`text-brand-base text-2xl ${
-            isLoginScreen() ? 'mb-14' : 'mb-3'
-          }`}
+          className={`text-brand-base text-2xl
+          ${isLoginScreen() ? 'mb-14' : 'mb-3'}`}
         >
           Alpha Bunker
         </span>
@@ -198,35 +206,8 @@ export const Home = () => {
           placeholder="Digite seu e-mail"
           value={email}
           onChange={setEmail}
-          mask={maskEmail}
           validators={[
             { validate: validateEmail, errorMessage: 'Email inválido' },
-          ]}
-          callback={setDisableSubmit}
-        />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Digite sua senha"
-          value={password}
-          onChange={setPassword}
-          validators={[
-            { validate: validatePassword, errorMessage: 'Senha inválida' },
-          ]}
-          callback={setDisableSubmit}
-        />
-        <Input
-          name="passwordconfirm"
-          type="password"
-          placeholder="Confirme sua senha"
-          value={confirmPassword}
-          onChange={setConfirmPassword}
-          validators={[
-            {
-              validate: () =>
-                validateConfirmPassword(password, confirmPassword),
-              errorMessage: 'Senha não confere',
-            },
           ]}
           callback={setDisableSubmit}
         />

@@ -16,7 +16,7 @@ exports.WithdrawTable = void 0;
 const _1 = require(".");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const { Client } = require('pg');
+const { Client } = require("pg");
 const uuid_1 = require("uuid");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 class WithdrawTable extends _1.PostgresDB {
@@ -25,7 +25,7 @@ class WithdrawTable extends _1.PostgresDB {
             const client = new Client();
             try {
                 yield client.connect();
-                console.log('conectado ao banco');
+                console.log("conectado ao banco");
                 const selectBalanceQuery = `
             SELECT * FROM public.accounts
             WHERE
@@ -36,7 +36,13 @@ class WithdrawTable extends _1.PostgresDB {
                 account_digit=$5
 
             `;
-                const check = yield client.query(selectBalanceQuery, [withdraw.ownerCpf, withdraw.agency, withdraw.agencyDigit, withdraw.account, withdraw.accountDigit]);
+                const check = yield client.query(selectBalanceQuery, [
+                    withdraw.ownerCpf,
+                    withdraw.agency,
+                    withdraw.agencyDigit,
+                    withdraw.account,
+                    withdraw.accountDigit,
+                ]);
                 const compare = bcrypt_1.default.compareSync(withdraw.password, check.rows[0].password);
                 if (!compare) {
                     return false;
@@ -49,7 +55,7 @@ class WithdrawTable extends _1.PostgresDB {
                 const newFee = withdrawValue + fee;
                 const newValue = atualBalance - newFee;
                 if (newValue >= 0) {
-                    console.log('entrou');
+                    console.log("entrou");
                     const insertWithdrawQuery = `
                 INSERT INTO public.extracts
                     (id, account_id, operation_name, value, created_at, type) 
@@ -59,11 +65,10 @@ class WithdrawTable extends _1.PostgresDB {
                     const result = yield client.query(insertWithdrawQuery, [
                         withdraw.id,
                         id,
-                        'saque',
+                        "saque",
                         withdraw.value,
-                        'debito'
+                        "debito",
                     ]);
-                    console.log(result.rows);
                     if (result.rows.length !== 0) {
                         console.log("primeiro ok");
                     }
@@ -78,11 +83,10 @@ class WithdrawTable extends _1.PostgresDB {
                     const feeResult = yield client.query(insertFeeQuery, [
                         feeId,
                         id,
-                        'taxa',
+                        "taxa",
                         passFee,
-                        'debito'
+                        "debito",
                     ]);
-                    console.log(feeResult.rows);
                     if (feeResult.rows.length !== 0) {
                         console.log("segundo ok");
                     }
@@ -96,15 +100,17 @@ class WithdrawTable extends _1.PostgresDB {
                     account_digit=$6
                     RETURNING balance
                 `;
+                    console.log(newFee);
                     const final = yield client.query(alterBalance, [
                         newFee,
                         withdraw.ownerCpf,
                         withdraw.agency,
                         withdraw.agencyDigit,
                         withdraw.account,
-                        withdraw.accountDigit
+                        withdraw.accountDigit,
                     ]);
-                    console.log('withdraw completo');
+                    console.log(final.rows[0]);
+                    console.log("withdraw completo");
                     const data = {
                         withdraw: {
                             id: withdraw.id,
@@ -114,12 +120,12 @@ class WithdrawTable extends _1.PostgresDB {
                             agencyDigit: withdraw.agencyDigit,
                             account: withdraw.account,
                             accountDigit: withdraw.accountDigit,
-                            createdAt: new Date()
+                            createdAt: new Date(),
                         },
                         fee: {
                             id: feeId,
-                            value: passFee
-                        }
+                            value: passFee,
+                        },
                     };
                     yield client.end();
                     return data;

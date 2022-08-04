@@ -10,6 +10,7 @@ import {
   ResponseDeposit,
   ResponseWithdraw,
   ResponseTransfer,
+  ResponseBalance,
 } from '../../Types';
 
 export const api = axios.create({
@@ -25,12 +26,12 @@ export class BankAPI {
     });
   }
 
-  async createSession(ownerCpf: string, password: string) {
+  async createSession(cpf: string, password: string) {
     const response = await this.api.post('/login', {
-      ownerCpf,
+      cpf,
       password,
     });
-    return response as unknown as ResponseLogin;
+    return response.data as unknown as ResponseLogin;
   }
 
   async createAccount(
@@ -45,7 +46,8 @@ export class BankAPI {
       cpf,
       birthdate,
     });
-    return response as unknown as ResponseCreateAccount;
+    console.log(response.data);
+    return response.data as unknown as ResponseCreateAccount;
   }
 
   async makeDeposit(
@@ -54,7 +56,7 @@ export class BankAPI {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
   ) {
     const response = await this.api.post('/deposit', {
       ownerCpf,
@@ -64,7 +66,7 @@ export class BankAPI {
       agencyDigit,
       value,
     });
-    return response as unknown as ResponseDeposit;
+    return response.data as unknown as ResponseDeposit;
   }
 
   async makeWithdraw(
@@ -73,7 +75,8 @@ export class BankAPI {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
+    password: string,
   ) {
     const response = await this.api.post('/withdraw', {
       ownerCpf,
@@ -82,12 +85,14 @@ export class BankAPI {
       agency,
       agencyDigit,
       value,
+      password,
     });
-    return response as unknown as ResponseWithdraw;
+    return response.data as unknown as ResponseWithdraw;
   }
 
   async getTransactions(
     ownerCpf: string,
+    password: string,
     account: string,
     accountDigit: string,
     agency: string,
@@ -96,21 +101,22 @@ export class BankAPI {
     const response = await this.api.post('/extract', {
       ownerCpf,
       account,
+      password,
       accountDigit,
       agency,
       agencyDigit,
     });
-    return response as unknown as ResponseExtract;
+    return response.data as unknown as ResponseExtract;
   }
 
   async makeTransfer(
     ownerCpf: string,
     ownerPassword: string,
-    onweraccount: string,
-    onweraccountDigit: string,
-    onweragency: string,
-    onweragencyDigit: string,
-    value: number,
+    ownerAccount: string,
+    ownerAccountDigit: string,
+    ownerAgency: string,
+    ownerAgencyDigit: string,
+    value: string,
     transferCpf: string,
     transferAccount: string,
     transferAccountDigit: string,
@@ -120,10 +126,10 @@ export class BankAPI {
     const response = await this.api.post('/transfer', {
       ownerCpf,
       ownerPassword,
-      onweraccount,
-      onweraccountDigit,
-      onweragency,
-      onweragencyDigit,
+      ownerAccount,
+      ownerAccountDigit,
+      ownerAgency,
+      ownerAgencyDigit,
       transferCpf,
       transferAccount,
       transferAccountDigit,
@@ -131,14 +137,33 @@ export class BankAPI {
       transferAgencyDigit,
       value,
     });
-    return response as unknown as ResponseTransfer;
+    return response.data as unknown as ResponseTransfer;
   }
 
   async getAccounts(ownerCpf: string) {
     const response = await this.api.post('/search', {
       ownerCpf,
     });
-    return response as unknown as ResponseAccounts;
+    return response.data as unknown as ResponseAccounts;
+  }
+
+  async getBalance(
+    ownerCpf: string,
+    account: string,
+    accountDigit: string,
+    agency: string,
+    agencyDigit: string,
+    password: string,
+  ) {
+    const response = await this.api.post('/balance', {
+      ownerCpf,
+      account,
+      accountDigit,
+      agency,
+      agencyDigit,
+      password,
+    });
+    return response.data as unknown as ResponseBalance;
   }
 }
 export const bankAPI = new BankAPI();

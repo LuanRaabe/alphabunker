@@ -26,16 +26,15 @@ class SearchBalanceService {
                     throw new Error(`400: ${validBalanceData.errors}`);
                 }
                 const searchBalance = yield this.balanceTable(balance.ownerCpf, balance.password, balance.agency, balance.agencyDigit, balance.account, balance.accountDigit);
-                console.log(searchBalance);
                 if (searchBalance) {
                     return {
                         data: searchBalance,
-                        messages: []
+                        messages: [],
                     };
                 }
                 return {
                     data: {},
-                    messages: ["Senha ou conta inválidos"]
+                    messages: ["Senha ou conta inválidos"],
                 };
             }
             catch (error) {

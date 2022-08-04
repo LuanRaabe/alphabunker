@@ -3,7 +3,6 @@ import {
   createContext,
   useState,
   useContext,
-  useEffect,
 } from 'react';
 import bankAPI from '../libs/api';
 import { cookie } from '../libs/cookie';
@@ -14,27 +13,34 @@ interface UserTypes {
   name: string;
   email: string;
   cpf: string;
-  birthDate: string;
+  birthdate: string;
+  password: string;
   photo?: string;
 }
 
 interface AccountTypes {
-  id: string;
-  cpf: string;
+  id?: string;
+  owners_cpf: string;
   agency: string;
-  agencyDigit: string;
+  password: string;
+  agency_digit: string;
   account: string;
-  accountDigit: string;
+  account_digit: string;
   balance: string;
 }
 
-interface ITransaction {
+export interface ITransaction {
   id: string;
   account_id: string;
   operation_name: string;
   type: string;
-  value: number;
+  value: string;
   created_at: string;
+}
+
+export interface OrderedTransaction {
+  date: string;
+  transactions: ITransaction[];
 }
 
 interface ContextTypes {
@@ -42,8 +48,13 @@ interface ContextTypes {
   accounts: AccountTypes[];
   loggedAccount: AccountTypes;
   transactions: ITransaction[];
+  orderedTransactions: OrderedTransaction[];
+  balance: string;
   loading: boolean;
   error: string;
+  setBalance: (balance: string) => void;
+  setOrderedTransactions: (orderedTransactions: OrderedTransaction[]) => void;
+  setTransactions: (transactions: ITransaction[]) => void;
   loginUser: (cpf: string, password: string) => void;
   createAccount: (
     name: string,
@@ -57,7 +68,7 @@ interface ContextTypes {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
   ) => void;
   makeWithdraw: (
     ownerCpf: string,
@@ -65,7 +76,8 @@ interface ContextTypes {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    value: number,
+    value: string,
+    password: string,
   ) => void;
   makeTransfer: (
     ownerCpf: string,
@@ -74,7 +86,7 @@ interface ContextTypes {
     onweraccountDigit: string,
     onweragency: string,
     onweragencyDigit: string,
-    value: number,
+    value: string,
     transferCpf: string,
     transferAccount: string,
     transferAccountDigit: string,
@@ -92,28 +104,40 @@ interface UserProviderTypes {
 export const UserProvider = ({ children }: UserProviderTypes) => {
   const [error, setError] = useState<string>('');
   const [user, setUser] = useState<UserTypes | undefined>(undefined);
+  const [balance, setBalance] = useState<string>('0,00');
   const [accounts, setAccounts] = useState<AccountTypes[] | undefined>(
     undefined,
   );
   const [loggedAccount, setLoggedAccount] = useState<AccountTypes | undefined>(
     undefined,
   );
-  const [transactions, setTansactions] = useState<
-    ITransaction[] | undefined
-  >(undefined);
+  const [orderedTransactions, setOrderedTransactions] = useState<OrderedTransaction[]>([]);
+  const [transactions, setTransactions] = useState<ITransaction[]>([]);
   const [loading, setLoading] = useState(false);
 
   function loginUser(cpf: string, password: string) {
     setLoading(true);
+    console.log('antes do login');
     bankAPI
       .createSession(cpf, password)
       .then((response) => {
-        const { name, email, cpf, birthDate, photo } = response.data.owner;
-        setUser({ name, email, cpf, birthDate, photo });
-        cookie.ObjectToCookies(user);
+        const { name, email, birthdate, photo } = response.data.owner;
+        setUser({ name, email, cpf: response.data.account.owners_cpf, birthdate, password, photo });
+        setLoggedAccount({
+          id: response.data.account.id,
+          owners_cpf: response.data.account.owners_cpf,
+          agency: response.data.account.agency,
+          password,
+          agency_digit: response.data.account.agency_digit,
+          account: response.data.account.account,
+          account_digit: response.data.account.account_digit,
+          balance: response.data.account.balance,
+        });
+        setBalance(response.data.account.balance);
+        //cookie.ObjectToCookies(user); // TODO: n funfa tem que ve
       })
-      .then(() => setLoading(false))
       .catch((e) => setError(e));
+    setLoading(false);
   }
 
   function createAccount(
@@ -126,31 +150,12 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     bankAPI
       .createAccount(name, email, cpf, birthDate)
       .then((response) => {
-        const { name, email, cpf, birthDate, photo } = response.data.owner;
-        setUser({ name, email, cpf, birthDate, photo });
+        // TODO: implementar modal para senha
         cookie.ObjectToCookies(user);
-        const {
-          id,
-          ownerCpf,
-          account,
-          accountDigit,
-          agency,
-          agencyDigit,
-          balance,
-        } = response.data.account;
-        setLoggedAccount({
-          id,
-          cpf: ownerCpf,
-          account,
-          accountDigit,
-          agency,
-          agencyDigit,
-          balance,
-        });
-        cookie.ObjectToCookies(account);
+        cookie.ObjectToCookies(response.data.account);
       })
-      .then(() => setLoading(false))
       .catch((e) => setError(e));
+    setLoading(false);
   }
 
   function makeDeposit(
@@ -159,7 +164,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    valueTransaction: number,
+    valueTransaction: string,
   ) {
     setLoading(true);
     bankAPI
@@ -171,19 +176,17 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agencyDigit,
         valueTransaction,
       )
-      .then(() => {
-        setLoading(false);
-      })
       .catch((e) => setError(e));
+    setLoading(false);
   }
-
   function makeWithdraw(
     ownerCpf: string,
     account: string,
     accountDigit: string,
     agency: string,
     agencyDigit: string,
-    valueTransaction: number,
+    valueTransaction: string,
+    password: string,
   ) {
     setLoading(true);
     bankAPI
@@ -194,11 +197,10 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
         agency,
         agencyDigit,
         valueTransaction,
+        password
       )
-      .then(() => {
-        setLoading(false);
-      })
       .catch((e) => setError(e));
+    setLoading(false);
   }
 
   function makeTransfer(
@@ -208,7 +210,7 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     onweraccountDigit: string,
     onweragency: string,
     onweragencyDigit: string,
-    value: number,
+    value: string,
     transferCpf: string,
     transferAccount: string,
     transferAccountDigit: string,
@@ -216,205 +218,212 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     transferAgencyDigit: string,
   ) {
     setLoading(true);
-    bankAPI.makeTransfer(
-      ownerCpf,
-      ownerPassword,
-      onweraccount,
-      onweraccountDigit,
-      onweragency,
-      onweragencyDigit,
-      value,
-      transferCpf,
-      transferAccount,
-      transferAccountDigit,
-      transferAgency,
-      transferAgencyDigit,
-    )
+    bankAPI
+      .makeTransfer(
+        ownerCpf,
+        ownerPassword,
+        onweraccount,
+        onweraccountDigit,
+        onweragency,
+        onweragencyDigit,
+        value,
+        transferCpf,
+        transferAccount,
+        transferAccountDigit,
+        transferAgency,
+        transferAgencyDigit,
+      )
       .catch((e) => setError(e));
+    setLoading(false);
   }
 
-  useEffect(() => {
-    setUser({
-      name: 'Fulano',
-      email: 'fulano@mail.com',
-      cpf: '123456789',
-      birthDate: '01/01/2000',
-    });
-    setAccounts([
-      {
-        id: '1',
-        cpf: '34515222617',
-        balance: '234',
-        agency: '123',
-        agencyDigit: '6',
-        account: '9876',
-        accountDigit: '5',
-      },
-      {
-        id: '2',
-        cpf: '34515552617',
-        balance: '321',
-        agency: '564',
-        agencyDigit: '6',
-        account: '6658',
-        accountDigit: '5',
-      },
-    ]);
-    setLoggedAccount({
-      id: '1',
-      cpf: '34515222617',
-      balance: '234',
-      agency: '123',
-      agencyDigit: '6',
-      account: '9876',
-      accountDigit: '5',
-    });
-    setTansactions([
-      {
-        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        value: 60,
-        type: 'debito',
-        created_at: '2022-07-29T12:24:01.916Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 6000,
-        created_at: '2022-07-29T12:24:01.728Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 300,
-        created_at: '2022-07-29T12:24:01.728Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 30,
-        created_at: '2022-07-29T12:24:01.728Z',
-      },
-      {
-        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 60,
-        created_at: '2022-07-28T12:24:01.916Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 6000,
-        created_at: '2022-07-28T12:24:01.728Z',
-      },
-      {
-        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 60,
-        created_at: '2022-07-27T12:24:01.916Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 6000,
-        created_at: '2022-07-27T12:24:01.728Z',
-      },
-      {
-        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 60,
-        created_at: '2022-07-29T12:24:01.916Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 6000,
-        created_at: '2022-07-29T12:24:01.728Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 300,
-        created_at: '2022-07-29T12:24:01.728Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 30,
-        created_at: '2022-07-29T12:24:01.728Z',
-      },
-      {
-        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 60,
-        created_at: '2022-07-28T12:24:01.916Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 6000,
-        created_at: '2022-07-28T12:24:01.728Z',
-      },
-      {
-        id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'taxa',
-        type: 'debito',
-        value: 60,
-        created_at: '2022-07-27T12:24:01.916Z',
-      },
-      {
-        id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
-        account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
-        operation_name: 'deposito',
-        type: 'credito',
-        value: 6000,
-        created_at: '2022-07-27T12:24:01.728Z',
-      },
-    ]);
-  }, []);
+  // useEffect(() => {
+  //   setUser({
+  //     name: 'Fulano',
+  //     email: 'fulano@mail.com',
+  //     cpf: '123456789',
+  //     birthDate: '01/01/2000',
+  //   });
+  //   setAccounts([
+  //     {
+  //       id: '1',
+  //       cpf: '34515222617',
+  //       balance: '234',
+  //       agency: '123',
+  //       agencyDigit: '6',
+  //       account: '9876',
+  //       accountDigit: '5',
+  //     },
+  //     {
+  //       id: '2',
+  //       cpf: '34515552617',
+  //       balance: '321',
+  //       agency: '564',
+  //       agencyDigit: '6',
+  //       account: '6658',
+  //       accountDigit: '5',
+  //     },
+  //   ]);
+  //   setLoggedAccount({
+  //     id: '1',
+  //     cpf: '34515222617',
+  //     balance: '234',
+  //     agency: '123',
+  //     agencyDigit: '6',
+  //     account: '9876',
+  //     accountDigit: '5',
+  //   });
+  //   setTansactions([
+  //     {
+  //       id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       value: 60,
+  //       type: 'debito',
+  //       created_at: '2022-07-29T12:24:01.916Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 6000,
+  //       created_at: '2022-07-29T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 300,
+  //       created_at: '2022-07-29T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 30,
+  //       created_at: '2022-07-29T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 60,
+  //       created_at: '2022-07-28T12:24:01.916Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 6000,
+  //       created_at: '2022-07-28T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 60,
+  //       created_at: '2022-07-27T12:24:01.916Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 6000,
+  //       created_at: '2022-07-27T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 60,
+  //       created_at: '2022-07-29T12:24:01.916Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 6000,
+  //       created_at: '2022-07-29T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 300,
+  //       created_at: '2022-07-29T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 30,
+  //       created_at: '2022-07-29T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 60,
+  //       created_at: '2022-07-28T12:24:01.916Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 6000,
+  //       created_at: '2022-07-28T12:24:01.728Z',
+  //     },
+  //     {
+  //       id: '3ad28711-ba20-4aec-85a6-4646fd8a815f',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'taxa',
+  //       type: 'debito',
+  //       value: 60,
+  //       created_at: '2022-07-27T12:24:01.916Z',
+  //     },
+  //     {
+  //       id: 'f6903dc3-fc8d-4a30-b1ec90684bda2e23',
+  //       account_id: '0cb63ab4-7763-4056-8540-b4d9335b87cb',
+  //       operation_name: 'deposito',
+  //       type: 'credito',
+  //       value: 6000,
+  //       created_at: '2022-07-27T12:24:01.728Z',
+  //     },
+  //   ]);
+  // }, []);
 
   return (
     <UserContext.Provider
       value={{
         user,
+        balance,
         accounts,
         loggedAccount,
         transactions,
+        orderedTransactions,
         loading,
         error,
         loginUser,
+        setBalance,
         createAccount,
         makeDeposit,
         makeWithdraw,
         makeTransfer,
+        setTransactions,
+        setOrderedTransactions
       }}
     >
       {children}

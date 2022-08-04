@@ -34,8 +34,8 @@ class CreateOwnerService {
                 let insertOwner;
                 const validOwnerData = new this.ownerDataValidator(owner);
                 const newAccount = (0, utils_2.GenerateAccount)(owner.cpf);
-                let bancAccount = newAccount;
-                let password = bancAccount.password;
+                const bancAccount = newAccount;
+                const password = bancAccount.password;
                 const hash = bcrypt_1.default.hashSync(bancAccount.password, salt);
                 bancAccount.password = hash;
                 console.log(hash);
@@ -46,7 +46,7 @@ class CreateOwnerService {
                 const searchOwner = yield (0, search_owner_1.SearchOwner)(owner.cpf);
                 console.log(searchOwner);
                 if (!searchOwner) {
-                    console.log('insertOwner');
+                    console.log("insertOwner");
                     insertOwner = yield new this.ownerTable().insert(validOwnerData.owner, bancAccount);
                 }
                 else {
@@ -56,14 +56,13 @@ class CreateOwnerService {
                 if (insertOwner) {
                     newAccount.password = password;
                     return {
-                        data: { owner: validOwnerData.owner,
-                            account: newAccount },
-                        messages: []
+                        data: { owner: validOwnerData.owner, account: newAccount },
+                        messages: [],
                     };
                 }
                 return {
                     data: {},
-                    messages: ["an error occurred while creating the owner"]
+                    messages: ["an error occurred while creating the owner"],
                 };
             }
             catch (error) {

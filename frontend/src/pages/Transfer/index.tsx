@@ -1,5 +1,7 @@
+import bankAPI from '../../libs/api';
 import { ArrowsLeftRight } from 'phosphor-react';
 import { FormEvent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Form/Button';
 import { Input } from '../../components/Form/Input';
 import { SmallInput } from '../../components/Form/Panel/SmallInput';
@@ -17,14 +19,16 @@ import {
   validatePassword,
   validateAgency,
   validateAccount,
+  validateCpf,
 } from '../../utils/Validators';
 
 const TAB_INDEX = {
   AGENCY: 1,
   ACCOUNT: 2,
-  VALUE: 3,
-  PASSWORD: 4,
-  BUTTON: 5,
+  CPF: 3,
+  VALUE: 4,
+  PASSWORD: 5,
+  BUTTON: 6,
 };
 
 /**
@@ -38,30 +42,51 @@ const TAB_INDEX = {
  */
 
 export const Transfer = () => {
+  const references = InputReferences();
+  const navigate = useNavigate();
+  const { loggedAccount, transactions } = useUser();
   const [modal, setModal] = useState(false);
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
-  const references = InputReferences();
-  const { loggedAccount, transactions } = useUser();
-  const [agencyNumber, setAgencyNumber] = useState<string>('');
   const [accountNumber, setAccountNumber] = useState<string>('');
-  const [amount, setAmount] = useState<string>('0.00');
+  const [agencyNumber, setAgencyNumber] = useState<string>('');
+  const [error, setError] = useState('');
+  const [amount, setAmount] = useState<string>('R$0,00');
   const [password, setPassword] = useState<string>('');
+  const [cpf, setCpf] = useState<string>('');
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setModal(true);
   }
 
-  function confirSubmit() {
-    /* const response = request;
-    const {data, error} = response;
-    if(error){
-      const {name, message} = error;
-      references.setError(name, message);
+  async function confirmSubmit() {
+    if (!loggedAccount) {
+      navigate('/');
       return;
     }
-    navigate('/transaction', {state: {transactionId: });
-    */
+    const transferValue = amount.replace('R$', '').replaceAll('.', '').replace(',', '.');
+    const response = await bankAPI.makeTransfer(
+      loggedAccount.owners_cpf,
+      loggedAccount.password,
+      loggedAccount.account,
+      loggedAccount.account_digit,
+      loggedAccount.agency,
+      loggedAccount.agency_digit,
+      transferValue,
+      cpf,
+      accountNumber.split('-')[0],
+      accountNumber.split('-')[1],
+      agencyNumber.split('-')[0],
+      agencyNumber.split('-')[1],
+    );
+    if (response.messages.length > 0) {
+      console.log('erro na transferencia');
+      setError(response.messages[0]);
+      setModal(false);
+      return;
+    }
+    setModal(false);
+    navigate('/extract');
   }
 
   return (
@@ -70,7 +95,7 @@ export const Transfer = () => {
         <Modal
           title="Transferência"
           setModal={setModal}
-          handleConfirmModal={confirSubmit}
+          handleConfirmModal={confirmSubmit}
         />
       )}
       <WhiteCard
@@ -84,12 +109,12 @@ export const Transfer = () => {
             <SmallInput
               title="Agência"
               isDisabled={true}
-              value={loggedAccount?.agency + '-' + loggedAccount?.agencyDigit}
+              value={loggedAccount?.agency + '-' + loggedAccount?.agency_digit}
             />
             <SmallInput
               title="Conta"
               isDisabled={true}
-              value={loggedAccount?.account + '-' + loggedAccount?.accountDigit}
+              value={loggedAccount?.account + '-' + loggedAccount?.account_digit}
             />
           </div>
           <span className="text-base font-normal">Destino</span>
@@ -127,6 +152,19 @@ export const Transfer = () => {
             />
           </div>
           <Input
+            name="cpf"
+            placeholder="CPF"
+            type="text"
+            value={cpf}
+            onChange={setCpf}
+            validators={[
+              { validate: validateCpf, errorMessage: 'CPF inválido' },
+            ]}
+            ref={references.getOrCrateRef('cpf')}
+            callback={setDisableSubmit}
+            tabIndex={TAB_INDEX.CPF}
+          />
+          <Input
             name="value"
             placeholder="Valor"
             type="text"
@@ -143,7 +181,7 @@ export const Transfer = () => {
           <Input
             name="password"
             placeholder="Senha"
-            type="text"
+            type="password"
             value={password}
             onChange={setPassword}
             validators={[
@@ -160,6 +198,7 @@ export const Transfer = () => {
             isDisabled={disableSubmit}
             tabIndex={TAB_INDEX.BUTTON}
           />
+          {error && <span className="text-red-600">{error}</span>}
         </form>
       </WhiteCard>
     </>

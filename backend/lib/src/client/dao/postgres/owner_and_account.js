@@ -16,14 +16,14 @@ exports.OwnerTable = void 0;
 const _1 = require(".");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const { Client } = require('pg');
+const { Client } = require("pg");
 class OwnerTable extends _1.PostgresDB {
     insert(owner, account) {
         return __awaiter(this, void 0, void 0, function* () {
             const client = new Client();
             try {
                 yield client.connect();
-                console.log('conectado ao banco');
+                console.log("conectado ao banco");
                 const insertUserQuery = `
                 INSERT INTO public.owners
                     (id, cpf, name, email, birthdate) 
@@ -35,7 +35,7 @@ class OwnerTable extends _1.PostgresDB {
                     owner.cpf,
                     owner.name,
                     owner.email,
-                    owner.birthdate
+                    owner.birthdate,
                 ]);
                 if (result.rows.length !== 0) {
                     const insertAccountQuery = `
@@ -44,7 +44,7 @@ class OwnerTable extends _1.PostgresDB {
                 VALUES 
                     ( $1, $2, $3, $4, $5, $6, $7, $8 ) RETURNING id
                 `;
-                    const result = yield client.query(insertAccountQuery, [
+                    const queryValues = [
                         account.id,
                         account.ownerCpf,
                         account.password,
@@ -52,8 +52,10 @@ class OwnerTable extends _1.PostgresDB {
                         account.agencyDigit,
                         account.account,
                         account.accountDigit,
-                        account.balance
-                    ]);
+                        account.balance,
+                    ];
+                    const result = yield client.query(insertAccountQuery, queryValues);
+                    console.log("completo");
                     yield client.end();
                     if (result.rows.length !== 0) {
                         return true;

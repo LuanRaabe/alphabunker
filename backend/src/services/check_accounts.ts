@@ -19,7 +19,6 @@ class SearchOwnerAccountsService{
             }
 
             const searchOwnerAccounts = await this.searchAccount(ownerAccounts.cpf);
-            console.log(searchOwnerAccounts);
 
             if(searchOwnerAccounts){
                 return {

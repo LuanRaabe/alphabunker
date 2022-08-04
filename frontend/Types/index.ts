@@ -10,20 +10,18 @@ export interface Transaction {
 export interface Owner {
   name: string;
   email: string;
-  cpf: string;
-  birthDate: string;
+  birthdate: string;
   photo?: string;
-  id: string;
 }
 
 export interface Account {
-  id: string;
-  ownerCpf: string;
-  password: string;
+  id?: string;
+  owners_cpf: string;
+  password?: string;
   agency: string;
-  agencyDigit: string;
+  agency_digit: string;
   account: string;
-  accountDigit: string;
+  account_digit: string;
   balance: string;
 }
 
@@ -34,7 +32,7 @@ export interface DataCreateAccount {
 
 export interface ResponseCreateAccount {
   data: DataCreateAccount;
-  message: string[];
+  messages: string[];
 }
 
 export interface DataLogin {
@@ -44,22 +42,33 @@ export interface DataLogin {
 
 export interface ResponseLogin {
   data: DataLogin;
-  message: string[];
+  messages: string[];
 }
 
 export interface DataExtract {
-  owner: Owner;
+  account: Account;
+  extract: Transaction[];
 }
 
 export interface ResponseExtract {
   data: DataExtract;
-  extract: Transaction[];
-  message: string[];
+  messages: string[];
 }
 
 export interface ResponseAccounts {
   data: Partial<Account>[];
-  message: string[];
+  messages: string[];
+}
+
+export interface BalanceData {
+  id: string;
+  name: string;
+  owners_cpf: string;
+  agency: string;
+  agencyDigit: string;
+  account: string;
+  accountDigit: string;
+  balance: string;
 }
 
 export interface Transaction {
@@ -79,7 +88,7 @@ export interface DepositData {
 
 export interface ResponseDeposit {
   data: DepositData;
-  message: string[];
+  messages: string[];
 }
 
 export interface Fee {
@@ -94,7 +103,12 @@ export interface WithdrawData {
 
 export interface ResponseWithdraw {
   data: WithdrawData;
-  message: string[];
+  messages: string[];
+}
+
+export interface ResponseBalance {
+  data: BalanceData;
+  messages: string[];
 }
 
 export interface TransferData {
@@ -105,5 +119,5 @@ export interface TransferData {
 
 export interface ResponseTransfer {
   data: TransferData;
-  message: string[];
+  messages: string[];
 }
