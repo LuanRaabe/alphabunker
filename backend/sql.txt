@@ -1,0 +1,50 @@
+CREATE TABLE public.owners (
+	"cpf" varchar(11) NOT NULL,
+	"id" varchar(64) NOT NULL UNIQUE,
+	"name" varchar(60) NOT NULL,
+	"email" varchar(120) NOT NULL,
+	"birthdate" TIMESTAMP NOT NULL,
+	CONSTRAINT "owners_pk" PRIMARY KEY ("cpf")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE public.accounts (
+	"id" varchar(64) NOT NULL,
+	"owners_cpf" varchar NOT NULL,
+	"password" varchar NOT NULL,
+	"agency" varchar(5) NOT NULL,
+	"agency_digit" varchar(1) NOT NULL,
+	"account" varchar(6) NOT NULL,
+	"account_digit" varchar(1) NOT NULL,
+	"balance" float4 NOT NULL,
+	CONSTRAINT "accounts_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE public.extracts (
+	"id" varchar(64) NOT NULL,
+	"account_id" varchar NOT NULL,
+	"operation_name" varchar(40) NOT NULL,
+	"value" float4 NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	"type" varchar(10) NOT NULL,
+	CONSTRAINT "extracts_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_fk0" FOREIGN KEY ("owners_id") REFERENCES "owners"("cpf");
+
+ALTER TABLE "extracts" ADD CONSTRAINT "extracts_fk0" FOREIGN KEY ("account_id") REFERENCES "accounts"("id");
+
+
+
