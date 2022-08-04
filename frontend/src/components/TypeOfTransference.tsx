@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 import { useUser } from '../providers/UserProvider';
+import { maskDate } from '../utils/Masks';
 
 interface TypeOfTransferenceProps {
   id: string;
@@ -41,27 +42,24 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
       'transferência enviada': 'Transferência enviada',
       taxa: 'Taxa',
     };
-    return transactionTypes[foundTransaction?.operation_name as keyof typeof transactionTypes];
-  }
-
-  function renderDate() {
-    const today = new Date(foundTransaction?.created_at ?? '');
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //janvier = 0
-    const yyyy = today.getFullYear();
-
-    return dd + '/' + mm + '/' + yyyy;
+    return transactionTypes[
+      foundTransaction?.operation_name as keyof typeof transactionTypes
+    ];
   }
 
   function renderValue() {
     return (
       <span
         className={
-          foundTransaction?.type === 'credito' ? 'text-green-500' : 'text-red-500'
+          foundTransaction?.type === 'credito'
+            ? 'text-green-500'
+            : 'text-red-500'
         }
       >
         {foundTransaction?.type === 'credito' ? '+ R$' : '- R$'}
-        {foundTransaction?.value ? parseFloat(foundTransaction.value).toFixed(2).replace('.', ',') : '0.00'}
+        {foundTransaction?.value
+          ? parseFloat(foundTransaction.value).toFixed(2).replace('.', ',')
+          : '0.00'}
       </span>
     );
   }
@@ -69,7 +67,7 @@ export function TypeOfTransference(props: TypeOfTransferenceProps) {
   return (
     <div>
       <p>Tipo: {renderType()}</p>
-      <p>Data: {renderDate()}</p>
+      <p>Data: {maskDate(foundTransaction?.created_at ?? '')}</p>
       {isTransfer && (
         <>
           <p>Dados de {isSameUser ? 'destino' : 'origem'}</p>

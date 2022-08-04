@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/Form/Button';
 import { FormSubmit } from '../../components/Form/FormSubmit';
 import { Input } from '../../components/Form/Input';
-import { PasswordModal } from '../../components/PasswordModal';
 import { useUser } from '../../providers/UserProvider';
-import { maskCpf } from '../../utils/Masks';
+import { maskCpf, maskPassword } from '../../utils/Masks';
 import {
+  validateConfirmPassword,
   validateCpf,
   validateDate,
   validateEmail,
@@ -34,6 +34,7 @@ export const Home = () => {
   const [cpf, setCpf] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [disableSubmit, setDisableSubmit] = useState<boolean>(false);
 
   const isLoginScreen = () => loginOrRegister === 'login';
@@ -48,12 +49,7 @@ export const Home = () => {
       loginUser?.(cpf.replace(/\D/g, ''), password);
       navigate('/deposit');
     } else {
-      createAccount?.(
-        username,
-        email,
-        cpf.replace(/\D/g, ''),
-        birthday,
-      );
+      createAccount?.(username, email, cpf.replace(/\D/g, ''), birthday);
 
       navigate('/home');
     }
@@ -136,10 +132,11 @@ export const Home = () => {
         />
         <Input
           name="passwordlogin"
-          type="password"
+          type="text"
           placeholder="Digite sua senha"
           value={password}
           onChange={setPassword}
+          mask={maskPassword}
           validators={[
             { validate: validatePassword, errorMessage: 'Senha inválida' },
           ]}
@@ -209,6 +206,37 @@ export const Home = () => {
           ]}
           callback={setDisableSubmit}
         />
+        <Input
+          name="passwordregister"
+          type="text"
+          placeholder="Digite sua senha"
+          value={password}
+          onChange={setPassword}
+          mask={maskPassword}
+          validators={[
+            {
+              validate: validatePassword,
+              errorMessage: 'Senha deve conter 4 dígitos',
+            },
+          ]}
+          callback={setDisableSubmit}
+        />
+        <Input
+          name="passwordconfirm"
+          type="text"
+          placeholder="Confirme sua senha"
+          value={confirmPassword}
+          onChange={setConfirmPassword}
+          mask={maskPassword}
+          validators={[
+            {
+              validate: () =>
+                validateConfirmPassword(password, confirmPassword),
+              errorMessage: 'Senha não confere',
+            },
+          ]}
+          callback={setDisableSubmit}
+        />
         {renderBottomButtons()}
       </>
     );
@@ -221,7 +249,6 @@ export const Home = () => {
       ) : (
         <>{isLoginScreen() ? renderLogin() : renderRegister()}</>
       )}
-      <PasswordModal password="123456" />
     </FormSubmit>
   );
 };

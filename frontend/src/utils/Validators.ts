@@ -48,7 +48,14 @@ export function validateEmail(email: string): boolean {
 
 export function validatePassword(password: string): boolean {
   const passwordFormatted = password.replace(/\s/g, '');
-  return passwordFormatted.length >= 4 && passwordFormatted.length <= 20;
+  return passwordFormatted.length !== 4;
+}
+
+export function validateConfirmPassword(
+  password: string,
+  confirmPassword: string,
+): boolean {
+  return password === confirmPassword;
 }
 
 export function validateDate(inputDate: string): boolean {
