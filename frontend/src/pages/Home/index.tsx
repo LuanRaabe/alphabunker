@@ -86,9 +86,7 @@ export const Home = () => {
           Alpha Bunker
         </span>
         <span
-          className={`text-paragraph-dark text-xl dark:text-white ${
-            isLoginScreen() ? 'mb-6' : 'mb-7'
-          }`}
+          className={`text-paragraph-dark text-xl dark:text-white ${isLoginScreen() ? 'mb-6' : 'mb-7'}`}
         >
           {isLoginScreen() ? 'Login' : 'Crie sua conta'}
         </span>

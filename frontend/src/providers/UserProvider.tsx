@@ -134,7 +134,6 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
           balance: response.data.account.balance,
         });
         setBalance(response.data.account.balance);
-        //cookie.ObjectToCookies(user); // TODO: n funfa tem que ve
       })
       .catch((e) => setError(e));
     setLoading(false);
@@ -150,7 +149,6 @@ export const UserProvider = ({ children }: UserProviderTypes) => {
     bankAPI
       .createAccount(name, email, cpf, birthDate)
       .then((response) => {
-        // TODO: implementar modal para senha
         cookie.ObjectToCookies(user);
         cookie.ObjectToCookies(response.data.account);
       })
