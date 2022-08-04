@@ -17,7 +17,7 @@ interface AccountTypes {
   id?: string;
   owners_cpf: string;
   agency: string;
-  password?: string;
+  password: string;
   agency_digit: string;
   account: string;
   account_digit: string;
