@@ -7,6 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { WhiteCard } from '../../components/WhiteCard';
 import { useUser } from '../../providers/UserProvider';
+import { maskCpf, maskDate } from '../../utils/Masks';
 
 /**
  * Archive: src/pages/Profile.tsx
@@ -50,8 +51,8 @@ export const Profile = () => {
           childs={[
             <>
               <span>Nome: {user?.name}</span>
-              <span>Data de nascimento: {user?.birthdate}</span>
-              <span>CPF: {user?.cpf}</span>
+              <span>Data de nascimento: {maskDate(user?.birthdate ?? '')}</span>
+              <span>CPF: {maskCpf(user?.cpf ?? '')}</span>
             </>,
           ]}
           className="mb-9"
@@ -61,8 +62,12 @@ export const Profile = () => {
           title="Minhas contas correntes"
           childs={accounts?.map((account) => (
             <div className="flex flex-col" key={account.id}>
-              <span>Agência: {account.agency + '-' + account.agency_digit}</span>
-              <span>Conta: {account.account + '-' + account.account_digit}</span>
+              <span>
+                Agência: {account.agency + '-' + account.agency_digit}
+              </span>
+              <span>
+                Conta: {account.account + '-' + account.account_digit}
+              </span>
             </div>
           ))}
         />
